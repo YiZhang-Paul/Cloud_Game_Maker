@@ -1,0 +1,28 @@
+{
+  "name": "cloud_game_maker",
+  "version": "0.1.0",
+  "description": "a cloud based 2D game maker",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YiZhang-Paul/Cloud_Game_Maker.git"
+  },
+  "keywords": [
+    "2D",
+    "game",
+    "cloud",
+    "game engine"
+  ],
+  "author": "Yi Zhang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/YiZhang-Paul/Cloud_Game_Maker/issues"
+  },
+  "homepage": "https://github.com/YiZhang-Paul/Cloud_Game_Maker#readme",
+  "dependencies": {
+    "@angular/cli": "^10.2.0"
+  }
+}
