@@ -112,5 +112,8 @@
             }
         }
     },
-    "defaultProject": "game-maker"
+    "defaultProject": "game-maker",
+    "cli": {
+        "analytics": false
+    }
 }
