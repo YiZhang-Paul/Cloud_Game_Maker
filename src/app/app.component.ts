@@ -9,12 +9,15 @@ import { Scene } from './core/data-model/scene/scene';
 })
 export class AppComponent {
     private _scenes: Scene[] = [];
+    private _activeScene: Scene;
 
-    get scenes(): Scene[] {
-        return this._scenes;
+    get activeScene(): Scene {
+        return this._activeScene;
     }
 
     public onCreateScene(): void {
-        this._scenes = [...this._scenes, new Scene()];
+        const scene = new Scene();
+        this._scenes.push(scene);
+        this._activeScene = scene;
     }
 }

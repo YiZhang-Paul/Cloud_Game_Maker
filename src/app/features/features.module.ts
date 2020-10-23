@@ -8,6 +8,9 @@ import { GameSceneModule } from './game-scene/game-scene.module';
     imports: [
         CommonModule,
         GameSceneModule
+    ],
+    exports: [
+        GameSceneModule
     ]
 })
 export class FeaturesModule { }
