@@ -10,27 +10,27 @@
     position: relative;
     width: 100%;
     height: 100%;
-}
 
-.container > div:first-of-type {
-    width: 100%;
-    cursor: move;
-}
+    & > div:first-of-type {
+        width: 100%;
+        cursor: move;
+    }
 
-app-image-display-panel {
-    width: 75%;
-    height: 80%;
-}
+    app-image-display-panel {
+        width: 75%;
+        height: 80%;
+    }
 
-.container > button {
-    position: absolute;
-}
+    & > button {
+        position: absolute;
+    }
 
-.container > button:first-of-type {
-    top: 2%;
-    right: 1.5%;
-}
+    & > button:first-of-type {
+        top: 2%;
+        right: 1.5%;
+    }
 
-.container > button:last-of-type {
-    bottom: 5%;
+    & > button:last-of-type {
+        bottom: 5%;
+    }
 }

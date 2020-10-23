@@ -8,18 +8,20 @@
 }
 
 .container {
+    $gap: 5px;
     padding: 3px;
     width: 100%;
     height: 100%;
 
     app-image-display-panel {
-        margin: 5px;
-        min-height: calc(90% - 15px);
-        max-height: calc(90% - 15px);
+        $panel-height: calc(90% - #{$gap} * 3);
+        margin: $gap;
+        min-height: $panel-height;
+        max-height: $panel-height;
     }
 
     & > span {
-        padding-bottom: 5px;
+        padding-bottom: $gap;
         height: 10%;
     }
 }

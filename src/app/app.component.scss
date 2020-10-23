@@ -1,22 +1,21 @@
 .container {
     width: 100%;
     height: 100%;
-}
 
-app-top-toolbar {
-    height: 60px;
-    background-color: lightcoral;
-}
+    app-top-toolbar {
+        height: 60px;
+        background-color: lightcoral;
+    }
 
-app-scene-builder {
-    background-color: lightblue;
-}
+    .content {
+        background-color: lightgray;
+    }
 
-app-sprite-manager,
-.content > div:last-of-type {
-    background-color: lightgray;
-}
+    app-scene-builder {
+        background-color: lightblue;
+    }
 
-.content > div:nth-of-type(2) > div:last-of-type {
-    background-color: lightcoral;
+    & > div:first-of-type > div:first-of-type {
+        background-color: lightcoral;
+    }
 }
