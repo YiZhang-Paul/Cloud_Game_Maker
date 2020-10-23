@@ -5,9 +5,13 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgxFileDropModule } from 'ngx-file-drop';
 
 import { FilePickerComponent } from './components/buttons/file-picker/file-picker.component';
+import { ImageDisplayPanelComponent } from './components/panels/image-display-panel/image-display-panel.component';
 
 @NgModule({
-    declarations: [FilePickerComponent],
+    declarations: [
+        FilePickerComponent,
+        ImageDisplayPanelComponent
+    ],
     imports: [
         CommonModule,
         FlexLayoutModule,
@@ -18,7 +22,8 @@ import { FilePickerComponent } from './components/buttons/file-picker/file-picke
         FlexLayoutModule,
         NgxFileDropModule,
         DragDropModule,
-        FilePickerComponent
+        FilePickerComponent,
+        ImageDisplayPanelComponent
     ]
 })
 export class SharedModule { }
