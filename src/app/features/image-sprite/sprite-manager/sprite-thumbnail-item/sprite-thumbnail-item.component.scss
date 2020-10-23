@@ -8,20 +8,35 @@
 }
 
 .container {
-    $gap: 5px;
-    padding: 3px;
+    $padding: 3px;
+    $inner-gap: 5px;
+    $panel-height: calc(90% - #{$inner-gap} * 3);
+    position: relative;
+    padding: $padding;
     width: 100%;
     height: 100%;
 
+    & > div {
+        position: absolute;
+        margin: $inner-gap;
+        width: calc(100% - #{$inner-gap} * 2 - #{$padding} * 2);
+        height: $panel-height;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    &:hover > div {
+        opacity: 1;
+    }
+
     app-image-display-panel {
-        $panel-height: calc(90% - #{$gap} * 3);
-        margin: $gap;
+        margin: $inner-gap;
         min-height: $panel-height;
         max-height: $panel-height;
     }
 
     & > span {
-        padding-bottom: $gap;
+        padding-bottom: $inner-gap;
         height: 10%;
     }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { SpriteFile } from '../../../../core/data-model/sprite/sprite-file';
 
@@ -10,4 +10,6 @@ import { SpriteFile } from '../../../../core/data-model/sprite/sprite-file';
 })
 export class SpriteThumbnailItemComponent {
     @Input() public file: SpriteFile;
+    @Output() public editStart = new EventEmitter();
+    @Output() public delete = new EventEmitter();
 }

@@ -1,4 +1,9 @@
 <div class="container" fxLayout="column" fxLayoutAlign="space-between">
+    <div fxLayoutAlign="center center" fxLayoutGap="5px">
+        <button (click)="editStart.emit()">Edit</button>
+        <button (click)="delete.emit()">Delete</button>
+    </div>
+
     <app-image-display-panel [file]="file.raw"></app-image-display-panel>
     <span>{{ file.name }}</span>
 </div>
