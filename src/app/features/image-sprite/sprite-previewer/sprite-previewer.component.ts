@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FileSystemFileEntry } from 'ngx-file-drop';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+
+import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 
 @Component({
     selector: 'app-sprite-previewer',
@@ -7,8 +8,8 @@ import { FileSystemFileEntry } from 'ngx-file-drop';
     styleUrls: ['./sprite-previewer.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SpritePreviewerComponent implements OnInit {
-    @Input() public file: FileSystemFileEntry;
+export class SpritePreviewerComponent {
+    @Input() public file: SpriteFile;
     @Input() public confirmAction = 'Confirm';
     @Output() public confirm = new EventEmitter();
     @Output() public cancel = new EventEmitter();

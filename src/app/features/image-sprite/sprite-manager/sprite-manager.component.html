@@ -1,24 +1,33 @@
 <div class="container">
-    <app-sprite-previewer *ngIf="previewed"
-        [file]="previewed"
+    <app-sprite-previewer *ngIf="previewing"
+        [file]="previewing"
         [confirmAction]="'Import'"
-        (cancel)="previewed = null"
-        (confirm)="onFileImported()"
+        (cancel)="previewing = null"
+        (confirm)="onFileImport()"
         cdkDrag>
     </app-sprite-previewer>
+
+    <app-sprite-editor *ngIf="editing"
+        [file]="editing"
+        cdkDrag>
+    </app-sprite-editor>
 
     <app-file-picker *ngIf="!files.length"
         [message]="'no sprite available'"
         [buttonText]="'Import Sprite'"
         [allowExtension]="['png', 'jpg']"
-        (fileSelect)="onFilePreviewed($event)">
+        (fileSelect)="onFilePreview($event)">
     </app-file-picker>
 
     <div *ngIf="files.length" fxLayout="column" fxFlex>
-        <app-sprite-manager-toolbar (fileSelect)="onFilePreviewed($event)"></app-sprite-manager-toolbar>
+        <app-sprite-manager-toolbar (fileSelect)="onFilePreview($event)"></app-sprite-manager-toolbar>
 
         <div class="sprite-files" fxLayout="row wrap" fxLayoutAlign="space-between">
-            <app-sprite-thumbnail-item *ngFor="let file of files" [file]="file"></app-sprite-thumbnail-item>
+            <app-sprite-thumbnail-item *ngFor="let file of files"
+                [file]="file"
+                (editStart)="editing = file"
+                (delete)="onFileDelete(file)">
+            </app-sprite-thumbnail-item>
         </div>
     </div>
 </div>

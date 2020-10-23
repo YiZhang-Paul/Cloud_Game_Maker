@@ -10,19 +10,25 @@ import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpriteManagerComponent {
-    public previewed: FileSystemFileEntry;
+    public previewing: SpriteFile;
+    public editing: SpriteFile;
     private _files: SpriteFile[] = [];
 
     get files(): SpriteFile[] {
         return this._files;
     }
 
-    public onFilePreviewed(files: NgxFileDropEntry[]): void {
-        this.previewed = files[0]?.fileEntry as FileSystemFileEntry;
+    public onFilePreview(files: NgxFileDropEntry[]): void {
+        const file = files[0]?.fileEntry as FileSystemFileEntry;
+        this.previewing = new SpriteFile(file);
     }
 
-    public onFileImported(): void {
-        this._files.push(new SpriteFile(this.previewed));
-        this.previewed = null;
+    public onFileImport(): void {
+        this._files.push(this.previewing);
+        this.previewing = null;
+    }
+
+    public onFileDelete(file: SpriteFile): void {
+        this._files = this._files.filter(_ => _ !== file);
     }
 }

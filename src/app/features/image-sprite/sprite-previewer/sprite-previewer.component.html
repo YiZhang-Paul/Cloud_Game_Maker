@@ -3,7 +3,7 @@
         <span>{{ file.name }}</span>
     </div>
 
-    <app-image-display-panel [file]="file"></app-image-display-panel>
+    <app-image-display-panel [file]="file.raw"></app-image-display-panel>
     <button (click)="cancel.emit()">X</button>
     <button (click)="confirm.emit()">{{ confirmAction }}</button>
 </div>
