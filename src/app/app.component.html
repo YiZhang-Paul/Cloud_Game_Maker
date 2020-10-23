@@ -2,7 +2,7 @@
     <app-top-toolbar (createScene)="onCreateScene()"></app-top-toolbar>
 
     <div class="content" fxLayout="row" fxFlex>
-        <div fxFlex="20"></div>
+        <app-sprite-editor fxFlex="20"></app-sprite-editor>
 
         <div fxLayout="column" fxFlex="60">
             <app-scene-builder [scene]="activeScene" fxFlex="75"></app-scene-builder>
