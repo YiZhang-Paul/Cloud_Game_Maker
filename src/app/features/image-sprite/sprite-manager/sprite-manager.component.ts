@@ -4,12 +4,12 @@ import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 
 @Component({
-    selector: 'app-sprite-editor',
-    templateUrl: './sprite-editor.component.html',
-    styleUrls: ['./sprite-editor.component.scss'],
+    selector: 'app-sprite-manager',
+    templateUrl: './sprite-manager.component.html',
+    styleUrls: ['./sprite-manager.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SpriteEditorComponent {
+export class SpriteManagerComponent {
     public previewed: FileSystemFileEntry;
     private _files: SpriteFile[] = [];
 
