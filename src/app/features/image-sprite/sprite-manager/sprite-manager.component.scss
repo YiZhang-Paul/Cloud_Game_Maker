@@ -1,7 +1,6 @@
 .container {
     width: 100%;
     height: 100%;
-    background-color: inherit;
 }
 
 app-sprite-previewer {
@@ -20,7 +19,12 @@ app-sprite-manager-toolbar {
 }
 
 app-sprite-thumbnail-item {
+    cursor: pointer;
     margin-bottom: 1.5vh;
     width: 15vh;
     height: 15vh;
+
+    &:hover {
+        background-color: rgba(180, 180, 180, 0.5);
+    }
 }
