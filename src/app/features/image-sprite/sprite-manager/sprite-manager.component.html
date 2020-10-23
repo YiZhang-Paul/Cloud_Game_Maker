@@ -12,12 +12,13 @@
         cdkDrag>
     </app-sprite-editor>
 
-    <app-file-picker *ngIf="!files.length"
-        [message]="'no sprite available'"
-        [buttonText]="'Import Sprite'"
-        [allowExtension]="['png', 'jpg']"
-        (fileSelect)="onFilePreview($event)">
-    </app-file-picker>
+    <div *ngIf="!files.length" fxLayoutAlign="center center" fxFlex>
+        <app-file-picker [message]="'no sprite available'"
+            [buttonText]="'Import Sprite'"
+            [allowExtension]="['png', 'jpg']"
+            (fileSelect)="onFilePreview($event)">
+        </app-file-picker>
+    </div>
 
     <div *ngIf="files.length" fxLayout="column" fxFlex>
         <app-sprite-manager-toolbar (fileSelect)="onFilePreview($event)"></app-sprite-manager-toolbar>
