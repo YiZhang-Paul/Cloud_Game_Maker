@@ -10,3 +10,18 @@ app-sprite-previewer {
     height: 75vh;
     background-color: rgb(255, 255, 255);
 }
+
+.sprite-toolbar {
+    height: 35px;
+}
+
+.sprite-files {
+    padding: 1.5vh 2.5vh;
+}
+
+.sprite-files > div {
+    margin-bottom: 1.5vh;
+    width: 15vh;
+    height: 15vh;
+    background-color: lightcoral;
+}

@@ -23,6 +23,6 @@ export class SpriteManagerComponent {
 
     public onFileImported(file: FileSystemFileEntry): void {
         this.previewed = null;
-        console.log(file);
+        this._files.push(new SpriteFile(file.name));
     }
 }
