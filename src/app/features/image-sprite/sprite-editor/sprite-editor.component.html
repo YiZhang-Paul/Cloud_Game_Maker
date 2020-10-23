@@ -2,7 +2,12 @@
     <div *ngIf="!files.length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="7px" fxFill>
         <span>no sprite available</span>
 
-        <ngx-file-drop dropZoneClassName="drop-zone" contentClassName="drop-zone-content">
+        <ngx-file-drop accept=".png,.jpg"
+            [multiple]="false"
+            (onFileDrop)="onFileImported($event)"
+            dropZoneClassName="drop-zone"
+            contentClassName="drop-zone-content">
+
             <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
                 <button (click)="openFileSelector()">Import Sprite</button>
             </ng-template>
