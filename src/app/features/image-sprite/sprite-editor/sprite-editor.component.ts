@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
@@ -10,29 +10,26 @@ import { SpriteEditorMode } from '../../../core/enum/sprite-editor-mode.enum';
     styleUrls: ['./sprite-editor.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SpriteEditorComponent implements OnInit {
+export class SpriteEditorComponent {
     @Input() public file: SpriteFile;
     @Output() public cancel = new EventEmitter();
+    public mode = SpriteEditorMode.Readonly;
     public modes = SpriteEditorMode;
-    private _mode = SpriteEditorMode.Readonly;
     private _imageChangedEvent: { target: { files: Blob[] } };
-
-    get mode(): SpriteEditorMode {
-        return this._mode;
-    }
 
     get imageChangedEvent(): { target: { files: Blob[] } } {
         return this._imageChangedEvent;
     }
 
-    public ngOnInit(): void {
+    public onImageCropStart(): void {
+        this.mode = this.modes.Crop;
+
         this.file.raw.file(_ => {
             this._imageChangedEvent = { target: { files: [_] } };
-            this._mode = SpriteEditorMode.Crop;
         });
     }
 
-    public onImageCrop(event: ImageCroppedEvent): void {
+    public onImageCropped(event: ImageCroppedEvent): void {
         console.log(event);
     }
 }

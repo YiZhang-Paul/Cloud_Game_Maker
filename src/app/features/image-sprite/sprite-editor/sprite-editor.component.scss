@@ -15,14 +15,19 @@
         cursor: move;
     }
 
-    app-image-display-panel {
-        width: 75%;
-        height: 80%;
-    }
-
     & > button:first-of-type {
         position: absolute;
         top: 2%;
         right: 1.5%;
+    }
+
+    app-image-display-panel,
+    image-cropper {
+        width: 75%;
+        height: 80%;
+    }
+
+    & > div:last-of-type {
+        width: 100%;
     }
 }

@@ -6,7 +6,10 @@
     <button (click)="cancel.emit()">X</button>
 
     <div fxLayout="row" fxFlex>
-        <div fxFlex="15"></div>
+        <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="7px" fxFlex="15">
+            <button (click)="mode = modes.Readonly">View</button>
+            <button (click)="onImageCropStart()">Crop</button>
+        </div>
 
         <div [ngSwitch]="mode"
             fxLayout="column"
@@ -16,13 +19,11 @@
 
             <app-image-display-panel *ngSwitchCase="modes.Readonly" [file]="file.raw"></app-image-display-panel>
 
-            <ng-container *ngSwitchCase="modes.Crop">
-                <image-cropper *ngIf="imageChangedEvent"
-                    format="png"
-                    [imageChangedEvent]="imageChangedEvent"
-                    (imageCropped)="onImageCrop($event)">
-                </image-cropper>
-            </ng-container>
+            <image-cropper *ngSwitchCase="modes.Crop"
+                format="png"
+                [imageChangedEvent]="imageChangedEvent"
+                (imageCropped)="onImageCropped($event)">
+            </image-cropper>
         </div>
     </div>
 </div>
