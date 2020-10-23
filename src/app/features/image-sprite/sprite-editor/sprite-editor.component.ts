@@ -10,18 +10,19 @@ import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpriteEditorComponent {
+    public previewed: FileSystemFileEntry;
     private _files: SpriteFile[] = [];
-    private _previewed: FileSystemFileEntry;
 
     get files(): SpriteFile[] {
         return this._files;
     }
 
-    get previewed(): FileSystemFileEntry {
-        return this._previewed;
+    public onFilePreviewed(files: NgxFileDropEntry[]): void {
+        this.previewed = files[0]?.fileEntry as FileSystemFileEntry;
     }
 
-    public onFileImported(files: NgxFileDropEntry[]): void {
-        this._previewed = files[0]?.fileEntry as FileSystemFileEntry;
+    public onFileImported(file: FileSystemFileEntry): void {
+        this.previewed = null;
+        console.log(file);
     }
 }

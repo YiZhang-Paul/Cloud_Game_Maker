@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FileSystemFileEntry } from 'ngx-file-drop';
 
@@ -10,6 +10,9 @@ import { FileSystemFileEntry } from 'ngx-file-drop';
 })
 export class SpritePreviewerComponent implements OnInit {
     @Input() public file: FileSystemFileEntry;
+    @Input() public confirmAction = 'Confirm';
+    @Output() public confirm = new EventEmitter();
+    @Output() public cancel = new EventEmitter();
     private _objectUrl = '';
     private _safeUrl: SafeUrl;
 

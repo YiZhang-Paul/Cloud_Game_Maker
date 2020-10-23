@@ -1,5 +1,9 @@
 <div class="container" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="15px">
-    <span>{{ file.name }}</span>
+    <div fxLayoutAlign="center center" fxFlex="7.5">
+        <span>{{ file.name }}</span>
+    </div>
 
     <img *ngIf="safeUrl" [src]="safeUrl" (load)="onImageLoaded()" />
+    <button (click)="cancel.emit()">X</button>
+    <button (click)="confirm.emit()">{{ confirmAction }}</button>
 </div>

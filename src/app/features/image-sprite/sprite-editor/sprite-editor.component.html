@@ -1,11 +1,17 @@
 <div class="container">
-    <app-sprite-previewer *ngIf="previewed" [file]="previewed" cdkDrag></app-sprite-previewer>
+    <app-sprite-previewer *ngIf="previewed"
+        [file]="previewed"
+        [confirmAction]="'Import'"
+        (cancel)="previewed = null"
+        (confirm)="onFileImported(previewed)"
+        cdkDrag>
+    </app-sprite-previewer>
 
     <app-file-picker *ngIf="!files.length"
         [message]="'no sprite available'"
         [buttonText]="'Import Sprite'"
         [allowExtension]="['png', 'jpg']"
-        (fileSelect)="onFileImported($event)">
+        (fileSelect)="onFilePreviewed($event)">
     </app-file-picker>
 
     <div *ngIf="files.length" fxFill></div>
