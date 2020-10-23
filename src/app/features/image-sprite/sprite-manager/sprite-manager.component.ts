@@ -21,8 +21,8 @@ export class SpriteManagerComponent {
         this.previewed = files[0]?.fileEntry as FileSystemFileEntry;
     }
 
-    public onFileImported(file: FileSystemFileEntry): void {
+    public onFileImported(): void {
+        this._files.push(new SpriteFile(this.previewed));
         this.previewed = null;
-        this._files.push(new SpriteFile(file.name));
     }
 }
