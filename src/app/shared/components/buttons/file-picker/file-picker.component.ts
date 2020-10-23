@@ -8,6 +8,7 @@ import { NgxFileDropEntry } from 'ngx-file-drop';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilePickerComponent {
+    @Input() public message = '';
     @Input() public buttonText = 'Browse Files';
     @Input() public allowExtension: string[] = [];
     @Input() public allowMultiple = false;

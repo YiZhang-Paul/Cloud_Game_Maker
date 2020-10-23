@@ -1,5 +1,5 @@
 <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="7px" fxFill>
-    <span>no sprite available</span>
+    <span *ngIf="message">{{ message }}</span>
 
     <ngx-file-drop [accept]="accepted"
         [multiple]="allowMultiple"
