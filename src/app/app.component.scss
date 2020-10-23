@@ -7,3 +7,16 @@ app-top-toolbar {
     height: 60px;
     background-color: lightcoral;
 }
+
+.content > div:first-of-type,
+.content > div:last-of-type {
+    background-color: lightgray;
+}
+
+.content > div:nth-of-type(2) > div:first-of-type {
+    background-color: lightblue;
+}
+
+.content > div:nth-of-type(2) > div:last-of-type {
+    background-color: lightcoral;
+}
