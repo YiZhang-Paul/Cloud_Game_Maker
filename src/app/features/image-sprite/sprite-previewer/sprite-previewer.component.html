@@ -3,7 +3,7 @@
         <span>{{ file.name }}</span>
     </div>
 
-    <img *ngIf="safeUrl" [src]="safeUrl" (load)="onImageLoaded()" />
+    <app-image-display-panel [file]="file"></app-image-display-panel>
     <button (click)="cancel.emit()">X</button>
     <button (click)="confirm.emit()">{{ confirmAction }}</button>
 </div>
