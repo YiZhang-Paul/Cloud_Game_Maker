@@ -1,0 +1,14 @@
+<div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="7px" fxFill>
+    <span>no sprite available</span>
+
+    <ngx-file-drop [accept]="accepted"
+        [multiple]="allowMultiple"
+        (onFileDrop)="fileSelect.emit($event)"
+        dropZoneClassName="drop"
+        contentClassName="content">
+
+        <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+            <button (click)="openFileSelector()">{{ buttonText }}</button>
+        </ng-template>
+    </ngx-file-drop>
+</div>

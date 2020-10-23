@@ -4,8 +4,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgxFileDropModule } from 'ngx-file-drop';
 
+import { FilePickerComponent } from './components/buttons/file-picker/file-picker.component';
+
 @NgModule({
-    declarations: [],
+    declarations: [FilePickerComponent],
     imports: [
         CommonModule,
         FlexLayoutModule,
@@ -15,7 +17,8 @@ import { NgxFileDropModule } from 'ngx-file-drop';
     exports: [
         FlexLayoutModule,
         NgxFileDropModule,
-        DragDropModule
+        DragDropModule,
+        FilePickerComponent
     ]
 })
 export class SharedModule { }
