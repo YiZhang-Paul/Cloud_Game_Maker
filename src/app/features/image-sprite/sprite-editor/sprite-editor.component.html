@@ -3,6 +3,13 @@
         <span>{{ file.name }}</span>
     </div>
 
-    <app-image-display-panel [file]="file.raw"></app-image-display-panel>
     <button (click)="cancel.emit()">X</button>
+
+    <div fxLayout="row" fxFlex>
+        <div fxFlex="15"></div>
+
+        <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="15px" fxFlex="85">
+            <app-image-display-panel [file]="file.raw"></app-image-display-panel>
+        </div>
+    </div>
 </div>
