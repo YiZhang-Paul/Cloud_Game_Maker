@@ -15,7 +15,7 @@
     </app-file-picker>
 
     <div *ngIf="files.length" fxLayout="column" fxFlex>
-        <div class="sprite-toolbar"></div>
+        <app-sprite-manager-toolbar (fileSelect)="onFilePreviewed($event)"></app-sprite-manager-toolbar>
 
         <div class="sprite-files" fxLayout="row wrap" fxLayoutAlign="space-between">
             <app-sprite-thumbnail-item *ngFor="let file of files" [file]="file"></app-sprite-thumbnail-item>
