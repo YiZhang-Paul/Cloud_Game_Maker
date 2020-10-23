@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgxFileDropModule } from 'ngx-file-drop';
 
 @NgModule({
@@ -8,11 +9,13 @@ import { NgxFileDropModule } from 'ngx-file-drop';
     imports: [
         CommonModule,
         FlexLayoutModule,
-        NgxFileDropModule
+        NgxFileDropModule,
+        DragDropModule
     ],
     exports: [
         FlexLayoutModule,
-        NgxFileDropModule
+        NgxFileDropModule,
+        DragDropModule
     ]
 })
 export class SharedModule { }

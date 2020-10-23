@@ -1,4 +1,6 @@
 <div class="container">
+    <div *ngIf="isPreviewing" class="image-preview" cdkDrag></div>
+
     <div *ngIf="!files.length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="7px" fxFill>
         <span>no sprite available</span>
 
