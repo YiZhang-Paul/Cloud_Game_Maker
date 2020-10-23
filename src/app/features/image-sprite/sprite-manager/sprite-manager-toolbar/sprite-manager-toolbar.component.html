@@ -1,0 +1,6 @@
+<div class="container" fxLayoutAlign="start center">
+    <app-file-picker [buttonText]="'+'"
+        (fileSelect)="fileSelect.emit($event)"
+        [allowExtension]="['png', 'jpg']">
+    </app-file-picker>
+</div>

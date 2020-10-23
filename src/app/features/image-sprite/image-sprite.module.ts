@@ -6,12 +6,14 @@ import { SharedModule } from '../../shared/shared.module';
 import { SpriteManagerComponent } from './sprite-manager/sprite-manager.component';
 import { SpritePreviewerComponent } from './sprite-previewer/sprite-previewer.component';
 import { SpriteThumbnailItemComponent } from './sprite-manager/sprite-thumbnail-item/sprite-thumbnail-item.component';
+import { SpriteManagerToolbarComponent } from './sprite-manager/sprite-manager-toolbar/sprite-manager-toolbar.component';
 
 @NgModule({
     declarations: [
         SpriteManagerComponent,
         SpritePreviewerComponent,
-        SpriteThumbnailItemComponent
+        SpriteThumbnailItemComponent,
+        SpriteManagerToolbarComponent
     ],
     imports: [
         CommonModule,
