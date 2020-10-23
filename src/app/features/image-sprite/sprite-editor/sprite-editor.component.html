@@ -1,0 +1,8 @@
+<div class="container">
+    <div *ngIf="!files.length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="7px" fxFill>
+        <span>no sprites available</span>
+        <button>Import Sprite</button>
+    </div>
+
+    <div *ngIf="files.length" fxFill></div>
+</div>
