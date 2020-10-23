@@ -1,1 +1,8 @@
-<app-image-display-panel [file]="file.raw"></app-image-display-panel>
+<div class="container" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="15px">
+    <div fxLayoutAlign="center center" fxFlex="7.5">
+        <span>{{ file.name }}</span>
+    </div>
+
+    <app-image-display-panel [file]="file.raw"></app-image-display-panel>
+    <button (click)="cancel.emit()">X</button>
+</div>

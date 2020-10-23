@@ -1,0 +1,28 @@
+@import '../../../../styles/presets.scss';
+
+:host,
+.container {
+    @include drag-panel-style;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    & > div:first-of-type {
+        width: 100%;
+        cursor: move;
+    }
+
+    app-image-display-panel {
+        width: 75%;
+        height: 80%;
+    }
+
+    & > button:first-of-type {
+        position: absolute;
+        top: 2%;
+        right: 1.5%;
+    }
+}

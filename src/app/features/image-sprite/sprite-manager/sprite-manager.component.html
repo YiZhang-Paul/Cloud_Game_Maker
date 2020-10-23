@@ -9,6 +9,7 @@
 
     <app-sprite-editor *ngIf="editing"
         [file]="editing"
+        (cancel)="editing = null"
         cdkDrag>
     </app-sprite-editor>
 
