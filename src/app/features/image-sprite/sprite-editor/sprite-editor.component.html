@@ -1,20 +1,12 @@
 <div class="container">
     <div *ngIf="isPreviewing" class="image-preview" cdkDrag></div>
 
-    <div *ngIf="!files.length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="7px" fxFill>
-        <span>no sprite available</span>
-
-        <ngx-file-drop accept=".png,.jpg"
-            [multiple]="false"
-            (onFileDrop)="onFileImported($event)"
-            dropZoneClassName="drop-zone"
-            contentClassName="drop-zone-content">
-
-            <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
-                <button (click)="openFileSelector()">Import Sprite</button>
-            </ng-template>
-        </ngx-file-drop>
-    </div>
+    <app-file-picker *ngIf="!files.length"
+        [message]="'no sprite available'"
+        [buttonText]="'Import Sprite'"
+        [allowExtension]="['png', 'jpg']"
+        (fileSelect)="onFileImported($event)">
+    </app-file-picker>
 
     <div *ngIf="files.length" fxFill></div>
 </div>
