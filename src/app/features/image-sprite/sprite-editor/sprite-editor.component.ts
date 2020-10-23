@@ -13,13 +13,9 @@ import { SpriteEditorMode } from '../../../core/enum/sprite-editor-mode.enum';
 export class SpriteEditorComponent implements OnInit {
     @Input() public file: SpriteFile;
     @Output() public cancel = new EventEmitter();
-    private _imageChangedEvent: { target: { files: Blob[] } };
-    private _modes = SpriteEditorMode;
+    public modes = SpriteEditorMode;
     private _mode = SpriteEditorMode.Readonly;
-
-    get modes(): typeof SpriteEditorMode {
-        return this._modes;
-    }
+    private _imageChangedEvent: { target: { files: Blob[] } };
 
     get mode(): SpriteEditorMode {
         return this._mode;
