@@ -1,5 +1,5 @@
 <div class="container">
-    <div *ngIf="isPreviewing" class="image-preview" cdkDrag></div>
+    <app-sprite-previewer *ngIf="previewed" [file]="previewed" cdkDrag></app-sprite-previewer>
 
     <app-file-picker *ngIf="!files.length"
         [message]="'no sprite available'"

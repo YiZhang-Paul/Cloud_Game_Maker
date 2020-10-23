@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgxFileDropEntry } from 'ngx-file-drop';
+import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 
@@ -11,18 +11,17 @@ import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 })
 export class SpriteEditorComponent {
     private _files: SpriteFile[] = [];
-    private _isPreviewing = false;
+    private _previewed: FileSystemFileEntry;
 
     get files(): SpriteFile[] {
         return this._files;
     }
 
-    get isPreviewing(): boolean {
-        return this._isPreviewing;
+    get previewed(): FileSystemFileEntry {
+        return this._previewed;
     }
 
     public onFileImported(files: NgxFileDropEntry[]): void {
-        console.log(files);
-        this._isPreviewing = true;
+        this._previewed = files[0]?.fileEntry as FileSystemFileEntry;
     }
 }
