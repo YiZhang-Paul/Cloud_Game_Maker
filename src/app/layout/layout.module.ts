@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
+
+import { SharedModule } from '../shared/shared.module';
 
 import { TopToolbarComponent } from './top-toolbar/top-toolbar.component';
 
@@ -8,7 +9,7 @@ import { TopToolbarComponent } from './top-toolbar/top-toolbar.component';
     declarations: [TopToolbarComponent],
     imports: [
         CommonModule,
-        FlexLayoutModule
+        SharedModule
     ],
     exports: [TopToolbarComponent]
 })
