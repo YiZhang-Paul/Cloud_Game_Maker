@@ -18,10 +18,7 @@
         <div class="sprite-toolbar"></div>
 
         <div class="sprite-files" fxLayout="row wrap" fxLayoutAlign="space-between">
-            <div *ngFor="let file of files" fxLayout="column">
-                <app-image-display-panel [file]="file.raw"></app-image-display-panel>
-                <span>{{ file.name }}</span>
-            </div>
+            <app-sprite-thumbnail-item *ngFor="let file of files" [file]="file"></app-sprite-thumbnail-item>
         </div>
     </div>
 </div>
