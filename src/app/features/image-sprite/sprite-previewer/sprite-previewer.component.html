@@ -1,0 +1,5 @@
+<div class="container" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="15px">
+    <span>{{ file.name }}</span>
+
+    <img *ngIf="safeUrl" [src]="safeUrl" (load)="onImageLoaded()" />
+</div>
