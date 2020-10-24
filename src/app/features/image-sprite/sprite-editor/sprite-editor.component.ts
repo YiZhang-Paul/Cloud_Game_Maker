@@ -17,7 +17,7 @@ export class SpriteEditorComponent implements OnInit {
     @Input() public file: SpriteFile;
     @Input() public isEditMode = true;
     @Output() public overwrite = new EventEmitter<SpriteFile>();
-    @Output() public saveNew = new EventEmitter<SpriteFile>();
+    @Output() public saveAsNew = new EventEmitter<SpriteFile>();
     @Output() public cancel = new EventEmitter();
     @ViewChild('cropper') private _cropper: ImageCropperComponent;
     private _isCropperReady = false;
@@ -50,11 +50,10 @@ export class SpriteEditorComponent implements OnInit {
 
     public onNameEdit(name: string): void {
         if (!this._modifiedFile) {
-            this._modifiedFile = SpriteFile.fromBase64(name, this.file.imageSrc);
+            this._modifiedFile = SpriteFile.fromSpriteFile(this.file);
         }
-        else {
-            this._modifiedFile.name = name;
-        }
+
+        this._modifiedFile.name = name;
     }
 
     public onCropperReady(): void {
@@ -81,8 +80,12 @@ export class SpriteEditorComponent implements OnInit {
     }
 
     public onImageCropped(): void {
+        if (!this._modifiedFile) {
+            this._modifiedFile = SpriteFile.fromSpriteFile(this.file);
+        }
+
         const { base64 } = this._cropper.crop();
-        this._modifiedFile = SpriteFile.fromBase64(this.targetFile.name, base64);
+        this._modifiedFile.parseImageSrc(base64);
     }
 
     public onImageReset(): void {
@@ -107,7 +110,7 @@ export class SpriteEditorComponent implements OnInit {
             this.overwrite.emit(this._modifiedFile);
         }
         else if (value === actions[1].value) {
-            this.saveNew.emit(this._modifiedFile);
+            this.saveAsNew.emit(this._modifiedFile);
         }
     }
 }

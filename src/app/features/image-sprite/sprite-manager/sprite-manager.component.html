@@ -12,6 +12,8 @@
 
     <app-sprite-editor *ngIf="editing"
         [file]="editing"
+        (overwrite)="onFileEdit($event)"
+        (saveAsNew)="onFileEdit($event, true)"
         (cancel)="editing = null"
         cdkDragBoundary="body"
         cdkDrag>

@@ -26,6 +26,20 @@ export class SpriteManagerComponent {
         this._changeDetectorRef.markForCheck();
     }
 
+    public onFileEdit(file: SpriteFile, saveAsNew = false): void {
+        if (saveAsNew) {
+            this._files.push(file);
+
+            return;
+        }
+
+        const index = this._files.findIndex(_ => _.id === file.originated);
+
+        if (index !== -1) {
+            this._files[index] = file;
+        }
+    }
+
     public onFileImport(): void {
         this._files.push(this.previewing);
         this.previewing = null;
