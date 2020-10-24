@@ -7,6 +7,10 @@ export class SpriteFile {
     public type: string;
     public base64: string;
 
+    get imageSrc(): string {
+        return `data:${this.type};base64,${this.base64}`;
+    }
+
     public static async fromFileEntry(file: FileSystemFileEntry): Promise<SpriteFile> {
         const sprite = new SpriteFile();
         const blob: Blob = await new Promise(resolve => file.file(resolve));
