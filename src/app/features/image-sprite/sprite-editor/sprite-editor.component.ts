@@ -26,6 +26,12 @@ export class SpriteEditorComponent {
         return this._imageTransform;
     }
 
+    get currentScale(): string {
+        const scale = this._imageTransform.scale * 100;
+
+        return `${scale.toFixed(0)}%`;
+    }
+
     public onImageCropStart(): void {
         this.mode = this.modes.Crop;
         this.file.raw.file(_ => this._targetImage = _);
@@ -44,6 +50,10 @@ export class SpriteEditorComponent {
             flipH: isVertical ? flipH : !flipH,
             flipV: isVertical ? !flipV : flipV
         };
+    }
+
+    public onImageScale(value: number): void {
+        this._imageTransform = { ...this._imageTransform, scale: value / 3 };
     }
 
     public onImageCropped(event: ImageCroppedEvent): void {

@@ -27,10 +27,14 @@
         right: 1.5%;
     }
 
-    app-image-display-panel,
-    image-cropper {
+    app-image-display-panel {
         width: 75%;
         height: 80%;
+    }
+
+    .crop-panel {
+        width: 75%;
+        height: calc(80% + 30px);
     }
 
     & > div:last-of-type {

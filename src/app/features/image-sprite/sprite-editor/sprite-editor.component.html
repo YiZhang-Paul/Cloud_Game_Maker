@@ -26,13 +26,19 @@
 
             <app-image-display-panel *ngSwitchCase="modes.Readonly" [file]="file.raw"></app-image-display-panel>
 
-            <image-cropper *ngSwitchCase="modes.Crop"
-                format="png"
-                [imageFile]="targetImage"
-                [autoCrop]="false"
-                [transform]="imageTransform"
-                (imageCropped)="onImageCropped($event)">
-            </image-cropper>
+            <div *ngSwitchCase="modes.Crop" class="crop-panel" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="10px">
+                <image-cropper format="png"
+                    [imageFile]="targetImage"
+                    [autoCrop]="false"
+                    [transform]="imageTransform"
+                    (imageCropped)="onImageCropped($event)">
+                </image-cropper>
+
+                <div fxLayoutAlign="start center" fxLayoutGap="5px">
+                    <input type="range" min="1" max="15" value="3" (input)="onImageScale($event.target.value)" />
+                    <span>({{ currentScale }})</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
