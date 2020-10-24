@@ -26,7 +26,7 @@
                 </div>
 
                 <div fxLayoutAlign="center center" fxLayoutGap="5px">
-                    <button (click)="onImageSave()">Save</button>
+                    <button (click)="onImageSave()" [disabled]="!isModified">Save</button>
                     <button (click)="onImageCropped()">Crop</button>
                     <button (click)="onImageReset()">Reset</button>
                 </div>

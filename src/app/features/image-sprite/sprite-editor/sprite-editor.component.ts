@@ -30,6 +30,10 @@ export class SpriteEditorComponent implements OnInit {
         return this._modifiedFile || this.file;
     }
 
+    get isModified(): boolean {
+        return Boolean(this._modifiedFile);
+    }
+
     get isCropperReady(): boolean {
         return this._isCropperReady;
     }
@@ -89,6 +93,7 @@ export class SpriteEditorComponent implements OnInit {
     }
 
     public onImageReset(): void {
+        this._modifiedFile = null;
         this._transform = { scale: 1, rotate: 0, flipH: false, flipV: false };
     }
 
