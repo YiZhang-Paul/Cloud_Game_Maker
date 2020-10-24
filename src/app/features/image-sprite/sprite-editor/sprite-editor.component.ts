@@ -54,7 +54,7 @@ export class SpriteEditorComponent {
     }
 
     public onImageScale(value: number): void {
-        this._imageTransform = { ...this._imageTransform, scale: value / 3 };
+        this._imageTransform = { ...this._imageTransform, scale: value / 20 };
     }
 
     public onImageCropped(event: ImageCroppedEvent): void {

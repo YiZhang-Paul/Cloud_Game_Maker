@@ -31,7 +31,7 @@
                 </image-cropper>
 
                 <div *ngIf="isCropperReady" fxLayoutAlign="start center" fxLayoutGap="5px">
-                    <input type="range" min="1" max="15" value="3" (input)="onImageScale($event.target.value)" />
+                    <input type="range" min="10" max="60" value="20" (input)="onImageScale($event.target.value)" />
                     <span>({{ currentScale }})</span>
                 </div>
             </div>
