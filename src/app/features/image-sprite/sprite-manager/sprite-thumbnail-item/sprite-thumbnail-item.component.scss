@@ -29,7 +29,7 @@
         opacity: 1;
     }
 
-    app-image-display-panel {
+    & > img {
         margin: $inner-gap;
         min-height: $panel-height;
         max-height: $panel-height;

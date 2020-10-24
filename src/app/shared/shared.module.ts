@@ -6,12 +6,10 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 import { ImageCropperModule } from 'ngx-image-cropper';
 
 import { FilePickerComponent } from './components/buttons/file-picker/file-picker.component';
-import { ImageDisplayPanelComponent } from './components/panels/image-display-panel/image-display-panel.component';
 
 @NgModule({
     declarations: [
-        FilePickerComponent,
-        ImageDisplayPanelComponent
+        FilePickerComponent
     ],
     imports: [
         CommonModule,
@@ -25,8 +23,7 @@ import { ImageDisplayPanelComponent } from './components/panels/image-display-pa
         NgxFileDropModule,
         DragDropModule,
         ImageCropperModule,
-        FilePickerComponent,
-        ImageDisplayPanelComponent
+        FilePickerComponent
     ]
 })
 export class SharedModule { }

@@ -4,6 +4,6 @@
         <button (click)="delete.emit()">Delete</button>
     </div>
 
-    <app-image-display-panel [file]="file"></app-image-display-panel>
+    <img [src]="file.imageSrc" />
     <span>{{ file.name }}</span>
 </div>
