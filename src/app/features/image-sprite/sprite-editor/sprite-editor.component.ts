@@ -1,7 +1,11 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ImageCropperComponent, ImageTransform } from 'ngx-image-cropper';
 
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
+import { ConfirmPopupOption } from '../../../core/data-model/generic/options/confirm-popup-option';
+import { ConfirmActionOption } from '../../../core/data-model/generic/options/confirm-action-option';
+import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm-popup/confirm-popup.component';
 
 @Component({
     selector: 'app-sprite-editor',
@@ -12,11 +16,15 @@ import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 export class SpriteEditorComponent implements OnInit {
     @Input() public file: SpriteFile;
     @Input() public isEditMode = true;
+    @Output() public overwrite = new EventEmitter<SpriteFile>();
+    @Output() public saveNew = new EventEmitter<SpriteFile>();
     @Output() public cancel = new EventEmitter();
     @ViewChild('cropper') private _cropper: ImageCropperComponent;
     private _isCropperReady = false;
     private _transform: ImageTransform;
     private _modifiedFile: SpriteFile;
+
+    constructor(private _dialog: MatDialog) { }
 
     get targetFile(): SpriteFile {
         return this._modifiedFile || this.file;
@@ -79,5 +87,27 @@ export class SpriteEditorComponent implements OnInit {
 
     public onImageReset(): void {
         this._transform = { scale: 1, rotate: 0, flipH: false, flipV: false };
+    }
+
+    public async onImageSave(): Promise<void> {
+        const title = 'Overwrite existing sprite?';
+        const message = 'You can save the changes as a new sprite.';
+        const option = ['Overwrite', 'Save as New', 'Cancel'];
+        const actions = option.map((_, i) => new ConfirmActionOption(_, i));
+
+        const dialog = this._dialog.open(ConfirmPopupComponent, {
+            data: new ConfirmPopupOption(title, message, actions),
+            width: '350px',
+            height: '175px'
+        });
+
+        const value = await dialog.afterClosed().toPromise();
+
+        if (value === actions[0].value) {
+            this.overwrite.emit(this._modifiedFile);
+        }
+        else if (value === actions[1].value) {
+            this.saveNew.emit(this._modifiedFile);
+        }
     }
 }
