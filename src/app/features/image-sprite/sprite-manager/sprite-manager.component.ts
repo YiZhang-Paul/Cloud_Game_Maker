@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
@@ -14,13 +14,16 @@ export class SpriteManagerComponent {
     public editing: SpriteFile;
     private _files: SpriteFile[] = [];
 
+    constructor(private _changeDetectorRef: ChangeDetectorRef) { }
+
     get files(): SpriteFile[] {
         return this._files;
     }
 
-    public onFilePreview(files: NgxFileDropEntry[]): void {
+    public async onFilePreview(files: NgxFileDropEntry[]): Promise<void> {
         const file = files[0]?.fileEntry as FileSystemFileEntry;
-        this.previewing = new SpriteFile(file);
+        this.previewing = await SpriteFile.fromFileEntry(file);
+        this._changeDetectorRef.markForCheck();
     }
 
     public onFileImport(): void {
