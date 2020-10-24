@@ -18,11 +18,13 @@
     height: 100%;
 
     & > div {
+        padding-top: 7.5%;
         width: 100%;
     }
 
-    & > div:last-of-type {
-        padding-top: 15px;
+    app-editable-text-box {
+        position: absolute;
+        top: 2%;
     }
 
     & > button:first-of-type {

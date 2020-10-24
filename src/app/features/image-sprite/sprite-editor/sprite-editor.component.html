@@ -1,9 +1,6 @@
 <div class="container" fxLayout="column" fxLayoutAlign="start center">
-    <div fxLayoutAlign="center center" fxFlex="7.5">
-        <span>{{ targetFile.name }}</span>
-    </div>
-
     <ng-content></ng-content>
+    <app-editable-text-box [content]="targetFile.name"></app-editable-text-box>
     <button (click)="cancel.emit()">X</button>
 
     <div *ngIf="isEditMode" fxLayout="row" fxFlex="92.5">
