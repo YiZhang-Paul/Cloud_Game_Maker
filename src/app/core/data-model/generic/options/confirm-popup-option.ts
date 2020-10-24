@@ -1,13 +1,17 @@
+import { ConfirmActionOption } from './confirm-action-option';
+
 export class ConfirmPopupOption {
     public title = 'Are you sure?';
     public message: string;
-    public confirmText = 'Proceed';
-    public cancelText = 'Cancel';
 
-    constructor(title = '', message = '', confirmText = '', cancelText = '') {
+    public actions = [
+        new ConfirmActionOption('Proceed', true),
+        new ConfirmActionOption('Cancel', false),
+    ];
+
+    constructor(title = '', message = '', actions = []) {
         this.title = title || this.title;
         this.message = message;
-        this.confirmText = confirmText || this.confirmText;
-        this.cancelText = cancelText || this.cancelText;
+        this.actions = actions.length ? actions : this.actions;
     }
 }

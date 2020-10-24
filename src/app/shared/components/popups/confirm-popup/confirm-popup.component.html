@@ -4,7 +4,8 @@
     <div fxFlex></div>
 
     <div fxLayoutAlign="end center" fxLayoutGap="5px">
-        <button mat-dialog-close>{{ option.confirmText }}</button>
-        <button [mat-dialog-close]="true">{{ option.cancelText }}</button>
+        <button *ngFor="let action of option.actions" [mat-dialog-close]="action.value">
+            {{ action.text }}
+        </button>
     </div>
 </div>
