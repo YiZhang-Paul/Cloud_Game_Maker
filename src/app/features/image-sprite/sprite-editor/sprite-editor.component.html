@@ -1,4 +1,4 @@
-<div class="container" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="15px">
+<div class="container" fxLayout="column" fxLayoutAlign="start center">
     <div fxLayoutAlign="center center" fxFlex="7.5">
         <span>{{ file.name }}</span>
     </div>
@@ -6,37 +6,30 @@
     <ng-content></ng-content>
     <button (click)="cancel.emit()">X</button>
 
-    <div fxLayout="row" fxFlex>
-        <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="7px" fxFlex="15">
-            <button (click)="mode = modes.Readonly">View</button>
-            <button (click)="onImageCropStart()">Crop</button>
-
-            <ng-container *ngIf="mode === modes.Crop">
-                <button (click)="onImageRotate()">Rotate 90°</button>
-                <button (click)="onImageFlip()">Flip Horizontally</button>
-                <button (click)="onImageFlip(true)">Flip Vertically</button>
-            </ng-container>
+    <div *ngIf="isEditMode" fxLayout="row" fxFlex="92.5">
+        <div class="action-panel" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px" fxFlex="15">
+            <button (click)="onImageRotate()">Rotate 90°</button>
+            <button (click)="onImageFlip()">Flip Horizontally</button>
+            <button (click)="onImageFlip(true)">Flip Vertically</button>
         </div>
 
-        <div [ngSwitch]="mode" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="15px" fxFlex="85">
-            <app-image-display-panel *ngSwitchCase="modes.Readonly" [file]="file.raw"></app-image-display-panel>
+        <div class="crop-panel" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="10px" fxFlex="85">
+            <image-cropper #cropper
+                format="png"
+                [imageFile]="target"
+                [autoCrop]="false"
+                [transform]="transform"
+                (cropperReady)="onCropperReady()">
+            </image-cropper>
 
-            <div *ngSwitchCase="modes.Crop" class="crop-panel" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="10px">
-                <image-cropper #cropper
-                    format="png"
-                    [imageFile]="targetImage"
-                    [autoCrop]="false"
-                    [transform]="imageTransform"
-                    (cropperReady)="isCropperReady = true">
-                </image-cropper>
-
-                <div *ngIf="isCropperReady" fxLayoutAlign="start center" fxLayoutGap="5px">
+            <ng-container *ngIf="isCropperReady">
+                <div fxLayoutAlign="start center" fxLayoutGap="5px">
                     <input type="range" min="10" max="60" value="20" (input)="onImageScale($event.target.value)" />
-                    <span>({{ currentScale }})</span>
+                    <span>({{ scale }})</span>
                 </div>
 
                 <button (click)="onImageCropped()">Confirm</button>
-            </div>
+            </ng-container>
         </div>
     </div>
 </div>

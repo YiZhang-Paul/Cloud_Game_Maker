@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ImageCropperComponent, ImageTransform } from 'ngx-image-cropper';
 
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
-import { SpriteEditorMode } from '../../../core/enum/sprite-editor-mode.enum';
 
 @Component({
     selector: 'app-sprite-editor',
@@ -10,52 +9,60 @@ import { SpriteEditorMode } from '../../../core/enum/sprite-editor-mode.enum';
     styleUrls: ['./sprite-editor.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SpriteEditorComponent {
+export class SpriteEditorComponent implements OnInit {
     @Input() public file: SpriteFile;
+    @Input() public isEditMode = true;
     @Output() public cancel = new EventEmitter();
     @ViewChild('cropper') private _cropper: ImageCropperComponent;
-    public mode = SpriteEditorMode.Readonly;
-    public modes = SpriteEditorMode;
-    public isCropperReady = false;
-    private _targetImage: Blob;
-    private _imageTransform: ImageTransform = { scale: 1, rotate: 0, flipH: false, flipV: false };
+    private _isCropperReady = false;
+    private _target: Blob;
+    private _transform: ImageTransform = { scale: 1, rotate: 0, flipH: false, flipV: false };
 
-    get targetImage(): Blob {
-        return this._targetImage;
+    get isCropperReady(): boolean {
+        return this._isCropperReady;
     }
 
-    get imageTransform(): ImageTransform {
-        return this._imageTransform;
+    get target(): Blob {
+        return this._target;
     }
 
-    get currentScale(): string {
-        const scale = this._imageTransform.scale * 100;
+    get transform(): ImageTransform {
+        return this._transform;
+    }
+
+    get scale(): string {
+        const scale = this._transform.scale * 100;
 
         return `${scale.toFixed(0)}%`;
     }
 
-    public onImageCropStart(): void {
-        this.mode = this.modes.Crop;
-        this.file.raw.file(_ => this._targetImage = _);
+    public ngOnInit(): void {
+        if (this.isEditMode) {
+            this.file.raw.file(_ => this._target = _);
+        }
+    }
+
+    public onCropperReady(): void {
+        this._isCropperReady = true;
     }
 
     public onImageRotate(): void {
-        const rotate = (this._imageTransform.rotate + 90) % 360;
-        this._imageTransform = { ...this._imageTransform, rotate };
+        const rotate = (this._transform.rotate + 90) % 360;
+        this._transform = { ...this._transform, rotate };
     }
 
     public onImageFlip(isVertical = false): void {
-        const { flipH, flipV } = this._imageTransform;
+        const { flipH, flipV } = this._transform;
 
-        this._imageTransform = {
-            ...this._imageTransform,
+        this._transform = {
+            ...this._transform,
             flipH: isVertical ? flipH : !flipH,
             flipV: isVertical ? !flipV : flipV
         };
     }
 
     public onImageScale(value: number): void {
-        this._imageTransform = { ...this._imageTransform, scale: value / 20 };
+        this._transform = { ...this._transform, scale: value / 20 };
     }
 
     public onImageCropped(): void {
