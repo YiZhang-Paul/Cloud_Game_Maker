@@ -10,6 +10,12 @@
         <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="7px" fxFlex="15">
             <button (click)="mode = modes.Readonly">View</button>
             <button (click)="onImageCropStart()">Crop</button>
+
+            <ng-container *ngIf="mode === modes.Crop">
+                <button (click)="onImageRotate()">Rotate 90°</button>
+                <button (click)="onImageFlip()">Flip Horizontally</button>
+                <button (click)="onImageFlip(true)">Flip Vertically</button>
+            </ng-container>
         </div>
 
         <div [ngSwitch]="mode"
@@ -23,6 +29,8 @@
             <image-cropper *ngSwitchCase="modes.Crop"
                 format="png"
                 [imageFile]="targetImage"
+                [autoCrop]="false"
+                [transform]="imageTransform"
                 (imageCropped)="onImageCropped($event)">
             </image-cropper>
         </div>
