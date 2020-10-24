@@ -16,7 +16,7 @@
         <div class="crop-panel" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="10px" fxFlex="85">
             <image-cropper #cropper
                 format="png"
-                [imageFile]="target"
+                [imageBase64]="file.imageSrc"
                 [autoCrop]="false"
                 [transform]="transform"
                 (cropperReady)="onCropperReady()">
