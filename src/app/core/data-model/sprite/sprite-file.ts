@@ -4,6 +4,7 @@ import { FileSystemFileEntry } from 'ngx-file-drop';
 import { FileUtility } from '../../utility/file.utility';
 
 export class SpriteFile {
+    public originated: string;
     public id: string = uuid();
     public name: string;
     public type: string;
@@ -14,16 +15,11 @@ export class SpriteFile {
         return `data:${this.type};base64,${this.base64}`;
     }
 
-    public static fromBase64(name: string, base64: string): SpriteFile {
-        if (!base64.includes(',')) {
-            throw new Error('Missing type information in provided base64 string.');
-        }
-
+    public static fromSpriteFile(file: SpriteFile): SpriteFile {
         const sprite = new SpriteFile();
-        sprite.name = name.replace(/\.[^.]*$/g, '');
-        sprite.type = base64.split(',')[0].replace(/data:|;base64/g, '');
-        sprite.extension = sprite.type.includes('png') ? 'png' : 'jpg';
-        sprite.base64 = base64.split(',')[1];
+        sprite.originated = file.id;
+        sprite.name = file.name;
+        sprite.parseImageSrc(file.imageSrc);
 
         return sprite;
     }
@@ -37,5 +33,11 @@ export class SpriteFile {
         sprite.base64 = await FileUtility.toBase64(blob);
 
         return sprite;
+    }
+
+    public parseImageSrc(src: string): void {
+        this.type = src.split(',')[0].replace(/data:|;base64/g, '');
+        this.extension = this.type.includes('png') ? 'png' : 'jpg';
+        this.base64 = src.split(',')[1];
     }
 }
