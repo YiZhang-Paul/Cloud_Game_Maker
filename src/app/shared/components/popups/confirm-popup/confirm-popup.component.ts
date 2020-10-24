@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { ConfirmPopupOption } from '../../../../core/data-model/generic/options/confirm-popup-option';
 
@@ -9,7 +9,12 @@ import { ConfirmPopupOption } from '../../../../core/data-model/generic/options/
     styleUrls: ['./confirm-popup.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ConfirmPopupComponent {
+export class ConfirmPopupComponent implements OnInit {
 
-    constructor(@Inject(MAT_DIALOG_DATA) public option: ConfirmPopupOption) { }
+    constructor(private _dialogRef: MatDialogRef<ConfirmPopupComponent>,
+                @Inject(MAT_DIALOG_DATA) public option: ConfirmPopupOption) { }
+
+    public ngOnInit(): void {
+        this._dialogRef.disableClose = true;
+    }
 }
