@@ -5,12 +5,16 @@
         (cancel)="previewing = null"
         (confirm)="onFileImport()"
         cdkDrag>
+
+        <div cdkDragHandle></div>
     </app-sprite-previewer>
 
     <app-sprite-editor *ngIf="editing"
         [file]="editing"
         (cancel)="editing = null"
         cdkDrag>
+
+        <div cdkDragHandle></div>
     </app-sprite-editor>
 
     <div *ngIf="!files.length" fxLayoutAlign="center center" fxFlex>
