@@ -1,13 +1,19 @@
 import { FileSystemFileEntry } from 'ngx-file-drop';
 
+import { FileUtility } from '../../utility/file.utility';
+
 export class SpriteFile {
-    public raw: FileSystemFileEntry;
     public name: string;
     public type: string;
     public base64: string;
 
-    constructor(raw: FileSystemFileEntry, name = '') {
-        this.raw = raw;
-        this.name = name || raw.name;
+    public static async fromFileEntry(file: FileSystemFileEntry): Promise<SpriteFile> {
+        const sprite = new SpriteFile();
+        const blob: Blob = await new Promise(resolve => file.file(resolve));
+        sprite.base64 = await FileUtility.toBase64(blob);
+        sprite.type = blob.type;
+        sprite.name = file.name;
+
+        return sprite;
     }
 }
