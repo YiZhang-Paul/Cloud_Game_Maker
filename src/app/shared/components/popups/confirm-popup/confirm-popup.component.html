@@ -1,0 +1,10 @@
+<div class="container" fxLayout="column" fxLayoutGap="20px">
+    <span>{{ option.title }}</span>
+    <span>{{ option.message }}</span>
+    <div fxFlex></div>
+
+    <div fxLayoutAlign="end center" fxLayoutGap="5px">
+        <button mat-dialog-close>{{ option.confirmText }}</button>
+        <button [mat-dialog-close]="true">{{ option.cancelText }}</button>
+    </div>
+</div>
