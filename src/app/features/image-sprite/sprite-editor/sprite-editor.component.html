@@ -28,7 +28,10 @@
                     <span>({{ scale }})</span>
                 </div>
 
-                <button (click)="onImageCropped()">Confirm</button>
+                <div fxLayoutAlign="center center" fxLayoutGap="5px">
+                    <button (click)="onImageCropped()">Confirm</button>
+                    <button (click)="onImageReset()">Reset</button>
+                </div>
             </ng-container>
         </div>
     </div>

@@ -16,7 +16,7 @@ export class SpriteEditorComponent implements OnInit {
     @ViewChild('cropper') private _cropper: ImageCropperComponent;
     private _isCropperReady = false;
     private _target: Blob;
-    private _transform: ImageTransform = { scale: 1, rotate: 0, flipH: false, flipV: false };
+    private _transform: ImageTransform;
 
     get isCropperReady(): boolean {
         return this._isCropperReady;
@@ -37,6 +37,8 @@ export class SpriteEditorComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.onImageReset();
+
         if (this.isEditMode) {
             this.file.raw.file(_ => this._target = _);
         }
@@ -70,5 +72,9 @@ export class SpriteEditorComponent implements OnInit {
         this.file.type = 'image/png';
         this.file.base64 = cropped.base64;
         this.file.raw = null;
+    }
+
+    public onImageReset(): void {
+        this._transform = { scale: 1, rotate: 0, flipH: false, flipV: false };
     }
 }
