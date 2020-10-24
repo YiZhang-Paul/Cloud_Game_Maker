@@ -1,8 +1,10 @@
+import { v4 as uuid } from 'uuid';
 import { FileSystemFileEntry } from 'ngx-file-drop';
 
 import { FileUtility } from '../../utility/file.utility';
 
 export class SpriteFile {
+    public id: string = uuid();
     public name: string;
     public type: string;
     public extension: string;
