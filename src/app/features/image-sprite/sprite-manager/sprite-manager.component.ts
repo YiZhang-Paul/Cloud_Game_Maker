@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
+import { FileUtility } from '../../../core/utility/file.utility';
 
 @Component({
     selector: 'app-sprite-manager',
@@ -27,9 +28,11 @@ export class SpriteManagerComponent {
     }
 
     public onFileEdit(file: SpriteFile, saveAsNew = false): void {
+        const names = this._files.map(_ => _.name);
         this.editing = null;
 
         if (saveAsNew) {
+            file.name = FileUtility.handleDuplicateName(names, file.name);
             this._files.push(file);
 
             return;
@@ -38,6 +41,8 @@ export class SpriteManagerComponent {
         const index = this._files.findIndex(_ => _.id === file.originated);
 
         if (index !== -1) {
+            const hasNewName = file.name !== this._files[index].name;
+            file.name = hasNewName ? FileUtility.handleDuplicateName(names, file.name) : file.name;
             this._files[index] = file;
         }
     }
