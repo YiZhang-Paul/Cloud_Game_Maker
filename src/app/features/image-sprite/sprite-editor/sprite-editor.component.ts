@@ -74,7 +74,7 @@ export class SpriteEditorComponent implements OnInit {
 
     public onImageCropped(): void {
         const { base64 } = this._cropper.crop();
-        this._modifiedFile = SpriteFile.fromBase64(this.file.name, base64);
+        this._modifiedFile = SpriteFile.fromBase64(this.targetFile.name, base64);
     }
 
     public onImageReset(): void {
