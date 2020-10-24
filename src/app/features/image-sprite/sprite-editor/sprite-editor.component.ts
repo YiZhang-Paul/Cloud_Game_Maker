@@ -15,18 +15,15 @@ export class SpriteEditorComponent {
     @Output() public cancel = new EventEmitter();
     public mode = SpriteEditorMode.Readonly;
     public modes = SpriteEditorMode;
-    private _imageChangedEvent: { target: { files: Blob[] } };
+    private _targetImage: Blob;
 
-    get imageChangedEvent(): { target: { files: Blob[] } } {
-        return this._imageChangedEvent;
+    get targetImage(): Blob {
+        return this._targetImage;
     }
 
     public onImageCropStart(): void {
         this.mode = this.modes.Crop;
-
-        this.file.raw.file(_ => {
-            this._imageChangedEvent = { target: { files: [_] } };
-        });
+        this.file.raw.file(_ => this._targetImage = _);
     }
 
     public onImageCropped(event: ImageCroppedEvent): void {

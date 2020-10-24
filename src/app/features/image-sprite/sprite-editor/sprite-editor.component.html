@@ -22,7 +22,7 @@
 
             <image-cropper *ngSwitchCase="modes.Crop"
                 format="png"
-                [imageChangedEvent]="imageChangedEvent"
+                [imageFile]="targetImage"
                 (imageCropped)="onImageCropped($event)">
             </image-cropper>
         </div>
