@@ -16,6 +16,11 @@ export class SpriteEditorComponent implements OnInit {
     @ViewChild('cropper') private _cropper: ImageCropperComponent;
     private _isCropperReady = false;
     private _transform: ImageTransform;
+    private _modifiedFile: SpriteFile;
+
+    get targetFile(): SpriteFile {
+        return this._modifiedFile || this.file;
+    }
 
     get isCropperReady(): boolean {
         return this._isCropperReady;
@@ -59,9 +64,8 @@ export class SpriteEditorComponent implements OnInit {
     }
 
     public onImageCropped(): void {
-        const cropped = this._cropper.crop();
-        this.file.type = 'image/png';
-        this.file.base64 = cropped.base64;
+        const { base64 } = this._cropper.crop();
+        this._modifiedFile = SpriteFile.fromBase64(this.file.name, base64);
     }
 
     public onImageReset(): void {

@@ -1,6 +1,6 @@
 <div class="container" fxLayout="column" fxLayoutAlign="start center">
     <div fxLayoutAlign="center center" fxFlex="7.5">
-        <span>{{ file.name }}</span>
+        <span>{{ targetFile.name }}</span>
     </div>
 
     <ng-content></ng-content>
@@ -16,7 +16,7 @@
         <div class="crop-panel" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="10px" fxFlex="85">
             <image-cropper #cropper
                 format="png"
-                [imageBase64]="file.imageSrc"
+                [imageBase64]="targetFile.imageSrc"
                 [autoCrop]="false"
                 [transform]="transform"
                 (cropperReady)="onCropperReady()">

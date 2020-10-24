@@ -11,12 +11,25 @@ export class SpriteFile {
         return `data:${this.type};base64,${this.base64}`;
     }
 
-    public static async fromFileEntry(file: FileSystemFileEntry): Promise<SpriteFile> {
+    public static fromBase64(name: string, base64: string): SpriteFile {
+        if (!base64.includes(',')) {
+            throw new Error('Missing type information in provided base64 string.');
+        }
+
         const sprite = new SpriteFile();
+        sprite.name = name;
+        sprite.type = base64.split(',')[0].replace(/data:|;base64/g, '');
+        sprite.base64 = base64.split(',')[1];
+
+        return sprite;
+    }
+
+    public static async fromFileEntry(file: FileSystemFileEntry): Promise<SpriteFile> {
         const blob: Blob = await new Promise(resolve => file.file(resolve));
-        sprite.base64 = await FileUtility.toBase64(blob);
-        sprite.type = blob.type;
+        const sprite = new SpriteFile();
         sprite.name = file.name;
+        sprite.type = blob.type;
+        sprite.base64 = await FileUtility.toBase64(blob);
 
         return sprite;
     }
