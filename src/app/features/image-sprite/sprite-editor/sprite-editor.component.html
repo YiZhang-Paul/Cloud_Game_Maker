@@ -1,6 +1,6 @@
 <div class="container" fxLayout="column" fxLayoutAlign="start center">
     <ng-content></ng-content>
-    <app-editable-text-box [content]="targetFile.name"></app-editable-text-box>
+    <app-editable-text-box [content]="targetFile.name" (contentEdit)="onNameEdit($event)"></app-editable-text-box>
     <button (click)="cancel.emit()">X</button>
 
     <div *ngIf="isEditMode" fxLayout="row" fxFlex="92.5">

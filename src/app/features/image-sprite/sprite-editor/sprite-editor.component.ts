@@ -40,6 +40,15 @@ export class SpriteEditorComponent implements OnInit {
         this.onImageReset();
     }
 
+    public onNameEdit(name: string): void {
+        if (!this._modifiedFile) {
+            this._modifiedFile = SpriteFile.fromBase64(name, this.file.imageSrc);
+        }
+        else {
+            this._modifiedFile.name = name;
+        }
+    }
+
     public onCropperReady(): void {
         this._isCropperReady = true;
     }
