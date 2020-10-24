@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
@@ -16,6 +17,7 @@ import { EditableTextBoxComponent } from './components/inputs/editable-text-box/
     ],
     imports: [
         CommonModule,
+        BrowserAnimationsModule,
         FlexLayoutModule,
         FormsModule,
         NgxFileDropModule,
@@ -23,6 +25,8 @@ import { EditableTextBoxComponent } from './components/inputs/editable-text-box/
         ImageCropperModule
     ],
     exports: [
+        CommonModule,
+        BrowserAnimationsModule,
         FlexLayoutModule,
         NgxFileDropModule,
         DragDropModule,
