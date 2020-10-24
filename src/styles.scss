@@ -5,3 +5,7 @@ html, body {
     padding: 0;
     box-sizing: border-box;
 }
+
+.cdk-drag {
+    z-index: 9999;
+}

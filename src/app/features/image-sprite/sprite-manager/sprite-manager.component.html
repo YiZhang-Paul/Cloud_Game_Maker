@@ -4,6 +4,7 @@
         [confirmAction]="'Import'"
         (cancel)="previewing = null"
         (confirm)="onFileImport()"
+        cdkDragBoundary="body"
         cdkDrag>
 
         <div cdkDragHandle></div>
@@ -12,6 +13,7 @@
     <app-sprite-editor *ngIf="editing"
         [file]="editing"
         (cancel)="editing = null"
+        cdkDragBoundary="body"
         cdkDrag>
 
         <div cdkDragHandle></div>
