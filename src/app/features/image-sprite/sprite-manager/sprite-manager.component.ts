@@ -27,6 +27,8 @@ export class SpriteManagerComponent {
     }
 
     public onFileEdit(file: SpriteFile, saveAsNew = false): void {
+        this.editing = null;
+
         if (saveAsNew) {
             this._files.push(file);
 
