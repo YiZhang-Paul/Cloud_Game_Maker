@@ -22,11 +22,11 @@
             <app-image-display-panel *ngSwitchCase="modes.Readonly" [file]="file.raw"></app-image-display-panel>
 
             <div *ngSwitchCase="modes.Crop" class="crop-panel" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="10px">
-                <image-cropper format="png"
+                <image-cropper #cropper
+                    format="png"
                     [imageFile]="targetImage"
                     [autoCrop]="false"
                     [transform]="imageTransform"
-                    (imageCropped)="onImageCropped($event)"
                     (cropperReady)="isCropperReady = true">
                 </image-cropper>
 
@@ -34,6 +34,8 @@
                     <input type="range" min="10" max="60" value="20" (input)="onImageScale($event.target.value)" />
                     <span>({{ currentScale }})</span>
                 </div>
+
+                <button (click)="onImageCropped()">Confirm</button>
             </div>
         </div>
     </div>

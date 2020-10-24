@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ImageCropperComponent, ImageTransform } from 'ngx-image-cropper';
 
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 import { SpriteEditorMode } from '../../../core/enum/sprite-editor-mode.enum';
@@ -13,6 +13,7 @@ import { SpriteEditorMode } from '../../../core/enum/sprite-editor-mode.enum';
 export class SpriteEditorComponent {
     @Input() public file: SpriteFile;
     @Output() public cancel = new EventEmitter();
+    @ViewChild('cropper') private _cropper: ImageCropperComponent;
     public mode = SpriteEditorMode.Readonly;
     public modes = SpriteEditorMode;
     public isCropperReady = false;
@@ -57,7 +58,10 @@ export class SpriteEditorComponent {
         this._imageTransform = { ...this._imageTransform, scale: value / 20 };
     }
 
-    public onImageCropped(event: ImageCroppedEvent): void {
-        console.log(event);
+    public onImageCropped(): void {
+        const cropped = this._cropper.crop();
+        this.file.type = 'image/png';
+        this.file.base64 = cropped.base64;
+        this.file.raw = null;
     }
 }
