@@ -18,12 +18,7 @@
             </ng-container>
         </div>
 
-        <div [ngSwitch]="mode"
-            fxLayout="column"
-            fxLayoutAlign="start center"
-            fxLayoutGap="15px"
-            fxFlex="85">
-
+        <div [ngSwitch]="mode" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="15px" fxFlex="85">
             <app-image-display-panel *ngSwitchCase="modes.Readonly" [file]="file.raw"></app-image-display-panel>
 
             <div *ngSwitchCase="modes.Crop" class="crop-panel" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="10px">
@@ -31,10 +26,11 @@
                     [imageFile]="targetImage"
                     [autoCrop]="false"
                     [transform]="imageTransform"
-                    (imageCropped)="onImageCropped($event)">
+                    (imageCropped)="onImageCropped($event)"
+                    (cropperReady)="isCropperReady = true">
                 </image-cropper>
 
-                <div fxLayoutAlign="start center" fxLayoutGap="5px">
+                <div *ngIf="isCropperReady" fxLayoutAlign="start center" fxLayoutGap="5px">
                     <input type="range" min="1" max="15" value="3" (input)="onImageScale($event.target.value)" />
                     <span>({{ currentScale }})</span>
                 </div>

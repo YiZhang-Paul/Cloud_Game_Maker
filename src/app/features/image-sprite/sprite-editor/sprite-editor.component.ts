@@ -15,6 +15,7 @@ export class SpriteEditorComponent {
     @Output() public cancel = new EventEmitter();
     public mode = SpriteEditorMode.Readonly;
     public modes = SpriteEditorMode;
+    public isCropperReady = false;
     private _targetImage: Blob;
     private _imageTransform: ImageTransform = { scale: 1, rotate: 0, flipH: false, flipV: false };
 
