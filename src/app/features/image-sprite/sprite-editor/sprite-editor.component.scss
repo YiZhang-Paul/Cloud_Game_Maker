@@ -1,0 +1,47 @@
+@import '../../../../styles/presets.scss';
+
+:host,
+.container {
+    @include drag-panel-style;
+}
+
+:host ::ng-deep .cdk-drag-handle {
+    position: absolute;
+    width: 100%;
+    height: 7.5%;
+    cursor: move;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    & > div {
+        padding-top: 7.5%;
+        width: 100%;
+    }
+
+    app-editable-text-box {
+        position: absolute;
+        top: 2%;
+    }
+
+    & > button:first-of-type {
+        position: absolute;
+        top: 2%;
+        right: 1.5%;
+    }
+
+    .action-panel {
+        padding-top: 20px;
+    }
+
+    .crop-panel {
+        height: 90%;
+    }
+
+    image-cropper {
+        width: 90%;
+    }
+}

@@ -1,0 +1,10 @@
+<div class="container" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="15px">
+    <div fxLayoutAlign="center center" fxFlex="7.5">
+        <span>{{ file.name }}</span>
+    </div>
+
+    <ng-content></ng-content>
+    <img [src]="file.imageSrc" />
+    <button (click)="cancel.emit()">X</button>
+    <button (click)="confirm.emit()">{{ confirmAction }}</button>
+</div>

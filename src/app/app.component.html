@@ -1,0 +1,14 @@
+<div class="container" fxLayout="column">
+    <app-top-toolbar (createScene)="onCreateScene()"></app-top-toolbar>
+
+    <div class="content" fxLayout="row" fxFlex>
+        <app-sprite-manager fxFlex="20"></app-sprite-manager>
+
+        <div fxLayout="column" fxFlex="60">
+            <app-scene-builder [scene]="activeScene" fxFlex="75"></app-scene-builder>
+            <div fxFlex="25"></div>
+        </div>
+
+        <div fxFlex="20"></div>
+    </div>
+</div>

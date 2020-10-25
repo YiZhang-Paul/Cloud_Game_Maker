@@ -1,0 +1,10 @@
+<div *ngIf="!isEditMode" fxLayoutAlign="start center" fxLayoutGap="5px">
+    <span>{{ content }}</span>
+    <button (click)="onEditToggle()">Edit</button>
+</div>
+
+<div *ngIf="isEditMode" fxLayoutAlign="start center" fxLayoutGap="5px">
+    <input type="text" [(ngModel)]="edited" />
+    <button (click)="onEditToggle(true)">Save</button>
+    <button (click)="onEditToggle()">Cancel</button>
+</div>

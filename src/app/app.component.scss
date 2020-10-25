@@ -1,0 +1,21 @@
+.container {
+    width: 100%;
+    height: 100%;
+
+    app-top-toolbar {
+        height: 60px;
+        background-color: lightcoral;
+    }
+
+    .content {
+        background-color: lightgray;
+    }
+
+    app-scene-builder {
+        background-color: lightblue;
+    }
+
+    & > div:first-of-type > div:first-of-type {
+        background-color: lightcoral;
+    }
+}

@@ -1,0 +1,36 @@
+<div class="container" fxLayout="column" fxLayoutAlign="start center">
+    <ng-content></ng-content>
+    <app-editable-text-box [content]="targetFile.name" (contentEdit)="onNameEdit($event)"></app-editable-text-box>
+    <button (click)="cancel.emit()">X</button>
+
+    <div *ngIf="isEditMode" fxLayout="row" fxFlex="92.5">
+        <div class="action-panel" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px" fxFlex="15">
+            <button (click)="onImageRotate()">Rotate 90°</button>
+            <button (click)="onImageFlip()">Flip Horizontally</button>
+            <button (click)="onImageFlip(true)">Flip Vertically</button>
+        </div>
+
+        <div class="crop-panel" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="10px" fxFlex="85">
+            <image-cropper #cropper
+                format="png"
+                [imageBase64]="targetFile.imageSrc"
+                [autoCrop]="false"
+                [transform]="transform"
+                (cropperReady)="onCropperReady()">
+            </image-cropper>
+
+            <ng-container *ngIf="isCropperReady">
+                <div fxLayoutAlign="start center" fxLayoutGap="5px">
+                    <input type="range" min="10" max="60" value="20" (input)="onImageScale($event.target.value)" />
+                    <span>({{ scale }})</span>
+                </div>
+
+                <div fxLayoutAlign="center center" fxLayoutGap="5px">
+                    <button (click)="onImageSave()" [disabled]="!isModified">Save</button>
+                    <button (click)="onImageCropped()">Crop</button>
+                    <button (click)="onImageReset()">Reset</button>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

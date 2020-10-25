@@ -1,0 +1,9 @@
+<div class="container" fxLayout="column" fxLayoutAlign="space-between">
+    <div fxLayoutAlign="center center" fxLayoutGap="5px">
+        <button (click)="editStart.emit()">Edit</button>
+        <button (click)="delete.emit()">Delete</button>
+    </div>
+
+    <img [src]="file.imageSrc" />
+    <span fxFlexAlign="center">{{ file.name }}</span>
+</div>
