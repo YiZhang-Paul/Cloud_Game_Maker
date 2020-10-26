@@ -7,12 +7,13 @@ export class SpriteFile {
     public originated: string;
     public id: string = uuid();
     public name: string;
-    public type: string;
+    public content: Blob;
+    public mime: string;
     public extension: string;
     public base64: string;
 
     get imageSrc(): string {
-        return `data:${this.type};base64,${this.base64}`;
+        return `data:${this.mime};base64,${this.base64}`;
     }
 
     public static fromSpriteFile(file: SpriteFile, fromRemote = false): SpriteFile {
@@ -20,7 +21,8 @@ export class SpriteFile {
         sprite.originated = fromRemote ? sprite.originated : file.id;
         sprite.id = fromRemote ? file.id : sprite.id;
         sprite.name = file.name;
-        sprite.type = file.type;
+        sprite.content = new Blob([sprite.content]);
+        sprite.mime = file.mime;
         sprite.extension = file.extension;
         sprite.base64 = file.base64;
 
@@ -32,19 +34,19 @@ export class SpriteFile {
     }
 
     public static async fromFileEntry(file: FileSystemFileEntry): Promise<SpriteFile> {
-        const blob: Blob = await new Promise(resolve => file.file(resolve));
         const sprite = new SpriteFile();
         sprite.name = file.name.replace(/\.[^.]*$/g, '');
-        sprite.type = blob.type;
-        sprite.extension = sprite.type.includes('png') ? 'png' : 'jpg';
-        sprite.base64 = await FileUtility.toBase64(blob);
+        sprite.content = await new Promise(resolve => file.file(resolve));
+        sprite.mime = sprite.content.type;
+        sprite.extension = sprite.mime.includes('png') ? 'png' : 'jpg';
+        sprite.base64 = await FileUtility.toBase64(sprite.content);
 
         return sprite;
     }
 
     public parseImageSrc(src: string): void {
-        this.type = src.split(',')[0].replace(/data:|;base64/g, '');
-        this.extension = this.type.includes('png') ? 'png' : 'jpg';
+        this.mime = src.split(',')[0].replace(/data:|;base64/g, '');
+        this.extension = this.mime.includes('png') ? 'png' : 'jpg';
         this.base64 = src.split(',')[1];
     }
 }
