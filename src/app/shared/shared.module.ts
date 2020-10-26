@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { ImageCropperModule } from 'ngx-image-cropper';
 
@@ -22,8 +24,10 @@ import { ConfirmPopupComponent } from './components/popups/confirm-popup/confirm
         CommonModule,
         BrowserAnimationsModule,
         FlexLayoutModule,
+        HttpClientModule,
         FormsModule,
         MatDialogModule,
+        MatSnackBarModule,
         NgxFileDropModule,
         DragDropModule,
         ImageCropperModule
@@ -32,8 +36,10 @@ import { ConfirmPopupComponent } from './components/popups/confirm-popup/confirm
         CommonModule,
         BrowserAnimationsModule,
         FlexLayoutModule,
+        HttpClientModule,
         FormsModule,
         MatDialogModule,
+        MatSnackBarModule,
         NgxFileDropModule,
         DragDropModule,
         ImageCropperModule,
