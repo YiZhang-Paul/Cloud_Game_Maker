@@ -9,11 +9,6 @@ export class SpriteFile {
     public mime: string;
     public extension: string;
     public url: string;
-    public base64: string;
-
-    get imageSrc(): string {
-        return `data:${this.mime};base64,${this.base64}`;
-    }
 
     public static fromSpriteFile(file: SpriteFile, fromRemote = false): SpriteFile {
         const sprite = new SpriteFile();
