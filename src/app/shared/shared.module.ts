@@ -13,12 +13,14 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { FilePickerComponent } from './components/buttons/file-picker/file-picker.component';
 import { EditableTextBoxComponent } from './components/inputs/editable-text-box/editable-text-box.component';
 import { ConfirmPopupComponent } from './components/popups/confirm-popup/confirm-popup.component';
+import { ImageBlobDisplayComponent } from './components/inputs/image-blob-display/image-blob-display.component';
 
 @NgModule({
     declarations: [
         FilePickerComponent,
         EditableTextBoxComponent,
-        ConfirmPopupComponent
+        ConfirmPopupComponent,
+        ImageBlobDisplayComponent
     ],
     imports: [
         CommonModule,
@@ -44,7 +46,8 @@ import { ConfirmPopupComponent } from './components/popups/confirm-popup/confirm
         DragDropModule,
         ImageCropperModule,
         FilePickerComponent,
-        EditableTextBoxComponent
+        EditableTextBoxComponent,
+        ImageBlobDisplayComponent
     ]
 })
 export class SharedModule { }
