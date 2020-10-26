@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 
@@ -11,7 +11,7 @@ import { CloudStorageHttpService } from '../../../core/service/http/cloud-storag
     templateUrl: './sprite-manager.component.html',
     styleUrls: ['./sprite-manager.component.scss']
 })
-export class SpriteManagerComponent {
+export class SpriteManagerComponent implements OnInit {
     public previewing: SpriteFile;
     public editing: SpriteFile;
     private _files: SpriteFile[] = [];
@@ -20,6 +20,10 @@ export class SpriteManagerComponent {
 
     get files(): SpriteFile[] {
         return this._files;
+    }
+
+    public async ngOnInit(): Promise<void> {
+        this._files = await this._cloudStorageHttp.getSprites();
     }
 
     public async onFilePreview(files: NgxFileDropEntry[]): Promise<void> {
