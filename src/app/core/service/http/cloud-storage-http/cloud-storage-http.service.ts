@@ -15,8 +15,9 @@ export class CloudStorageHttpService {
     public async getSprites(): Promise<SpriteFile[]> {
         try {
             const endpoint = `${this._api}/sprites`;
+            const sprites = await this._http.get<SpriteFile[]>(endpoint).toPromise();
 
-            return await this._http.get<SpriteFile[]>(endpoint).toPromise();
+            return sprites.map(_ => SpriteFile.fromSpriteFile(_, true));
         }
         catch {
             return [];

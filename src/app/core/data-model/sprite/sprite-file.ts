@@ -15,11 +15,18 @@ export class SpriteFile {
         return `data:${this.type};base64,${this.base64}`;
     }
 
-    public static fromSpriteFile(file: SpriteFile): SpriteFile {
+    public static fromSpriteFile(file: SpriteFile, fromRemote = false): SpriteFile {
         const sprite = new SpriteFile();
-        sprite.originated = file.id;
+        sprite.originated = fromRemote ? sprite.originated : file.id;
+        sprite.id = fromRemote ? file.id : sprite.id;
         sprite.name = file.name;
-        sprite.parseImageSrc(file.imageSrc);
+        sprite.type = file.type;
+        sprite.extension = file.extension;
+        sprite.base64 = file.base64;
+
+        if (file.imageSrc) {
+            sprite.parseImageSrc(file.imageSrc);
+        }
 
         return sprite;
     }
