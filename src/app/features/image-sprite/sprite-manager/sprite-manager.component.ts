@@ -32,22 +32,22 @@ export class SpriteManagerComponent implements OnInit {
     }
 
     public async onFileEdit(file: SpriteFile, saveAsNew = false): Promise<void> {
-        let saved = false;
+        let succeeded = false;
 
         if (saveAsNew) {
-            saved = await this.saveFile(file);
+            succeeded = await this.addFile(file);
         }
         else {
-            saved = await this.updateFile(file);
+            succeeded = await this.updateFile(file);
         }
 
-        if (saved) {
+        if (succeeded) {
             this.editing = null;
         }
     }
 
     public async onFileImport(): Promise<void> {
-        if (await this.saveFile(this.previewing)) {
+        if (await this.addFile(this.previewing)) {
             this.previewing = null;
         }
     }
@@ -62,7 +62,7 @@ export class SpriteManagerComponent implements OnInit {
         this._files = this._files.filter(_ => _ !== file);
     }
 
-    private async saveFile(file: SpriteFile): Promise<boolean> {
+    private async addFile(file: SpriteFile): Promise<boolean> {
         const names = this._files.map(_ => _.name);
         file.name = FileUtility.handleDuplicateName(names, file.name);
         const id = await this._cloudStorageHttp.addSprite(file);
@@ -72,7 +72,7 @@ export class SpriteManagerComponent implements OnInit {
             this._files.unshift(file);
         }
         else {
-            this._snackbar.open('Failed to save sprite file.', 'Ok');
+            this._snackbar.open('Failed to add sprite file.', 'Ok');
         }
 
         return Boolean(id);
