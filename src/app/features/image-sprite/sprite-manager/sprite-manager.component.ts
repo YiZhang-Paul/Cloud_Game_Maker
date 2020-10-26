@@ -31,13 +31,11 @@ export class SpriteManagerComponent implements OnInit {
         this.previewing = await SpriteFile.fromFileEntry(file);
     }
 
-    public onFileEdit(file: SpriteFile, saveAsNew = false): void {
-        const names = this._files.map(_ => _.name);
+    public async onFileEdit(file: SpriteFile, saveAsNew = false): Promise<void> {
         this.editing = null;
 
         if (saveAsNew) {
-            file.name = FileUtility.handleDuplicateName(names, file.name);
-            this._files.push(file);
+            await this.saveFile(file);
 
             return;
         }
@@ -45,6 +43,7 @@ export class SpriteManagerComponent implements OnInit {
         const index = this._files.findIndex(_ => _.id === file.originated);
 
         if (index !== -1) {
+            const names = this._files.map(_ => _.name);
             const hasNewName = file.name !== this._files[index].name;
             file.name = hasNewName ? FileUtility.handleDuplicateName(names, file.name) : file.name;
             this._files[index] = file;
@@ -52,14 +51,24 @@ export class SpriteManagerComponent implements OnInit {
     }
 
     public async onFileImport(): Promise<void> {
-        if (!await this._cloudStorageHttp.addSprite(this.previewing)) {
-            this._snackbar.open('Failed to import sprite file.', 'Ok');
+        if (await this.saveFile(this.previewing)) {
+            this.previewing = null;
+        }
+    }
 
-            return;
+    private async saveFile(file: SpriteFile): Promise<boolean> {
+        const names = this._files.map(_ => _.name);
+        file.name = FileUtility.handleDuplicateName(names, file.name);
+        const saved = await this._cloudStorageHttp.addSprite(file);
+
+        if (saved) {
+            this._files.unshift(file);
+        }
+        else {
+            this._snackbar.open('Failed to save sprite file.', 'Ok');
         }
 
-        this._files.push(this.previewing);
-        this.previewing = null;
+        return saved;
     }
 
     public async onFileDelete(file: SpriteFile): Promise<void> {
