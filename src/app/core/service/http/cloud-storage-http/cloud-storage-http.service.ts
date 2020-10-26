@@ -40,7 +40,10 @@ export class CloudStorageHttpService {
 
     public async updateSprite(sprite: SpriteFile): Promise<string> {
         try {
-            const endpoint = `${this._api}/sprites`;
+            const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.originated)}`;
+            const data = new FormData();
+            data.append('file', sprite.content);
+            data.append('spriteJson', JSON.stringify({ ...sprite, content: null }));
 
             return await this._http.put(endpoint, sprite, { responseType: 'text' }).toPromise();
         }
