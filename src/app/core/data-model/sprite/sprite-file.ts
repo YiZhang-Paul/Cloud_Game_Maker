@@ -1,8 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { FileSystemFileEntry } from 'ngx-file-drop';
 
-import { FileUtility } from '../../utility/file.utility';
-
 export class SpriteFile {
     public originated: string;
     public id: string = uuid();
@@ -10,6 +8,7 @@ export class SpriteFile {
     public content: Blob;
     public mime: string;
     public extension: string;
+    public url: string;
     public base64: string;
 
     get imageSrc(): string {
@@ -21,13 +20,10 @@ export class SpriteFile {
         sprite.originated = fromRemote ? sprite.originated : file.id;
         sprite.id = fromRemote ? file.id : sprite.id;
         sprite.name = file.name;
-        sprite.content = new Blob([sprite.content]);
+        sprite.content = fromRemote ? sprite.content : new Blob([file.content], { type: file.content.type });
         sprite.mime = file.mime;
         sprite.extension = file.extension;
-
-        if (file.imageSrc) {
-            sprite.parseImageSrc(file.imageSrc);
-        }
+        sprite.url = file.url;
 
         return sprite;
     }
