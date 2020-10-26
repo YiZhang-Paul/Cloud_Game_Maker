@@ -29,7 +29,7 @@ export class CloudStorageHttpService {
             const endpoint = `${this._api}/sprites`;
             const data = new FormData();
             data.append('file', sprite.content);
-            data.append('spriteJson', JSON.stringify({ ...sprite, content: null }));
+            data.append('spriteJson', JSON.stringify(sprite));
 
             return await this._http.post(endpoint, data, { responseType: 'text' }).toPromise();
         }
