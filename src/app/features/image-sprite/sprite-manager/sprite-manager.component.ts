@@ -46,7 +46,15 @@ export class SpriteManagerComponent implements OnInit {
             const names = this._files.map(_ => _.name);
             const hasNewName = file.name !== this._files[index].name;
             file.name = hasNewName ? FileUtility.handleDuplicateName(names, file.name) : file.name;
-            this._files[index] = file;
+            const id = await this._cloudStorageHttp.updateSprite(file);
+
+            if (id) {
+                file.id = id;
+                this._files[index] = file;
+            }
+            else {
+                this._snackbar.open('Failed to update sprite file.', 'Ok');
+            }
         }
     }
 
