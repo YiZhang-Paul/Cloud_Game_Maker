@@ -32,29 +32,17 @@ export class SpriteManagerComponent implements OnInit {
     }
 
     public async onFileEdit(file: SpriteFile, saveAsNew = false): Promise<void> {
-        this.editing = null;
+        let saved = false;
 
         if (saveAsNew) {
-            await this.saveFile(file);
-
-            return;
+            saved = await this.saveFile(file);
+        }
+        else {
+            saved = await this.updateFile(file);
         }
 
-        const index = this._files.findIndex(_ => _.id === file.originated);
-
-        if (index !== -1) {
-            const names = this._files.map(_ => _.name);
-            const hasNewName = file.name !== this._files[index].name;
-            file.name = hasNewName ? FileUtility.handleDuplicateName(names, file.name) : file.name;
-            const id = await this._cloudStorageHttp.updateSprite(file);
-
-            if (id) {
-                file.id = id;
-                this._files[index] = file;
-            }
-            else {
-                this._snackbar.open('Failed to update sprite file.', 'Ok');
-            }
+        if (saved) {
+            this.editing = null;
         }
     }
 
@@ -62,6 +50,16 @@ export class SpriteManagerComponent implements OnInit {
         if (await this.saveFile(this.previewing)) {
             this.previewing = null;
         }
+    }
+
+    public async onFileDelete(file: SpriteFile): Promise<void> {
+        if (!await this._cloudStorageHttp.deleteSprite(file)) {
+            this._snackbar.open('Failed to delete sprite file.', 'Ok');
+
+            return;
+        }
+
+        this._files = this._files.filter(_ => _ !== file);
     }
 
     private async saveFile(file: SpriteFile): Promise<boolean> {
@@ -80,13 +78,26 @@ export class SpriteManagerComponent implements OnInit {
         return Boolean(id);
     }
 
-    public async onFileDelete(file: SpriteFile): Promise<void> {
-        if (!await this._cloudStorageHttp.deleteSprite(file)) {
-            this._snackbar.open('Failed to delete sprite file.', 'Ok');
+    private async updateFile(file: SpriteFile): Promise<boolean> {
+        const index = this._files.findIndex(_ => _.id === file.originated);
 
-            return;
+        if (index === -1) {
+            return false;
         }
 
-        this._files = this._files.filter(_ => _ !== file);
+        const names = this._files.map(_ => _.name);
+        const hasNewName = file.name !== this._files[index].name;
+        file.name = hasNewName ? FileUtility.handleDuplicateName(names, file.name) : file.name;
+        const id = await this._cloudStorageHttp.updateSprite(file);
+
+        if (id) {
+            file.id = id;
+            this._files[index] = file;
+        }
+        else {
+            this._snackbar.open('Failed to update sprite file.', 'Ok');
+        }
+
+        return Boolean(id);
     }
 }
