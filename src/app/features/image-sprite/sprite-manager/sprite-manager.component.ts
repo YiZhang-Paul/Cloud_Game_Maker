@@ -62,7 +62,13 @@ export class SpriteManagerComponent implements OnInit {
         this.previewing = null;
     }
 
-    public onFileDelete(file: SpriteFile): void {
+    public async onFileDelete(file: SpriteFile): Promise<void> {
+        if (!await this._cloudStorageHttp.deleteSprite(file)) {
+            this._snackbar.open('Failed to delete sprite file.', 'Ok');
+
+            return;
+        }
+
         this._files = this._files.filter(_ => _ !== file);
     }
 }

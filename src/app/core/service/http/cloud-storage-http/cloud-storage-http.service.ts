@@ -34,4 +34,15 @@ export class CloudStorageHttpService {
             return false;
         }
     }
+
+    public async deleteSprite(sprite: SpriteFile): Promise<boolean> {
+        try {
+            const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.id)}`;
+
+            return await this._http.delete<boolean>(endpoint).toPromise();
+        }
+        catch {
+            return false;
+        }
+    }
 }
