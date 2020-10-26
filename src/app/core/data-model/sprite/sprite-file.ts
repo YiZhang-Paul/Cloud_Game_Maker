@@ -24,7 +24,6 @@ export class SpriteFile {
         sprite.content = new Blob([sprite.content]);
         sprite.mime = file.mime;
         sprite.extension = file.extension;
-        sprite.base64 = file.base64;
 
         if (file.imageSrc) {
             sprite.parseImageSrc(file.imageSrc);
@@ -39,7 +38,6 @@ export class SpriteFile {
         sprite.content = await new Promise(resolve => file.file(resolve));
         sprite.mime = sprite.content.type;
         sprite.extension = sprite.mime.includes('png') ? 'png' : 'jpg';
-        sprite.base64 = await FileUtility.toBase64(sprite.content);
 
         return sprite;
     }
@@ -47,6 +45,5 @@ export class SpriteFile {
     public parseImageSrc(src: string): void {
         this.mime = src.split(',')[0].replace(/data:|;base64/g, '');
         this.extension = this.mime.includes('png') ? 'png' : 'jpg';
-        this.base64 = src.split(',')[1];
     }
 }
