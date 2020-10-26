@@ -59,16 +59,17 @@ export class SpriteManagerComponent implements OnInit {
     private async saveFile(file: SpriteFile): Promise<boolean> {
         const names = this._files.map(_ => _.name);
         file.name = FileUtility.handleDuplicateName(names, file.name);
-        const saved = await this._cloudStorageHttp.addSprite(file);
+        const id = await this._cloudStorageHttp.addSprite(file);
 
-        if (saved) {
+        if (id) {
+            file.id = id;
             this._files.unshift(file);
         }
         else {
             this._snackbar.open('Failed to save sprite file.', 'Ok');
         }
 
-        return saved;
+        return Boolean(id);
     }
 
     public async onFileDelete(file: SpriteFile): Promise<void> {

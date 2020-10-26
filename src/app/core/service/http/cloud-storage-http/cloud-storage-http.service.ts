@@ -24,14 +24,14 @@ export class CloudStorageHttpService {
         }
     }
 
-    public async addSprite(sprite: SpriteFile): Promise<boolean> {
+    public async addSprite(sprite: SpriteFile): Promise<string> {
         try {
             const endpoint = `${this._api}/sprites`;
 
-            return await this._http.post<boolean>(endpoint, sprite).toPromise();
+            return await this._http.post(endpoint, sprite, { responseType: 'text' }).toPromise();
         }
         catch {
-            return false;
+            return null;
         }
     }
 
