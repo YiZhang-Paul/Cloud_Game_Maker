@@ -8,7 +8,8 @@ export class SpriteFile {
     public content: Blob;
     public mime: string;
     public extension: string;
-    public url: string;
+    public originalUrl: string;
+    public thumbnailUrl: string;
 
     public static fromSpriteFile(file: SpriteFile, fromRemote = false): SpriteFile {
         const sprite = new SpriteFile();
@@ -18,7 +19,8 @@ export class SpriteFile {
         sprite.content = fromRemote ? sprite.content : new Blob([file.content], { type: file.content?.type });
         sprite.mime = file.mime;
         sprite.extension = file.extension;
-        sprite.url = file.url;
+        sprite.originalUrl = file.originalUrl;
+        sprite.thumbnailUrl = file.thumbnailUrl;
 
         return sprite;
     }

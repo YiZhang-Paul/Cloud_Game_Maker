@@ -5,6 +5,6 @@
     </div>
 
     <app-image-blob-display *ngIf="file.content" [blob]="file.content"></app-image-blob-display>
-    <img *ngIf="!file.content" [src]="file.url" />
+    <img *ngIf="!file.content" [src]="file.thumbnailUrl" />
     <span fxFlexAlign="center">{{ file.name }}</span>
 </div>
