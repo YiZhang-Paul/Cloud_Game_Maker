@@ -92,7 +92,7 @@ export class SpriteEditorComponent implements OnInit {
         const { base64 } = this._cropper.crop();
         this._modifiedFile.mime = 'image/png';
         this._modifiedFile.extension = 'png';
-        this._modifiedFile.content = FileUtility.base64ToBlob(base64);
+        this._modifiedFile.content = FileUtility.base64ToBlob(base64, this._modifiedFile.mime);
     }
 
     public onImageReset(): void {

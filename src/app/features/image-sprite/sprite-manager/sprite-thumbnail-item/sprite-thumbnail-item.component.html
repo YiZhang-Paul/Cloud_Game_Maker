@@ -4,6 +4,7 @@
         <button (click)="delete.emit()">Delete</button>
     </div>
 
-    <img [src]="file.url" />
+    <app-image-blob-display *ngIf="file.content" [blob]="file.content"></app-image-blob-display>
+    <img *ngIf="!file.content" [src]="file.url" />
     <span fxFlexAlign="center">{{ file.name }}</span>
 </div>

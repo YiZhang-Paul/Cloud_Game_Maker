@@ -1,6 +1,6 @@
 export class FileUtility {
 
-    public static base64ToBlob(base64: string): Blob {
+    public static base64ToBlob(base64: string, type = 'text'): Blob {
         const characters = atob(base64.replace(/^[^,]*,/g, ''));
         const bytes = new Array(characters.length);
 
@@ -8,7 +8,7 @@ export class FileUtility {
             bytes[i] = characters.charCodeAt(i);
         }
 
-        return new Blob([new Uint8Array(bytes)]);
+        return new Blob([new Uint8Array(bytes)], { type });
     }
 
     public static handleDuplicateName(existing: string[], name: string): string {
