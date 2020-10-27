@@ -11,9 +11,19 @@
         </div>
 
         <div class="crop-panel" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="10px" fxFlex="85">
-            <image-cropper #cropper
+            <image-cropper *ngIf="targetFile.content"
+                #cropper
                 format="png"
-                [imageBase64]="targetFile.imageSrc"
+                [imageFile]="targetFile.content"
+                [autoCrop]="false"
+                [transform]="transform"
+                (cropperReady)="onCropperReady()">
+            </image-cropper>
+
+            <image-cropper *ngIf="!targetFile.content"
+                #cropper
+                format="png"
+                [imageURL]="targetFile.url"
                 [autoCrop]="false"
                 [transform]="transform"
                 (cropperReady)="onCropperReady()">

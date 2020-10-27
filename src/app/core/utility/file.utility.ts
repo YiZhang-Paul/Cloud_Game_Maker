@@ -1,15 +1,14 @@
 export class FileUtility {
 
-    public static async toBase64(file: Blob): Promise<string> {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
+    public static base64ToBlob(base64: string, type = 'text'): Blob {
+        const characters = atob(base64.replace(/^[^,]*,/g, ''));
+        const bytes = new Array(characters.length);
 
-        return new Promise(resolve => {
-            reader.onload = () => {
-                const base64 = reader.result as string;
-                resolve(base64.split(',')[1]);
-            };
-        });
+        for (let i = 0; i < characters.length; ++i) {
+            bytes[i] = characters.charCodeAt(i);
+        }
+
+        return new Blob([new Uint8Array(bytes)], { type });
     }
 
     public static handleDuplicateName(existing: string[], name: string): string {
