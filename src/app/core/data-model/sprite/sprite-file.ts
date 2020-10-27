@@ -15,7 +15,7 @@ export class SpriteFile {
         sprite.originated = fromRemote ? sprite.originated : file.id;
         sprite.id = fromRemote ? file.id : sprite.id;
         sprite.name = file.name;
-        sprite.content = fromRemote ? sprite.content : new Blob([file.content], { type: file.content.type });
+        sprite.content = fromRemote ? sprite.content : new Blob([file.content], { type: file.content?.type });
         sprite.mime = file.mime;
         sprite.extension = file.extension;
         sprite.url = file.url;
@@ -31,10 +31,5 @@ export class SpriteFile {
         sprite.extension = sprite.mime.includes('png') ? 'png' : 'jpg';
 
         return sprite;
-    }
-
-    public parseImageSrc(src: string): void {
-        this.mime = src.split(',')[0].replace(/data:|;base64/g, '');
-        this.extension = this.mime.includes('png') ? 'png' : 'jpg';
     }
 }

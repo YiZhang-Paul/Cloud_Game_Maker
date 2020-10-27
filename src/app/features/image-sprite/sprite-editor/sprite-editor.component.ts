@@ -6,6 +6,7 @@ import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 import { ConfirmPopupOption } from '../../../core/data-model/generic/options/confirm-popup-option';
 import { ConfirmActionOption } from '../../../core/data-model/generic/options/confirm-action-option';
 import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm-popup/confirm-popup.component';
+import { FileUtility } from '../../../core/utility/file.utility';
 
 @Component({
     selector: 'app-sprite-editor',
@@ -89,7 +90,9 @@ export class SpriteEditorComponent implements OnInit {
         }
 
         const { base64 } = this._cropper.crop();
-        this._modifiedFile.parseImageSrc(base64);
+        this._modifiedFile.mime = 'image/png';
+        this._modifiedFile.extension = 'png';
+        this._modifiedFile.content = FileUtility.base64ToBlob(base64);
     }
 
     public onImageReset(): void {
