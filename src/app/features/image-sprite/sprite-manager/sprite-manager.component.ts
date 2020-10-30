@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
+import imageCompression from 'browser-image-compression';
 
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 import { FileUtility } from '../../../core/utility/file.utility';
@@ -64,7 +65,9 @@ export class SpriteManagerComponent implements OnInit {
 
     private async addFile(file: SpriteFile): Promise<boolean> {
         const names = this._files.map(_ => _.name);
+        const compressed = await imageCompression(file.content, { maxSizeMB: 0.2 });
         file.name = FileUtility.handleDuplicateName(names, file.name);
+        file.content = new Blob([compressed], { type: compressed.type });
         const id = await this._cloudStorageHttp.addSprite(file);
 
         if (id) {
