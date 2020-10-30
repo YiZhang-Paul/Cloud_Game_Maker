@@ -4,7 +4,7 @@
     </div>
 
     <ng-content></ng-content>
-    <app-image-blob-display [blob]="file.content"></app-image-blob-display>
+    <app-image-blob-display *ngIf="file.content" [blob]="file.content"></app-image-blob-display>
+    <img *ngIf="!file.content" [src]="file.originalUrl" />
     <button (click)="cancel.emit()">X</button>
-    <button (click)="confirm.emit()">{{ confirmAction }}</button>
 </div>

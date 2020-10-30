@@ -21,21 +21,15 @@
         width: 100%;
     }
 
-    app-image-blob-display {
+    app-image-blob-display,
+    & > img {
         width: 75%;
         height: 80%;
     }
 
     & > button {
         position: absolute;
-    }
-
-    & > button:first-of-type {
         top: 2%;
         right: 1.5%;
-    }
-
-    & > button:last-of-type {
-        bottom: 5%;
     }
 }
