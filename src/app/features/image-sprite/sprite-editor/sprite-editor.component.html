@@ -24,18 +24,20 @@
                 #cropper
                 format="jpeg"
                 [imageFile]="targetFile.content"
+                [imageQuality]="100"
                 [autoCrop]="false"
                 [transform]="transform"
-                (cropperReady)="onCropperReady()">
+                (cropperReady)="onCropperReady($event)">
             </image-cropper>
 
             <image-cropper *ngIf="!targetFile.content"
                 #cropper
                 format="jpeg"
                 [imageURL]="targetFile.originalUrl"
+                [imageQuality]="100"
                 [autoCrop]="false"
                 [transform]="transform"
-                (cropperReady)="onCropperReady()">
+                (cropperReady)="onCropperReady($event)">
             </image-cropper>
 
             <ng-container *ngIf="isCropperReady">
@@ -46,8 +48,8 @@
 
                 <div fxLayoutAlign="center center" fxLayoutGap="5px">
                     <button (click)="isPreviewing = true">Preview</button>
-                    <button *ngIf="!file.isImported" (click)="importNew.emit(targetFile)">Import</button>
-                    <button *ngIf="file.isImported" (click)="onImageSave()" [disabled]="!isModified">Save</button>
+                    <button *ngIf="!file.isImported" (click)="onImageSave()">Import</button>
+                    <button *ngIf="file.isImported" (click)="onImageSave(false)" [disabled]="!isModified">Save</button>
                     <button (click)="onImageCropped()">Crop</button>
                     <button (click)="onImageReset()">Reset</button>
                 </div>
