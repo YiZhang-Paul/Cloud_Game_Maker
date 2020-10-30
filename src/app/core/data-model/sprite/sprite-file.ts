@@ -20,7 +20,7 @@ export class SpriteFile {
         sprite.originated = fromRemote ? sprite.originated : file.id;
         sprite.id = fromRemote ? file.id : sprite.id;
         sprite.name = file.name;
-        sprite.content = fromRemote ? sprite.content : new Blob([file.content], { type: file.content?.type });
+        sprite.content = fromRemote ? sprite.content : file.content;
         sprite.mime = file.mime;
         sprite.extension = file.extension;
         sprite.originalUrl = file.originalUrl;
