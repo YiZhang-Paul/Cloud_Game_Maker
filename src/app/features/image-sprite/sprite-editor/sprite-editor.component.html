@@ -22,7 +22,7 @@
         <div class="crop-panel" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="10px" fxFlex="85">
             <image-cropper *ngIf="targetFile.content"
                 #cropper
-                format="png"
+                format="jpeg"
                 [imageFile]="targetFile.content"
                 [autoCrop]="false"
                 [transform]="transform"
@@ -31,7 +31,7 @@
 
             <image-cropper *ngIf="!targetFile.content"
                 #cropper
-                format="png"
+                format="jpeg"
                 [imageURL]="targetFile.originalUrl"
                 [autoCrop]="false"
                 [transform]="transform"

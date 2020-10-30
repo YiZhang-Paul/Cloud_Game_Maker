@@ -34,7 +34,7 @@ export class SpriteFile {
         sprite.name = file.name.replace(/\.[^.]*$/g, '');
         sprite.content = await new Promise(resolve => file.file(resolve));
         sprite.mime = sprite.content.type;
-        sprite.extension = sprite.mime.includes('png') ? 'png' : 'jpg';
+        sprite.extension = sprite.content.type.includes('png') ? 'png' : 'jpg';
 
         return sprite;
     }
