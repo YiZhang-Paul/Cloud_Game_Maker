@@ -11,6 +11,10 @@ export class SpriteFile {
     public originalUrl: string;
     public thumbnailUrl: string;
 
+    get isImported(): boolean {
+        return this.id.includes('/');
+    }
+
     public static fromSpriteFile(file: SpriteFile, fromRemote = false): SpriteFile {
         const sprite = new SpriteFile();
         sprite.originated = fromRemote ? sprite.originated : file.id;

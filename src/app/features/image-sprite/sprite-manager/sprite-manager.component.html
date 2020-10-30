@@ -1,6 +1,7 @@
 <div class="container">
     <app-sprite-editor *ngIf="editing"
         [file]="editing"
+        (importNew)="onFileEdit($event, true)"
         (overwrite)="onFileEdit($event)"
         (saveAsNew)="onFileEdit($event, true)"
         (cancel)="editing = null"
