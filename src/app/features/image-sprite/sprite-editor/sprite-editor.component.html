@@ -1,6 +1,6 @@
 <div class="container" fxLayout="column" fxLayoutAlign="start center">
     <app-sprite-previewer *ngIf="isPreviewing"
-        [file]="file"
+        [file]="targetFile"
         (cancel)="isPreviewing = false"
         cdkDragBoundary="body"
         cdkDrag>
