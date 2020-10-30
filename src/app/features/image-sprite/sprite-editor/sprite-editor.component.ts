@@ -94,6 +94,7 @@ export class SpriteEditorComponent implements OnInit {
         this._modifiedFile.mime = 'image/png';
         this._modifiedFile.extension = 'png';
         this._modifiedFile.content = FileUtility.base64ToBlob(base64, this._modifiedFile.mime);
+        this._transform = { scale: 1, rotate: 0, flipH: false, flipV: false };
     }
 
     public onImageReset(): void {
