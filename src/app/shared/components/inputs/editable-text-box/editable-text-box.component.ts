@@ -19,7 +19,7 @@ export class EditableTextBoxComponent implements OnInit {
     public onEditToggle(emit = false): void {
         this.isEditMode = !this.isEditMode;
 
-        if (emit) {
+        if (emit && this.edited !== this.content) {
             this.contentEdit.emit(this.edited);
         }
     }
