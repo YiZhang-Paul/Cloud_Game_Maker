@@ -13,7 +13,6 @@ import { CloudStorageHttpService } from '../../../core/service/http/cloud-storag
     styleUrls: ['./sprite-manager.component.scss']
 })
 export class SpriteManagerComponent implements OnInit {
-    public previewing: SpriteFile;
     public editing: SpriteFile;
     private _files: SpriteFile[] = [];
 
@@ -27,9 +26,9 @@ export class SpriteManagerComponent implements OnInit {
         this._files = await this._cloudStorageHttp.getSprites();
     }
 
-    public async onFilePreview(files: NgxFileDropEntry[]): Promise<void> {
+    public async onFileSelect(files: NgxFileDropEntry[]): Promise<void> {
         const file = files[0]?.fileEntry as FileSystemFileEntry;
-        this.previewing = await SpriteFile.fromFileEntry(file);
+        this.editing = await SpriteFile.fromFileEntry(file);
     }
 
     public async onFileEdit(file: SpriteFile, saveAsNew = false): Promise<void> {
@@ -44,12 +43,6 @@ export class SpriteManagerComponent implements OnInit {
 
         if (succeeded) {
             this.editing = null;
-        }
-    }
-
-    public async onFileImport(): Promise<void> {
-        if (await this.addFile(this.previewing)) {
-            this.previewing = null;
         }
     }
 

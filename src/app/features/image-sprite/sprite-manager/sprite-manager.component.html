@@ -1,15 +1,4 @@
 <div class="container">
-    <app-sprite-previewer *ngIf="previewing"
-        [file]="previewing"
-        [confirmAction]="'Import'"
-        (cancel)="previewing = null"
-        (confirm)="onFileImport()"
-        cdkDragBoundary="body"
-        cdkDrag>
-
-        <div cdkDragHandle></div>
-    </app-sprite-previewer>
-
     <app-sprite-editor *ngIf="editing"
         [file]="editing"
         (overwrite)="onFileEdit($event)"
@@ -25,12 +14,12 @@
         <app-file-picker [message]="'no sprite available'"
             [buttonText]="'Import Sprite'"
             [allowExtension]="['png', 'jpg']"
-            (fileSelect)="onFilePreview($event)">
+            (fileSelect)="onFileSelect($event)">
         </app-file-picker>
     </div>
 
     <div *ngIf="files.length" fxLayout="column" fxFlex>
-        <app-sprite-manager-toolbar (fileSelect)="onFilePreview($event)"></app-sprite-manager-toolbar>
+        <app-sprite-manager-toolbar (fileSelect)="onFileSelect($event)"></app-sprite-manager-toolbar>
 
         <div class="sprite-files" fxLayout="row wrap" fxLayoutAlign="space-between">
             <app-sprite-thumbnail-item *ngFor="let file of files"
