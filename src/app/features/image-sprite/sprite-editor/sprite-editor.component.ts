@@ -16,12 +16,12 @@ import { FileUtility } from '../../../core/utility/file.utility';
 })
 export class SpriteEditorComponent implements OnInit {
     @Input() public file: SpriteFile;
-    @Input() public isEditMode = true;
     @Output() public importNew = new EventEmitter<SpriteFile>();
     @Output() public overwrite = new EventEmitter<SpriteFile>();
     @Output() public saveAsNew = new EventEmitter<SpriteFile>();
     @Output() public cancel = new EventEmitter();
     @ViewChild('cropper') private _cropper: ImageCropperComponent;
+    public isPreviewing = false;
     private _isCropperReady = false;
     private _transform: ImageTransform;
     private _modifiedFile: SpriteFile;
