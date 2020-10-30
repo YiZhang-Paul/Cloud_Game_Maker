@@ -33,6 +33,8 @@ export class SpriteManagerComponent implements OnInit {
 
     public async onFileEdit(file: SpriteFile, saveAsNew = false): Promise<void> {
         let succeeded = false;
+        const content = await imageCompression(file.content, { maxSizeMB: 0.2 });
+        file.content = new Blob([content], { type: content.type });
 
         if (saveAsNew) {
             succeeded = await this.addFile(file);
@@ -58,9 +60,7 @@ export class SpriteManagerComponent implements OnInit {
 
     private async addFile(file: SpriteFile): Promise<boolean> {
         const names = this._files.map(_ => _.name);
-        const compressed = await imageCompression(file.content, { maxSizeMB: 0.2 });
         file.name = FileUtility.handleDuplicateName(names, file.name);
-        file.content = new Blob([compressed], { type: compressed.type });
         const id = await this._cloudStorageHttp.addSprite(file);
 
         if (id) {
