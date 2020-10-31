@@ -15,13 +15,13 @@
     }
 
     .sprite-files {
-        padding: calc(#{$item-dimension} / 10) calc(#{$item-dimension} / 6);
+        padding: calc(#{$item-dimension} / 10) calc(#{$item-dimension} / 4);
     }
 
     app-sprite-thumbnail-item {
         cursor: pointer;
         margin-bottom: calc(#{$item-dimension} / 10);
-        width: $item-dimension;
+        width: calc(#{$item-dimension} * 0.9);
         height: $item-dimension;
 
         &:hover {
