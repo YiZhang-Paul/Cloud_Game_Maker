@@ -56,8 +56,11 @@ export class SpriteEditorComponent implements OnInit {
 
     public async ngOnInit(): Promise<void> {
         this.onImageReset();
-        this.file = await this._cloudStorageHttp.getSprite(this.file);
-        this._changeDetectorRef.markForCheck();
+
+        if (!this.file.content) {
+            this.file = await this._cloudStorageHttp.getSprite(this.file);
+            this._changeDetectorRef.markForCheck();
+        }
     }
 
     public onNameEdit(name: string): void {
