@@ -23,6 +23,8 @@
             <image-cropper *ngIf="targetFile.content"
                 #cropper
                 format="jpeg"
+                [resizeToWidth]="1000"
+                [resizeToHeight]="1000"
                 [imageFile]="targetFile.content"
                 [imageQuality]="100"
                 [autoCrop]="false"
