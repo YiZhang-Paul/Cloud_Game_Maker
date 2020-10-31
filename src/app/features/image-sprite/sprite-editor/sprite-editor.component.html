@@ -1,5 +1,5 @@
 <div class="container" fxLayout="column" fxLayoutAlign="start center">
-    <app-sprite-previewer *ngIf="isPreviewing"
+    <app-sprite-previewer *ngIf="isPreviewing && targetFile.content"
         [file]="targetFile"
         (cancel)="isPreviewing = false"
         cdkDragBoundary="body"
@@ -20,10 +20,10 @@
         </div>
 
         <div class="crop-panel" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="10px" fxFlex="85">
-            <image-cropper #cropper
+            <image-cropper *ngIf="targetFile.content"
+                #cropper
                 format="jpeg"
                 [imageFile]="targetFile.content"
-                [imageURL]="targetFile.originalUrl"
                 [imageQuality]="100"
                 [autoCrop]="false"
                 [transform]="transform"

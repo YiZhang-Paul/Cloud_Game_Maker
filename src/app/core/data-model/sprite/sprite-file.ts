@@ -8,7 +8,6 @@ export class SpriteFile {
     public content: Blob;
     public mime: string;
     public extension: string;
-    public originalUrl: string;
     public thumbnailUrl: string;
 
     get isImported(): boolean {
@@ -23,7 +22,6 @@ export class SpriteFile {
         sprite.content = fromRemote ? sprite.content : file.content;
         sprite.mime = file.mime;
         sprite.extension = file.extension;
-        sprite.originalUrl = file.originalUrl;
         sprite.thumbnailUrl = file.thumbnailUrl;
 
         return sprite;

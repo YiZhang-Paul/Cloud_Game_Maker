@@ -4,7 +4,6 @@
     </div>
 
     <ng-content></ng-content>
-    <app-image-blob-display *ngIf="file.content" [blob]="file.content"></app-image-blob-display>
-    <img *ngIf="!file.content" [src]="file.originalUrl" />
+    <app-image-blob-display [blob]="file.content"></app-image-blob-display>
     <button (click)="cancel.emit()">X</button>
 </div>
