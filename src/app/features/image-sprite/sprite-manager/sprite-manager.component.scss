@@ -20,6 +20,7 @@
 
     .sprite-files {
         padding: calc(#{$item-dimension} / 10) calc(#{$item-dimension} / 4);
+        overflow-y: auto;
     }
 
     app-sprite-thumbnail-item {
