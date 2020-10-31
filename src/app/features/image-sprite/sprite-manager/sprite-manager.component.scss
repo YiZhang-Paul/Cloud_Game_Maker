@@ -4,9 +4,13 @@
     height: 100%;
 
     app-sprite-editor {
+        $editor-width: 60vw;
+        $editor-height: 75vh;
         position: absolute;
-        width: 60vw;
-        height: 75vh;
+        top: calc(50vh - #{$editor-height} / 2);
+        left: calc(50vw - #{$editor-width} / 2);
+        width: $editor-width;
+        height: $editor-height;
         background-color: rgb(255, 255, 255);
     }
 
