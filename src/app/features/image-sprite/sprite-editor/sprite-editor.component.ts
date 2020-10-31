@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Dimensions, ImageCropperComponent, ImageTransform } from 'ngx-image-cropper';
 
@@ -6,6 +6,7 @@ import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 import { ConfirmPopupOption } from '../../../core/data-model/generic/options/confirm-popup-option';
 import { ConfirmActionOption } from '../../../core/data-model/generic/options/confirm-action-option';
 import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm-popup/confirm-popup.component';
+import { CloudStorageHttpService } from '../../../core/service/http/cloud-storage-http/cloud-storage-http.service';
 import { FileUtility } from '../../../core/utility/file.utility';
 
 @Component({
@@ -27,7 +28,9 @@ export class SpriteEditorComponent implements OnInit {
     private _transform: ImageTransform;
     private _modifiedFile: SpriteFile;
 
-    constructor(private _dialog: MatDialog) { }
+    constructor(private _cloudStorageHttp: CloudStorageHttpService,
+                private _dialog: MatDialog,
+                private _changeDetectorRef: ChangeDetectorRef) { }
 
     get targetFile(): SpriteFile {
         return this._modifiedFile || this.file;
@@ -51,8 +54,10 @@ export class SpriteEditorComponent implements OnInit {
         return `${scale.toFixed(0)}%`;
     }
 
-    public ngOnInit(): void {
+    public async ngOnInit(): Promise<void> {
         this.onImageReset();
+        this.file = await this._cloudStorageHttp.getSprite(this.file);
+        this._changeDetectorRef.markForCheck();
     }
 
     public onNameEdit(name: string): void {
