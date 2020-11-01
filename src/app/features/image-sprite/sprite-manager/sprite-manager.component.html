@@ -20,10 +20,12 @@
     </div>
 
     <div *ngIf="files.length" fxLayout="column" fxFlex>
-        <app-sprite-manager-toolbar (fileSelect)="onFileSelect($event)"></app-sprite-manager-toolbar>
+        <app-sprite-manager-toolbar (fileSelect)="onFileSelect($event)"
+            (fileSearch)="onFileSearch($event)">
+        </app-sprite-manager-toolbar>
 
         <div class="sprite-files" fxLayout="row wrap" fxLayoutAlign="space-between">
-            <app-sprite-thumbnail-item *ngFor="let file of files"
+            <app-sprite-thumbnail-item *ngFor="let file of filteredFiles"
                 [file]="file"
                 (editStart)="editing = file"
                 (delete)="onFileDelete(file)">

@@ -9,4 +9,5 @@ import { NgxFileDropEntry } from 'ngx-file-drop';
 })
 export class SpriteManagerToolbarComponent {
     @Output() public fileSelect = new EventEmitter<NgxFileDropEntry[]>();
+    @Output() public fileSearch = new EventEmitter<string>();
 }
