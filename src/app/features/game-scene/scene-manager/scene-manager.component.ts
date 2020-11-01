@@ -12,14 +12,14 @@ import { FileUtility } from '../../../core/utility/file.utility';
 export class SceneManagerComponent {
     public toolbarOptions = [MiniToolbarOption.Create, MiniToolbarOption.Search];
     private _scenes: Scene[] = [];
-    private _filteredScenes: Scene[] = [];
+    public filter = '';
 
     get scenes(): Scene[] {
         return this._scenes;
     }
 
     get filteredScenes(): Scene[] {
-        return this._filteredScenes;
+        return this._scenes.filter(_ => _.name.toLowerCase().includes(this.filter ?? ''));
     }
 
     public onSceneCreate(): void {
@@ -27,11 +27,5 @@ export class SceneManagerComponent {
         const names = this._scenes.map(_ => _.name);
         scene.name = FileUtility.handleDuplicateName(names, scene.name, '_', '');
         this._scenes.push(scene);
-        this._filteredScenes = this._scenes.slice();
-    }
-
-    public onFileSearch(keyword: string): void {
-        const lowercase = keyword.toLowerCase();
-        this._filteredScenes = this._scenes.filter(_ => _.name.toLowerCase().includes(lowercase));
     }
 }

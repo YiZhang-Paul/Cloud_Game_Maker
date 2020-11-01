@@ -7,7 +7,7 @@
     <div *ngIf="scenes.length" fxLayout="column" fxFlex>
         <app-mini-toolbar [activeOptions]="toolbarOptions"
             (fileCreate)="onSceneCreate()"
-            (fileSearch)="onFileSearch($event)">
+            (fileSearch)="filter = $event.toLowerCase()">
         </app-mini-toolbar>
 
         <div *ngIf="!filteredScenes.length" fxLayoutAlign="center center" fxFlex>
