@@ -3,8 +3,8 @@
 
     <div class="content" fxLayout="row" fxFlex>
         <app-tool-set-panel #toolSet [tools]="tools" [ngSwitch]="toolSet.activeTool" fxFlex="20">
-            <app-sprite-manager *ngSwitchCase="tools[0]"></app-sprite-manager>
-            <app-scene-manager *ngSwitchCase="tools[1]"></app-scene-manager>
+            <app-scene-manager *ngSwitchCase="tools[0]"></app-scene-manager>
+            <app-sprite-manager *ngSwitchCase="tools[1]"></app-sprite-manager>
         </app-tool-set-panel>
 
         <div fxLayout="column" fxFlex="60">
