@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 import { Scene } from '../../../core/data-model/scene/scene';
 import { MiniToolbarOption } from '../../../core/enum/mini-toolbar-option.enum';
+import { FileUtility } from '../../../core/utility/file.utility';
 
 @Component({
     selector: 'app-scene-manager',
@@ -22,7 +23,10 @@ export class SceneManagerComponent {
     }
 
     public onSceneCreate(): void {
-        this._scenes.push(new Scene());
+        const scene = new Scene();
+        const names = this._scenes.map(_ => _.name);
+        scene.name = FileUtility.handleDuplicateName(names, scene.name);
+        this._scenes.push(scene);
         this._filteredScenes = this._scenes.slice();
     }
 
