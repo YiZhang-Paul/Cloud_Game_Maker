@@ -25,7 +25,7 @@ export class SceneManagerComponent {
     public onSceneCreate(): void {
         const scene = new Scene();
         const names = this._scenes.map(_ => _.name);
-        scene.name = FileUtility.handleDuplicateName(names, scene.name);
+        scene.name = FileUtility.handleDuplicateName(names, scene.name, '_', '');
         this._scenes.push(scene);
         this._filteredScenes = this._scenes.slice();
     }
