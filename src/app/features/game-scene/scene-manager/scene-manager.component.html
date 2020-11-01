@@ -5,7 +5,12 @@
     </div>
 
     <div *ngIf="scenes.length" fxLayout="column" fxFlex>
-        <div *ngFor="let scene of scenes">
+        <app-mini-toolbar [activeOptions]="toolbarOptions"
+            (fileCreate)="onSceneCreate()"
+            (fileSearch)="onFileSearch($event)">
+        </app-mini-toolbar>
+
+        <div *ngFor="let scene of filteredScenes">
             {{ scene.name }}
         </div>
     </div>
