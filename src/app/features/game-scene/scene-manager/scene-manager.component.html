@@ -10,8 +10,14 @@
             (fileSearch)="onFileSearch($event)">
         </app-mini-toolbar>
 
-        <div *ngFor="let scene of filteredScenes">
-            {{ scene.name }}
+        <div *ngIf="!filteredScenes.length" fxLayoutAlign="center center" fxFlex>
+            <span>no matching scenes found.</span>
         </div>
+
+        <ng-container *ngIf="filteredScenes.length">
+            <div *ngFor="let scene of filteredScenes">
+                {{ scene.name }}
+            </div>
+        </ng-container>
     </div>
 </div>
