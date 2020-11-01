@@ -14,10 +14,15 @@ import { CloudStorageHttpService } from '../../../core/service/http/cloud-storag
 })
 export class SpriteManagerComponent implements OnInit {
     public editing: SpriteFile;
+    private _isLoaded = false;
     private _files: SpriteFile[] = [];
     private _filteredFiles: SpriteFile[] = [];
 
     constructor(private _cloudStorageHttp: CloudStorageHttpService, private _snackbar: MatSnackBar) { }
+
+    get isLoaded(): boolean {
+        return this._isLoaded;
+    }
 
     get files(): SpriteFile[] {
         return this._files;
@@ -30,6 +35,7 @@ export class SpriteManagerComponent implements OnInit {
     public async ngOnInit(): Promise<void> {
         this._files = await this._cloudStorageHttp.getSprites();
         this._filteredFiles = this._files.slice();
+        this._isLoaded = true;
     }
 
     public async onFileSelect(files: NgxFileDropEntry[]): Promise<void> {
