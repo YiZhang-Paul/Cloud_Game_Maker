@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../../../../environments/environment';
 import { SpriteFile } from '../../../data-model/sprite/sprite-file';
+import { Scene } from '../../../data-model/scene/scene';
 
 @Injectable({
     providedIn: 'root'
@@ -11,6 +12,17 @@ export class CloudStorageHttpService {
     private readonly _api = `${environment.apiUrl}/api/cloud-storage`;
 
     constructor(private _http: HttpClient) { }
+
+    public async addScene(scene: Scene): Promise<string> {
+        try {
+            const endpoint = `${this._api}/scenes`;
+
+            return await this._http.post(endpoint, scene, { responseType: 'text' }).toPromise();
+        }
+        catch {
+            return null;
+        }
+    }
 
     public async getSprite(sprite: SpriteFile): Promise<SpriteFile> {
         try {

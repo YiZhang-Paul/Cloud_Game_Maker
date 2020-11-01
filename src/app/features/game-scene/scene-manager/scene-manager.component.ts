@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 import { Scene } from '../../../core/data-model/scene/scene';
 import { MiniToolbarOption } from '../../../core/enum/mini-toolbar-option.enum';
+import { CloudStorageHttpService } from '../../../core/service/http/cloud-storage-http/cloud-storage-http.service';
 import { FileUtility } from '../../../core/utility/file.utility';
 
 @Component({
@@ -14,6 +15,8 @@ export class SceneManagerComponent {
     public filter = '';
     private _scenes: Scene[] = [];
 
+    constructor(private _cloudStorageHttp: CloudStorageHttpService) { }
+
     get scenes(): Scene[] {
         return this._scenes;
     }
@@ -22,10 +25,14 @@ export class SceneManagerComponent {
         return this._scenes.filter(_ => _.name.toLowerCase().includes(this.filter ?? ''));
     }
 
-    public onSceneCreate(): void {
+    public async onSceneCreate(): Promise<void> {
         const scene = new Scene();
         const names = this._scenes.map(_ => _.name);
         scene.name = FileUtility.handleDuplicateName(names, scene.name, '_', '');
-        this._scenes.push(scene);
+        scene.id = await this._cloudStorageHttp.addScene(scene);
+
+        if (scene.id) {
+            this._scenes.push(scene);
+        }
     }
 }
