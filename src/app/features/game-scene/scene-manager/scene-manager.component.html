@@ -15,8 +15,9 @@
         </div>
 
         <div *ngIf="filteredScenes.length" class="scenes" fxLayout="column" fxLayoutGap="4px">
-            <div *ngFor="let scene of filteredScenes">
-                {{ scene.name }}
+            <div *ngFor="let scene of filteredScenes" fxLayoutAlign="start center">
+                <span>{{ scene.name }}</span>
+                <button (click)="onDelete(scene)">Delete</button>
             </div>
         </div>
     </div>

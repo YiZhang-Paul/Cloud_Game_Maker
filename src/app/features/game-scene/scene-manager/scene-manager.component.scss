@@ -17,10 +17,20 @@
             background-color: rgb(170, 170, 170);
             cursor: pointer;
             transition: background-color 0.3s;
+
+            button {
+                margin-left: auto;
+                cursor: pointer;
+                opacity: 0;
+            }
         }
 
         & > div:hover {
             background-color: rgb(135, 135, 135);
+
+            button {
+                opacity: 1;
+            }
         }
     }
 }
