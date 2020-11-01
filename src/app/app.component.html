@@ -2,7 +2,9 @@
     <app-top-toolbar (createScene)="onCreateScene()"></app-top-toolbar>
 
     <div class="content" fxLayout="row" fxFlex>
-        <app-sprite-manager fxFlex="20"></app-sprite-manager>
+        <app-tool-set-panel #toolSet [tools]="tools" [ngSwitch]="toolSet.activeTool" fxFlex="20">
+            <app-sprite-manager *ngSwitchCase="tools[0]"></app-sprite-manager>
+        </app-tool-set-panel>
 
         <div fxLayout="column" fxFlex="60">
             <app-scene-builder [scene]="activeScene" fxFlex="75"></app-scene-builder>
