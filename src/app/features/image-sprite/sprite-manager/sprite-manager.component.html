@@ -24,7 +24,11 @@
             (fileSearch)="onFileSearch($event)">
         </app-sprite-manager-toolbar>
 
-        <div class="sprite-files" fxLayout="row wrap" fxLayoutAlign="space-between">
+        <div *ngIf="!filteredFiles.length" fxLayoutAlign="center center" fxFlex>
+            <span>no matching sprites found.</span>
+        </div>
+
+        <div *ngIf="filteredFiles.length" class="sprite-files" fxLayout="row wrap" fxLayoutAlign="space-between">
             <app-sprite-thumbnail-item *ngFor="let file of filteredFiles"
                 [file]="file"
                 (editStart)="editing = file"
