@@ -1,8 +1,0 @@
-<div class="container" fxLayoutAlign="start center" fxLayoutGap="7px">
-    <app-file-picker [buttonText]="'+'"
-        (fileSelect)="fileSelect.emit($event)"
-        [allowExtension]="['png', 'jpg']">
-    </app-file-picker>
-
-    <input type="text" placeholder="search sprites here..." (input)="fileSearch.emit($event.target.value)" />
-</div>

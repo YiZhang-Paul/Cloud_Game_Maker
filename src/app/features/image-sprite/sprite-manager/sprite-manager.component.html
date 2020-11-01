@@ -20,9 +20,9 @@
     </div>
 
     <div *ngIf="files.length" fxLayout="column" fxFlex>
-        <app-sprite-manager-toolbar (fileSelect)="onFileSelect($event)"
+        <app-mini-toolbar (filePick)="onFileSelect($event)"
             (fileSearch)="onFileSearch($event)">
-        </app-sprite-manager-toolbar>
+        </app-mini-toolbar>
 
         <div *ngIf="!filteredFiles.length" fxLayoutAlign="center center" fxFlex>
             <span>no matching sprites found.</span>
