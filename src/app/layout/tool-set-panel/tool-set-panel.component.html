@@ -1,0 +1,14 @@
+<div class="container" fxLayout="column">
+    <div fxLayoutAlign="start end" fxFlex="35px">
+        <button *ngFor="let tool of tools"
+            [ngClass]="{ 'active-tool': tool === activeTool }"
+            (click)="activeTool = tool">
+
+            {{ tool }}
+        </button>
+    </div>
+
+    <div fxFlex="calc(100% - 35px)">
+        <ng-content></ng-content>
+    </div>
+</div>
