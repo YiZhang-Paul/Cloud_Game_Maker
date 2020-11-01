@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
     selector: 'app-tool-set-panel',
     templateUrl: './tool-set-panel.component.html',
-    styleUrls: ['./tool-set-panel.component.scss']
+    styleUrls: ['./tool-set-panel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToolSetPanelComponent {
     @Input() public tools: string[] = [];
