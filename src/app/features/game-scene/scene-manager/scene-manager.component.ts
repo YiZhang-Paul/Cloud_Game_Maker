@@ -11,8 +11,8 @@ import { FileUtility } from '../../../core/utility/file.utility';
 })
 export class SceneManagerComponent {
     public toolbarOptions = [MiniToolbarOption.Create, MiniToolbarOption.Search];
-    private _scenes: Scene[] = [];
     public filter = '';
+    private _scenes: Scene[] = [];
 
     get scenes(): Scene[] {
         return this._scenes;

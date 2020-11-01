@@ -21,7 +21,7 @@
 
     <div *ngIf="files.length" fxLayout="column" fxFlex>
         <app-mini-toolbar (filePick)="onFileSelect($event)"
-            (fileSearch)="onFileSearch($event)">
+            (fileSearch)="filter = $event.toLowerCase()">
         </app-mini-toolbar>
 
         <div *ngIf="!filteredFiles.length" fxLayoutAlign="center center" fxFlex>

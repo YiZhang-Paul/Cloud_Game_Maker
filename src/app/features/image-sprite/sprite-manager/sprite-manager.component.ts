@@ -14,9 +14,9 @@ import { CloudStorageHttpService } from '../../../core/service/http/cloud-storag
 })
 export class SpriteManagerComponent implements OnInit {
     public editing: SpriteFile;
+    public filter = '';
     private _isLoaded = false;
     private _files: SpriteFile[] = [];
-    private _filteredFiles: SpriteFile[] = [];
 
     constructor(private _cloudStorageHttp: CloudStorageHttpService, private _snackbar: MatSnackBar) { }
 
@@ -29,23 +29,17 @@ export class SpriteManagerComponent implements OnInit {
     }
 
     get filteredFiles(): SpriteFile[] {
-        return this._filteredFiles;
+        return this._files.filter(_ => _.name.toLowerCase().includes(this.filter ?? ''));
     }
 
     public async ngOnInit(): Promise<void> {
         this._files = await this._cloudStorageHttp.getSprites();
-        this._filteredFiles = this._files.slice();
         this._isLoaded = true;
     }
 
     public async onFileSelect(files: NgxFileDropEntry[]): Promise<void> {
         const file = files[0]?.fileEntry as FileSystemFileEntry;
         this.editing = await SpriteFile.fromFileEntry(file);
-    }
-
-    public onFileSearch(keyword: string): void {
-        const lowercase = keyword.toLowerCase();
-        this._filteredFiles = this._files.filter(_ => _.name.toLowerCase().includes(lowercase));
     }
 
     public async onFileEdit(file: SpriteFile, saveAsNew = false): Promise<void> {
