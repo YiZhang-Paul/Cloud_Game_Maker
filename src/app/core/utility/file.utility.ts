@@ -21,7 +21,7 @@ export class FileUtility {
 
         const values = conflicts.map(_ => {
             const value = _.replace(/^.*\((\d+)\)$/g, '$1');
-            const parsed = parseInt(value, 2);
+            const parsed = parseInt(value, 10);
 
             return isNaN(parsed) ? 0 : parsed;
         });
