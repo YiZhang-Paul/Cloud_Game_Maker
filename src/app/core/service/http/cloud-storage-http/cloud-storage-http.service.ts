@@ -13,6 +13,17 @@ export class CloudStorageHttpService {
 
     constructor(private _http: HttpClient) { }
 
+    public async getScenes(): Promise<Scene[]> {
+        try {
+            const endpoint = `${this._api}/scenes`;
+
+            return await this._http.get<Scene[]>(endpoint).toPromise();
+        }
+        catch {
+            return [];
+        }
+    }
+
     public async addScene(scene: Scene): Promise<string> {
         try {
             const endpoint = `${this._api}/scenes`;

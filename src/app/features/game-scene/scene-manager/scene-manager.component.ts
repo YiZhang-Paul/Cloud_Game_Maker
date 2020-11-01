@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Scene } from '../../../core/data-model/scene/scene';
 import { MiniToolbarOption } from '../../../core/enum/mini-toolbar-option.enum';
@@ -10,12 +10,17 @@ import { FileUtility } from '../../../core/utility/file.utility';
     templateUrl: './scene-manager.component.html',
     styleUrls: ['./scene-manager.component.scss']
 })
-export class SceneManagerComponent {
+export class SceneManagerComponent implements OnInit {
     public toolbarOptions = [MiniToolbarOption.Create, MiniToolbarOption.Search];
     public filter = '';
+    private _isLoaded = false;
     private _scenes: Scene[] = [];
 
     constructor(private _cloudStorageHttp: CloudStorageHttpService) { }
+
+    get isLoaded(): boolean {
+        return this._isLoaded;
+    }
 
     get scenes(): Scene[] {
         return this._scenes;
@@ -23,6 +28,11 @@ export class SceneManagerComponent {
 
     get filteredScenes(): Scene[] {
         return this._scenes.filter(_ => _.name.toLowerCase().includes(this.filter ?? ''));
+    }
+
+    public async ngOnInit(): Promise<void> {
+        this._scenes = await this._cloudStorageHttp.getScenes();
+        this._isLoaded = true;
     }
 
     public async onSceneCreate(): Promise<void> {

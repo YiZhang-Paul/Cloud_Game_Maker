@@ -1,4 +1,4 @@
-<div class="container">
+<div *ngIf="isLoaded" class="container">
     <div *ngIf="!scenes.length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="7px" fxFlex>
         <span>no scenes found.</span>
         <button (click)="onSceneCreate()">Create Scene</button>
