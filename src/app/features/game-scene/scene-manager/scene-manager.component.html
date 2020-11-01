@@ -14,10 +14,10 @@
             <span>no matching scenes found.</span>
         </div>
 
-        <ng-container *ngIf="filteredScenes.length">
+        <div *ngIf="filteredScenes.length" class="scenes" fxLayout="column" fxLayoutGap="4px">
             <div *ngFor="let scene of filteredScenes">
                 {{ scene.name }}
             </div>
-        </ng-container>
+        </div>
     </div>
 </div>

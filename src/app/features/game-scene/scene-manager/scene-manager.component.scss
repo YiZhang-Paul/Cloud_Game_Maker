@@ -5,4 +5,21 @@
     app-mini-toolbar {
         height: 35px;
     }
+
+    .scenes {
+        padding: 10px;
+
+        & > div {
+            padding: 5px 8px;
+            border-radius: 3px;
+            color: white;
+            background-color: rgb(170, 170, 170);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        & > div:hover {
+            background-color: rgb(135, 135, 135);
+        }
+    }
 }
