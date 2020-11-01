@@ -1,16 +1,18 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'app-tool-set-panel',
     templateUrl: './tool-set-panel.component.html',
-    styleUrls: ['./tool-set-panel.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./tool-set-panel.component.scss']
 })
-export class ToolSetPanelComponent implements OnInit {
+export class ToolSetPanelComponent {
     @Input() public tools: string[] = [];
     public activeTool = '';
 
-    public ngOnInit(): void {
-        this.activeTool = this.tools[0] ?? this.activeTool;
+    public isActiveTool(index: number): boolean {
+        const isDefault = !this.activeTool && index === 0;
+        const isSelected = this.tools[index] === this.activeTool;
+
+        return isDefault || isSelected;
     }
 }

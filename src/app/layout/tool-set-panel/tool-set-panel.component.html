@@ -1,7 +1,7 @@
 <div class="container" fxLayout="column">
     <div fxLayoutAlign="start end" fxFlex="35px">
-        <button *ngFor="let tool of tools"
-            [ngClass]="{ 'active-tool': tool === activeTool }"
+        <button *ngFor="let tool of tools; let i = index"
+            [ngClass]="{ 'active-tool': isActiveTool(i) }"
             (click)="activeTool = tool">
 
             {{ tool }}
