@@ -1,0 +1,12 @@
+<div class="container">
+    <div *ngIf="!scenes.length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="7px" fxFlex>
+        <span>no scenes found.</span>
+        <button (click)="onSceneCreate()">Create Scene</button>
+    </div>
+
+    <div *ngIf="scenes.length" fxLayout="column" fxFlex>
+        <div *ngFor="let scene of scenes">
+            {{ scene.name }}
+        </div>
+    </div>
+</div>
