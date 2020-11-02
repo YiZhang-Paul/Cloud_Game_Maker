@@ -1,7 +1,17 @@
-import { IGameSceneState } from './game-scene.state';
+import { createSelector } from '@ngrx/store';
 
-export const selectTotalScenes = (state: IGameSceneState) => state.scenes.length;
+import { IGameSceneState, key } from './game-scene.state';
 
-export const selectFilteredScenes = (state: IGameSceneState, filter: string) => {
-    return state.scenes.filter(_ => _.name.toLowerCase().includes(filter));
-};
+export const getFeatureState = (state: { [key]: IGameSceneState }) => state[key];
+
+export const getTotalScenes = createSelector(
+    getFeatureState,
+    (state: IGameSceneState) => state.scenes.length
+);
+
+export const getFilteredScenes = createSelector(
+    getFeatureState,
+    (state: IGameSceneState, filter: string) => {
+        return state.scenes.filter(_ => _.name.toLowerCase().includes(filter ?? ''));
+    }
+);
