@@ -4,9 +4,9 @@ import { IGameSceneState, key } from './game-scene.state';
 
 export const getFeatureState = (state: { [key]: IGameSceneState }) => state[key];
 
-export const getTotalScenes = createSelector(
+export const hasScenes = createSelector(
     getFeatureState,
-    (state: IGameSceneState) => state.scenes.length
+    (state: IGameSceneState) => state.scenes.length > 0
 );
 
 export const getFilteredScenes = createSelector(
