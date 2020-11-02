@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 import { environment } from '../../../../../environments/environment';
 import { SpriteFile } from '../../../data-model/sprite/sprite-file';
@@ -13,15 +15,8 @@ export class CloudStorageHttpService {
 
     constructor(private _http: HttpClient) { }
 
-    public async getScenes(): Promise<Scene[]> {
-        try {
-            const endpoint = `${this._api}/scenes`;
-
-            return await this._http.get<Scene[]>(endpoint).toPromise();
-        }
-        catch {
-            return [];
-        }
+    public getScenes(): Observable<Scene[]> {
+        return this._http.get<Scene[]>(`${this._api}/scenes`).pipe(catchError(() => of([])));
     }
 
     public async addScene(scene: Scene): Promise<string> {
