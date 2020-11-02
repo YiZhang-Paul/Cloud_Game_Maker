@@ -3,7 +3,8 @@ import * as actions from './game-scene.actions';
 import * as reducers from './game-scene.reducers';
 import * as effects from './game-scene.effects';
 
-export default {
+export const store = {
+    key: 'gameScene',
     state,
     actions,
     reducers,
