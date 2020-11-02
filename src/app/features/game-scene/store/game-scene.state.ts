@@ -5,7 +5,7 @@ export interface IGameSceneState {
     sceneFilter: string;
 }
 
-export const state: IGameSceneState = {
+export const initialState: IGameSceneState = {
     scenes: [],
     sceneFilter: ''
 };
