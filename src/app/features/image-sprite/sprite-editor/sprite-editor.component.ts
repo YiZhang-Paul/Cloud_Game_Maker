@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ImageCropperComponent, ImageTransform } from 'ngx-image-cropper';
+import { Dimensions, ImageCropperComponent, ImageTransform } from 'ngx-image-cropper';
 
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 import { ConfirmPopupOption } from '../../../core/data-model/generic/options/confirm-popup-option';
 import { ConfirmActionOption } from '../../../core/data-model/generic/options/confirm-action-option';
 import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm-popup/confirm-popup.component';
+import { CloudStorageHttpService } from '../../../core/service/http/cloud-storage-http/cloud-storage-http.service';
 import { FileUtility } from '../../../core/utility/file.utility';
 
 @Component({
@@ -16,16 +17,20 @@ import { FileUtility } from '../../../core/utility/file.utility';
 })
 export class SpriteEditorComponent implements OnInit {
     @Input() public file: SpriteFile;
-    @Input() public isEditMode = true;
+    @Output() public importNew = new EventEmitter<SpriteFile>();
     @Output() public overwrite = new EventEmitter<SpriteFile>();
     @Output() public saveAsNew = new EventEmitter<SpriteFile>();
     @Output() public cancel = new EventEmitter();
     @ViewChild('cropper') private _cropper: ImageCropperComponent;
+    public isPreviewing = false;
     private _isCropperReady = false;
+    private _isCorrectRatio = false;
     private _transform: ImageTransform;
     private _modifiedFile: SpriteFile;
 
-    constructor(private _dialog: MatDialog) { }
+    constructor(private _cloudStorageHttp: CloudStorageHttpService,
+                private _dialog: MatDialog,
+                private _changeDetectorRef: ChangeDetectorRef) { }
 
     get targetFile(): SpriteFile {
         return this._modifiedFile || this.file;
@@ -49,8 +54,13 @@ export class SpriteEditorComponent implements OnInit {
         return `${scale.toFixed(0)}%`;
     }
 
-    public ngOnInit(): void {
+    public async ngOnInit(): Promise<void> {
         this.onImageReset();
+
+        if (!this.file.content) {
+            this.file = await this._cloudStorageHttp.getSprite(this.file);
+            this._changeDetectorRef.markForCheck();
+        }
     }
 
     public onNameEdit(name: string): void {
@@ -61,8 +71,9 @@ export class SpriteEditorComponent implements OnInit {
         this._modifiedFile.name = name;
     }
 
-    public onCropperReady(): void {
+    public onCropperReady({ width, height }: Dimensions): void {
         this._isCropperReady = true;
+        this._isCorrectRatio = width === height;
     }
 
     public onImageRotate(): void {
@@ -89,10 +100,12 @@ export class SpriteEditorComponent implements OnInit {
             this._modifiedFile = SpriteFile.fromSpriteFile(this.file);
         }
 
-        const { base64 } = this._cropper.crop();
-        this._modifiedFile.mime = 'image/png';
-        this._modifiedFile.extension = 'png';
+        const { base64, width, height } = this._cropper.crop();
+        this._isCorrectRatio = width === height;
+        this._modifiedFile.mime = 'image/jpeg';
+        this._modifiedFile.extension = 'jpg';
         this._modifiedFile.content = FileUtility.base64ToBlob(base64, this._modifiedFile.mime);
+        this._transform = { scale: 1, rotate: 0, flipH: false, flipV: false };
     }
 
     public onImageReset(): void {
@@ -100,7 +113,30 @@ export class SpriteEditorComponent implements OnInit {
         this._transform = { scale: 1, rotate: 0, flipH: false, flipV: false };
     }
 
-    public async onImageSave(): Promise<void> {
+    public async onImageSave(isNew = true): Promise<void> {
+        if (!this._isCorrectRatio) {
+            const title = 'Invalid aspect ratio';
+            const message = 'Please crop the image to ensure 1:1 ratio.';
+            const actions = [new ConfirmActionOption('Got It', null)];
+
+            this._dialog.open(ConfirmPopupComponent, {
+                data: new ConfirmPopupOption(title, message, actions),
+                width: '350px',
+                height: '175px'
+            });
+
+            return;
+        }
+
+        if (isNew) {
+            this.importNew.emit(this.targetFile);
+        }
+        else {
+            await this.saveExistingImage();
+        }
+    }
+
+    public async saveExistingImage(): Promise<void> {
         const title = 'Overwrite existing sprite?';
         const message = 'You can save the changes as a new sprite.';
         const option = ['Overwrite', 'Save as New', 'Cancel'];

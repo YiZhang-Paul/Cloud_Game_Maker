@@ -11,21 +11,28 @@ export class FileUtility {
         return new Blob([new Uint8Array(bytes)], { type });
     }
 
-    public static handleDuplicateName(existing: string[], name: string): string {
-        const regex = new RegExp(`^${name}(\s\(\d+\)$)?`);
-        const conflicts = existing.map(_ => _.trim()).filter(_ => regex.test(_));
+    public static handleDuplicateName(existing: string[], name: string, prefix = ' (', suffix = ')'): string {
+        const prefixPattern = this.escape(prefix ?? '');
+        const suffixPattern = this.escape(suffix ?? '');
+        const nameRegex = new RegExp(`^${name}(${prefixPattern}\\d+${suffixPattern})?$`);
+        const valueRegex = new RegExp(`^.*${prefixPattern}(\\d+)${suffixPattern}$`);
+        const conflicts = existing.map(_ => _.trim()).filter(_ => nameRegex.test(_));
 
         if (!conflicts.length) {
             return name;
         }
 
         const values = conflicts.map(_ => {
-            const value = _.replace(/^.*\((\d+)\)$/g, '$1');
-            const parsed = parseInt(value, 2);
+            const value = _.replace(valueRegex, '$1');
+            const parsed = parseInt(value, 10);
 
             return isNaN(parsed) ? 0 : parsed;
         });
 
-        return `${name} (${Math.max(...values) + 1})`;
+        return `${name}${prefix ?? ''}${Math.max(...values) + 1}${suffix ?? ''}`;
+    }
+
+    private static escape(text: string): string {
+        return text.replace(/(\\|\^|\$|\*|\+|\?|\.|\(|\)|\||\{|\}|\[|\])/g, '\\' + '$1');
     }
 }

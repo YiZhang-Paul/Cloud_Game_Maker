@@ -1,9 +1,18 @@
 <div class="container" fxLayout="column" fxLayoutAlign="start center">
+    <app-sprite-previewer *ngIf="isPreviewing && targetFile.content"
+        [file]="targetFile"
+        (cancel)="isPreviewing = false"
+        cdkDragBoundary="body"
+        cdkDrag>
+
+        <div cdkDragHandle></div>
+    </app-sprite-previewer>
+
     <ng-content></ng-content>
     <app-editable-text-box [content]="targetFile.name" (contentEdit)="onNameEdit($event)"></app-editable-text-box>
     <button (click)="cancel.emit()">X</button>
 
-    <div *ngIf="isEditMode" fxLayout="row" fxFlex="92.5">
+    <div fxLayout="row" fxFlex="92.5">
         <div class="action-panel" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px" fxFlex="15">
             <button (click)="onImageRotate()">Rotate 90°</button>
             <button (click)="onImageFlip()">Flip Horizontally</button>
@@ -13,20 +22,14 @@
         <div class="crop-panel" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="10px" fxFlex="85">
             <image-cropper *ngIf="targetFile.content"
                 #cropper
-                format="png"
+                format="jpeg"
+                [resizeToWidth]="1000"
+                [resizeToHeight]="1000"
                 [imageFile]="targetFile.content"
+                [imageQuality]="100"
                 [autoCrop]="false"
                 [transform]="transform"
-                (cropperReady)="onCropperReady()">
-            </image-cropper>
-
-            <image-cropper *ngIf="!targetFile.content"
-                #cropper
-                format="png"
-                [imageURL]="targetFile.url"
-                [autoCrop]="false"
-                [transform]="transform"
-                (cropperReady)="onCropperReady()">
+                (cropperReady)="onCropperReady($event)">
             </image-cropper>
 
             <ng-container *ngIf="isCropperReady">
@@ -36,7 +39,9 @@
                 </div>
 
                 <div fxLayoutAlign="center center" fxLayoutGap="5px">
-                    <button (click)="onImageSave()" [disabled]="!isModified">Save</button>
+                    <button (click)="isPreviewing = true">Preview</button>
+                    <button *ngIf="!file.isImported" (click)="onImageSave()">Import</button>
+                    <button *ngIf="file.isImported" (click)="onImageSave(false)" [disabled]="!isModified">Save</button>
                     <button (click)="onImageCropped()">Crop</button>
                     <button (click)="onImageReset()">Reset</button>
                 </div>

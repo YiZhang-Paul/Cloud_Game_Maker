@@ -14,13 +14,15 @@ import { FilePickerComponent } from './components/buttons/file-picker/file-picke
 import { EditableTextBoxComponent } from './components/inputs/editable-text-box/editable-text-box.component';
 import { ConfirmPopupComponent } from './components/popups/confirm-popup/confirm-popup.component';
 import { ImageBlobDisplayComponent } from './components/inputs/image-blob-display/image-blob-display.component';
+import { MiniToolbarComponent } from './components/toolbars/mini-toolbar/mini-toolbar.component';
 
 @NgModule({
     declarations: [
         FilePickerComponent,
         EditableTextBoxComponent,
         ConfirmPopupComponent,
-        ImageBlobDisplayComponent
+        ImageBlobDisplayComponent,
+        MiniToolbarComponent
     ],
     imports: [
         CommonModule,
@@ -47,7 +49,8 @@ import { ImageBlobDisplayComponent } from './components/inputs/image-blob-displa
         ImageCropperModule,
         FilePickerComponent,
         EditableTextBoxComponent,
-        ImageBlobDisplayComponent
+        ImageBlobDisplayComponent,
+        MiniToolbarComponent
     ]
 })
 export class SharedModule { }

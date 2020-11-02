@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
+import imageCompression from 'browser-image-compression';
 
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 import { FileUtility } from '../../../core/utility/file.utility';
@@ -12,27 +13,39 @@ import { CloudStorageHttpService } from '../../../core/service/http/cloud-storag
     styleUrls: ['./sprite-manager.component.scss']
 })
 export class SpriteManagerComponent implements OnInit {
-    public previewing: SpriteFile;
     public editing: SpriteFile;
+    public filter = '';
+    private _isLoaded = false;
     private _files: SpriteFile[] = [];
 
     constructor(private _cloudStorageHttp: CloudStorageHttpService, private _snackbar: MatSnackBar) { }
+
+    get isLoaded(): boolean {
+        return this._isLoaded;
+    }
 
     get files(): SpriteFile[] {
         return this._files;
     }
 
-    public async ngOnInit(): Promise<void> {
-        this._files = await this._cloudStorageHttp.getSprites();
+    get filteredFiles(): SpriteFile[] {
+        return this._files.filter(_ => _.name.toLowerCase().includes(this.filter ?? ''));
     }
 
-    public async onFilePreview(files: NgxFileDropEntry[]): Promise<void> {
+    public async ngOnInit(): Promise<void> {
+        this._files = await this._cloudStorageHttp.getSprites();
+        this._isLoaded = true;
+    }
+
+    public async onFileSelect(files: NgxFileDropEntry[]): Promise<void> {
         const file = files[0]?.fileEntry as FileSystemFileEntry;
-        this.previewing = await SpriteFile.fromFileEntry(file);
+        this.editing = await SpriteFile.fromFileEntry(file);
     }
 
     public async onFileEdit(file: SpriteFile, saveAsNew = false): Promise<void> {
         let succeeded = false;
+        const content = await imageCompression(file.content, { maxSizeMB: 0.2 });
+        file.content = new Blob([content], { type: content.type });
 
         if (saveAsNew) {
             succeeded = await this.addFile(file);
@@ -43,12 +56,6 @@ export class SpriteManagerComponent implements OnInit {
 
         if (succeeded) {
             this.editing = null;
-        }
-    }
-
-    public async onFileImport(): Promise<void> {
-        if (await this.addFile(this.previewing)) {
-            this.previewing = null;
         }
     }
 

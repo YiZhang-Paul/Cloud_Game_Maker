@@ -38,6 +38,10 @@
 
     & > span {
         padding-bottom: $inner-gap;
+        max-width: 100%;
         height: 10%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }

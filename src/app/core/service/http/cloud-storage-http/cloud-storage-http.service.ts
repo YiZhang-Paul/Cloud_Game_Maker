@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 import { environment } from '../../../../../environments/environment';
 import { SpriteFile } from '../../../data-model/sprite/sprite-file';
+import { Scene } from '../../../data-model/scene/scene';
 
 @Injectable({
     providedIn: 'root'
@@ -11,6 +14,45 @@ export class CloudStorageHttpService {
     private readonly _api = `${environment.apiUrl}/api/cloud-storage`;
 
     constructor(private _http: HttpClient) { }
+
+    public getScenes(): Observable<Scene[]> {
+        return this._http.get<Scene[]>(`${this._api}/scenes`).pipe(catchError(() => of([])));
+    }
+
+    public async addScene(scene: Scene): Promise<string> {
+        try {
+            const endpoint = `${this._api}/scenes`;
+
+            return await this._http.post(endpoint, scene, { responseType: 'text' }).toPromise();
+        }
+        catch {
+            return null;
+        }
+    }
+
+    public async deleteScene(scene: Scene): Promise<boolean> {
+        try {
+            const endpoint = `${this._api}/scenes/${encodeURIComponent(scene.id)}`;
+
+            return await this._http.delete<boolean>(endpoint).toPromise();
+        }
+        catch {
+            return false;
+        }
+    }
+
+    public async getSprite(sprite: SpriteFile): Promise<SpriteFile> {
+        try {
+            const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.id)}`;
+            const buffer = await this._http.get(endpoint, { responseType: 'arraybuffer' }).toPromise();
+            sprite.content = new Blob([buffer], { type: sprite.mime });
+
+            return sprite;
+        }
+        catch {
+            return null;
+        }
+    }
 
     public async getSprites(): Promise<SpriteFile[]> {
         try {

@@ -1,4 +1,4 @@
-@import '../../../../styles/presets.scss';
+@import '../../../../../styles/presets.scss';
 
 :host,
 .container {
@@ -28,14 +28,7 @@
 
     & > button {
         position: absolute;
-    }
-
-    & > button:first-of-type {
         top: 2%;
         right: 1.5%;
-    }
-
-    & > button:last-of-type {
-        bottom: 5%;
     }
 }

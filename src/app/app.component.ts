@@ -8,6 +8,7 @@ import { Scene } from './core/data-model/scene/scene';
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+    public tools = ['Scenes', 'Sprites'];
     private _scenes: Scene[] = [];
     private _activeScene: Scene;
 
