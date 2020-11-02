@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 import { SharedModule } from '../../shared/shared.module';
 
@@ -16,7 +17,8 @@ import { SceneManagerComponent } from './scene-manager/scene-manager.component';
     imports: [
         CommonModule,
         SharedModule,
-        StoreModule.forFeature(store.key, store.reducers)
+        StoreModule.forFeature(store.key, store.reducers),
+        EffectsModule.forFeature(Object.keys(store.effects).map(_ => store.effects[_]))
     ],
     exports: [
         SceneBuilderComponent,
