@@ -5,7 +5,6 @@ import * as reducers from './game-scene.reducers';
 import * as effects from './game-scene.effects';
 
 export const store = {
-    key: 'gameScene',
     state,
     selectors,
     actions,
