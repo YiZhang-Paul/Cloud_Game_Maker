@@ -19,15 +19,11 @@ export class CloudStorageHttpService {
         return this._http.get<Scene[]>(`${this._api}/scenes`).pipe(catchError(() => of([])));
     }
 
-    public async addScene(scene: Scene): Promise<string> {
-        try {
-            const endpoint = `${this._api}/scenes`;
+    public addScene(scene: Scene): Observable<string> {
+        const endpoint = `${this._api}/scenes`;
+        const responseType = 'text';
 
-            return await this._http.post(endpoint, scene, { responseType: 'text' }).toPromise();
-        }
-        catch {
-            return null;
-        }
+        return this._http.post(endpoint, scene, { responseType }).pipe(catchError(() => of(null)));
     }
 
     public async deleteScene(scene: Scene): Promise<boolean> {
