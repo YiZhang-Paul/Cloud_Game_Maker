@@ -36,6 +36,20 @@ export class ScenesEffects {
         })
     ));
 
+    public deleteSceneRemote$ = createEffect(() => this._actions$.pipe(
+        ofType(actions.deleteSceneRemote),
+        mergeMap(scene => this._cloudStorageHttp.deleteScene(scene).pipe(
+            map(isDeleted => ({ scene, isDeleted }))
+        )),
+        map(result => {
+            const { scene, isDeleted } = result;
+            const message = isDeleted ? 'Successfully removed the scene.' : 'Failed to remove the scene.';
+            this._snackBar.open(message, isDeleted ? 'Ok' : 'Got it');
+
+            return isDeleted ? actions.deleteScene(scene) : { type: 'no-op' };
+        })
+    ));
+
     constructor(private _actions$: Actions,
                 private _store: Store,
                 private _cloudStorageHttp: CloudStorageHttpService,
