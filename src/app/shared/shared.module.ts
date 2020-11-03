@@ -6,7 +6,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { ImageCropperModule } from 'ngx-image-cropper';
 
@@ -23,6 +23,15 @@ import { MiniToolbarComponent } from './components/toolbars/mini-toolbar/mini-to
         ConfirmPopupComponent,
         ImageBlobDisplayComponent,
         MiniToolbarComponent
+    ],
+    providers: [
+        {
+            provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+            useValue: {
+                duration: 3500,
+                verticalPosition: 'top'
+            }
+        }
     ],
     imports: [
         CommonModule,
