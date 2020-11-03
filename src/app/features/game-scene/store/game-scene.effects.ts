@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
 
 import { Scene } from '../../../core/data-model/scene/scene';
 import { FileUtility } from '../../../core/utility/file.utility';
@@ -26,13 +27,19 @@ export class ScenesEffects {
         mergeMap(scene => this._cloudStorageHttp.addScene(scene).pipe(
             map(id => ({ ...scene, id }))
         )),
-        filter(scene => Boolean(scene.id)),
-        map(scene => actions.addScene(scene))
+        map(scene => {
+            const isAdded = Boolean(scene.id);
+            const message = isAdded ? 'Successfully added the scene.' : 'Failed to add the scene.';
+            this._snackBar.open(message, isAdded ? 'Ok' : 'Got it');
+
+            return isAdded ? actions.addScene(scene) : { type: 'no-op' };
+        })
     ));
 
     constructor(private _actions$: Actions,
                 private _store: Store,
-                private _cloudStorageHttp: CloudStorageHttpService) { }
+                private _cloudStorageHttp: CloudStorageHttpService,
+                private _snackBar: MatSnackBar) { }
 
     private setUniqueName(scene: Scene, scenes: Scene[]): Scene {
         const names = scenes.map(_ => _.name);
