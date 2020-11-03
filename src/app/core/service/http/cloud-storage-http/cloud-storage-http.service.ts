@@ -26,15 +26,10 @@ export class CloudStorageHttpService {
         return this._http.post(endpoint, scene, { responseType }).pipe(catchError(() => of(null)));
     }
 
-    public async deleteScene(scene: Scene): Promise<boolean> {
-        try {
-            const endpoint = `${this._api}/scenes/${encodeURIComponent(scene.id)}`;
+    public deleteScene(scene: Scene): Observable<boolean> {
+        const endpoint = `${this._api}/scenes/${encodeURIComponent(scene.id)}`;
 
-            return await this._http.delete<boolean>(endpoint).toPromise();
-        }
-        catch {
-            return false;
-        }
+        return this._http.delete<boolean>(endpoint).pipe(catchError(() => of(false)));
     }
 
     public async getSprite(sprite: SpriteFile): Promise<SpriteFile> {
