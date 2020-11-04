@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { Scene } from '../../../core/data-model/scene/scene';
 import { FileUtility } from '../../../core/utility/file.utility';
@@ -14,10 +14,15 @@ import * as actions from './game-scene.actions';
 @Injectable()
 export class ScenesEffects {
 
+    public startGetScenesRemote = createEffect(() => this._actions$.pipe(
+        ofType(actions.startGetScenesRemote),
+        switchMap(() => [actions.toggleIsSceneLoaded(), actions.getScenesRemote()])
+    ));
+
     public getScenesRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.getScenesRemote),
         mergeMap(() => this._cloudStorageHttp.getScenes()),
-        map(scenes => actions.addScenes({ payload: scenes }))
+        switchMap(scenes => [actions.addScenes({ payload: scenes }), actions.toggleIsSceneLoaded()])
     ));
 
     public addSceneRemote$ = createEffect(() => this._actions$.pipe(

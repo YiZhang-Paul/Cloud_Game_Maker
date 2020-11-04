@@ -17,11 +17,16 @@ function deleteScene(state: IGameSceneState, scene: Scene): IGameSceneState {
     return { ...state, scenes: state.scenes.filter(_ => _.id !== scene.id) };
 }
 
+function toggleIsSceneLoaded(state: IGameSceneState): IGameSceneState {
+    return { ...state, isSceneLoaded: !state.isSceneLoaded };
+}
+
 const _scenesReducer = createReducer(
     initialState,
     on(actions.addScenes, addScenes),
     on(actions.addScene, addScene),
-    on(actions.deleteScene, deleteScene)
+    on(actions.deleteScene, deleteScene),
+    on(actions.toggleIsSceneLoaded, toggleIsSceneLoaded)
 );
 
 export function scenesReducer(state: IGameSceneState, action: Action): IGameSceneState {
