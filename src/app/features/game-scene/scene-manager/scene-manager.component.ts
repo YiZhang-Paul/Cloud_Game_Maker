@@ -17,17 +17,17 @@ import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm
 export class SceneManagerComponent implements OnInit {
     public toolbarOptions = [MiniToolbarOption.Create, MiniToolbarOption.Search];
     private _hasScenes$: Observable<boolean>;
+    private _isSceneLoaded$: Observable<boolean>;
     private _filteredScenes$: Observable<Scene[]>;
-    private _isLoaded = false;
 
     constructor(private _store: Store, private _dialog: MatDialog) { }
 
-    get isLoaded(): boolean {
-        return this._isLoaded;
-    }
-
     get hasScenes$(): Observable<boolean> {
         return this._hasScenes$;
+    }
+
+    get isSceneLoaded$(): Observable<boolean> {
+        return this._isSceneLoaded$;
     }
 
     get filteredScenes$(): Observable<Scene[]> {
@@ -35,17 +35,17 @@ export class SceneManagerComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this._store.dispatch(store.actions.getScenesRemote());
+        this._store.dispatch(store.actions.startGetScenesRemote());
         this._hasScenes$ = this._store.select(store.selectors.hasScenes);
+        this._isSceneLoaded$ = this._store.select(store.selectors.isSceneLoaded);
         this.onSceneSearch('');
-        this._isLoaded = true;
     }
 
     public onSceneSearch(keyword: string): void {
         this._filteredScenes$ = this._store.select(store.selectors.getFilteredScenes, keyword);
     }
 
-    public async onSceneCreate(): Promise<void> {
+    public onSceneCreate(): void {
         this._store.dispatch(store.actions.addSceneRemote(new Scene()));
     }
 

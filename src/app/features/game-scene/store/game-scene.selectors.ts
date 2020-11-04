@@ -14,6 +14,11 @@ export const getAllScenes = createSelector(
     (state: IGameSceneState) => state.scenes
 );
 
+export const isSceneLoaded = createSelector(
+    getFeatureState,
+    (state: IGameSceneState) => state.isSceneLoaded
+);
+
 export const getFilteredScenes = createSelector(
     getFeatureState,
     (state: IGameSceneState, filter: string) => {
