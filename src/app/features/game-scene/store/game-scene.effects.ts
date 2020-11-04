@@ -14,7 +14,7 @@ import * as actions from './game-scene.actions';
 @Injectable()
 export class ScenesEffects {
 
-    public startGetScenesRemote = createEffect(() => this._actions$.pipe(
+    public startGetScenesRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.startGetScenesRemote),
         switchMap(() => [actions.toggleIsSceneLoaded(), actions.getScenesRemote()])
     ));

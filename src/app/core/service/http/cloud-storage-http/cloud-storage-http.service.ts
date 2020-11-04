@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
+import { catchError, mergeMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
 import { environment } from '../../../../../environments/environment';
@@ -45,16 +45,13 @@ export class CloudStorageHttpService {
         }
     }
 
-    public async getSprites(): Promise<SpriteFile[]> {
-        try {
-            const endpoint = `${this._api}/sprites`;
-            const sprites = await this._http.get<SpriteFile[]>(endpoint).toPromise();
+    public getSprites(): Observable<SpriteFile[]> {
+        const endpoint = `${this._api}/sprites`;
 
-            return sprites.map(_ => SpriteFile.fromSpriteFile(_, true));
-        }
-        catch {
-            return [];
-        }
+        return this._http.get<SpriteFile[]>(endpoint).pipe(
+            mergeMap(sprites => of(sprites.map(_ => SpriteFile.fromSpriteFile(_, true)))),
+            catchError(() => of([]))
+        );
     }
 
     public async addSprite(sprite: SpriteFile): Promise<string> {
@@ -85,14 +82,9 @@ export class CloudStorageHttpService {
         }
     }
 
-    public async deleteSprite(sprite: SpriteFile): Promise<boolean> {
-        try {
-            const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.id)}`;
+    public deleteSprite(sprite: SpriteFile): Observable<boolean> {
+        const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.id)}`;
 
-            return await this._http.delete<boolean>(endpoint).toPromise();
-        }
-        catch {
-            return false;
-        }
+        return this._http.delete<boolean>(endpoint).pipe(catchError(() => of(false)));
     }
 }
