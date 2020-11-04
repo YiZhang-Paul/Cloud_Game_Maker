@@ -10,7 +10,7 @@ function addSprites(state: IImageSpriteState, props: { payload: SpriteFile[] }):
 }
 
 function addSprite(state: IImageSpriteState, sprite: SpriteFile): IImageSpriteState {
-    return { ...state, sprites: [...state.sprites, sprite] };
+    return { ...state, sprites: [sprite, ...state.sprites] };
 }
 
 function deleteSprite(state: IImageSpriteState, sprite: SpriteFile): IImageSpriteState {
