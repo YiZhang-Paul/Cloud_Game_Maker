@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 import { FileUtility } from '../../../core/utility/file.utility';
@@ -42,6 +42,39 @@ export class SpritesEffects {
             this._snackBar.open(message, isAdded ? 'Ok' : 'Got it');
 
             return isAdded ? actions.addSprite(sprite) : { type: 'no-op' };
+        })
+    ));
+
+    public updateSpriteRemote$ = createEffect(() => this._actions$.pipe(
+        ofType(actions.updateSpriteRemote),
+        withLatestFrom(this._store.select(selectors.getAllSprites)),
+        map(([sprite, sprites]) => {
+            const index = sprites.findIndex(_ => _.id === sprite.originated);
+
+            return ({ sprite, sprites, index });
+        }),
+        filter(result => result.index !== -1),
+        map(result => {
+            const { sprite, sprites, index } = result;
+            const hasNewName = sprite.name !== sprites[index].name;
+            const updated = hasNewName ? this.setUniqueName(sprite, sprites) : sprite;
+
+            return ({ sprite: updated, index });
+        }),
+        mergeMap(result => this._cloudStorageHttp.updateSprite(result.sprite).pipe(
+            map(id => {
+                result.sprite.id = id;
+
+                return result;
+            })
+        )),
+        map(result => {
+            const { sprite, index } = result;
+            const isUpdated = Boolean(sprite.id);
+            const message = isUpdated ? 'Successfully updated the sprite.' : 'Failed to update the sprite.';
+            this._snackBar.open(message, isUpdated ? 'Ok' : 'Got it');
+
+            return isUpdated ? actions.updateSprite({ payload: sprite, index }) : { type: 'no-op' };
         })
     ));
 

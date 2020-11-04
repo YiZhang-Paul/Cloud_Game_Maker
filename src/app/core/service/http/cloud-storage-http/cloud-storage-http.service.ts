@@ -63,18 +63,13 @@ export class CloudStorageHttpService {
         return this._http.post(endpoint, data, { responseType: 'text' }).pipe(catchError(() => of(null)));
     }
 
-    public async updateSprite(sprite: SpriteFile): Promise<string> {
-        try {
-            const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.originated)}`;
-            const data = new FormData();
-            data.append('file', sprite.content);
-            data.append('spriteJson', JSON.stringify(sprite));
+    public updateSprite(sprite: SpriteFile): Observable<string> {
+        const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.originated)}`;
+        const data = new FormData();
+        data.append('file', sprite.content);
+        data.append('spriteJson', JSON.stringify(sprite));
 
-            return await this._http.put(endpoint, data, { responseType: 'text' }).toPromise();
-        }
-        catch {
-            return null;
-        }
+        return this._http.put(endpoint, data, { responseType: 'text' }).pipe(catchError(() => of(null)));
     }
 
     public deleteSprite(sprite: SpriteFile): Observable<boolean> {
