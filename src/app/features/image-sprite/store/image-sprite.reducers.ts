@@ -5,6 +5,10 @@ import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 import { IImageSpriteState, initialState } from './image-sprite.state';
 import * as actions from './image-sprite.actions';
 
+function setActiveSprite(state: IImageSpriteState, sprite: SpriteFile): IImageSpriteState {
+    return { ...state, activeSprite: sprite };
+}
+
 function addSprites(state: IImageSpriteState, props: { payload: SpriteFile[] }): IImageSpriteState {
     return { ...state, sprites: [...state.sprites, ...props.payload] };
 }
@@ -30,6 +34,7 @@ function toggleIsSpriteLoaded(state: IImageSpriteState): IImageSpriteState {
 
 const _spritesReducer = createReducer(
     initialState,
+    on(actions.setActiveSprite, setActiveSprite),
     on(actions.addSprites, addSprites),
     on(actions.addSprite, addSprite),
     on(actions.updateSprite, updateSprite),

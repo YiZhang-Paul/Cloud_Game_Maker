@@ -14,6 +14,11 @@ export const getAllSprites = createSelector(
     (state: IImageSpriteState) => state.sprites
 );
 
+export const getActiveSprite = createSelector(
+    getFeatureState,
+    (state: IImageSpriteState) => state.activeSprite
+);
+
 export const isSpriteLoaded = createSelector(
     getFeatureState,
     (state: IImageSpriteState) => state.isSpriteLoaded

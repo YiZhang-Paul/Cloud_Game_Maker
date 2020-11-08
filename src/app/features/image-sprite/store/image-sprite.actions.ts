@@ -4,6 +4,7 @@ import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 
 const spriteManagerSource = '[Sprite Manager]';
 
+export const setActiveSprite = createAction(`${spriteManagerSource} Set Active Sprite`, props<SpriteFile>());
 export const addSprites = createAction(`${spriteManagerSource} Add Sprites`, props<{ payload: SpriteFile[] }>());
 export const addSprite = createAction(`${spriteManagerSource} Add Sprite`, props<SpriteFile>());
 export const updateSprite = createAction(`${spriteManagerSource} Update Sprite`, props<{ payload: SpriteFile, index: number }>());
