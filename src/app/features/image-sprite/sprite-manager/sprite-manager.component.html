@@ -1,10 +1,10 @@
 <div *ngIf="isSpriteLoaded$ | async" class="container">
-    <app-sprite-editor *ngIf="editing"
-        [file]="editing"
+    <app-sprite-editor *ngIf="activeSprite$ | async"
+        [file]="activeSprite$ | async"
         (importNew)="onFileEdit($event, true)"
         (overwrite)="onFileEdit($event)"
         (saveAsNew)="onFileEdit($event, true)"
-        (cancel)="editing = null"
+        (cancel)="setActiveSprite(null)"
         cdkDragBoundary="body"
         cdkDrag>
 
@@ -31,7 +31,7 @@
         <div *ngIf="(filteredSprites$ | async).length" class="sprite-files" fxLayout="row wrap" fxLayoutAlign="space-between">
             <app-sprite-thumbnail-item *ngFor="let file of filteredSprites$ | async"
                 [file]="file"
-                (editStart)="editing = file"
+                (editStart)="setActiveSprite(file)"
                 (delete)="onFileDelete(file)">
             </app-sprite-thumbnail-item>
         </div>

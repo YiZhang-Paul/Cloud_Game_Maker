@@ -50,12 +50,16 @@ export class SpritesEffects {
                 return sprite;
             })
         )),
-        map(sprite => {
+        switchMap(sprite => {
             const isAdded = Boolean(sprite.id);
             const message = isAdded ? 'Successfully added the sprite.' : 'Failed to add the sprite.';
             this._snackBar.open(message, isAdded ? 'Ok' : 'Got it');
 
-            return isAdded ? actions.addSprite(sprite) : { type: 'no-op' };
+            if (!isAdded) {
+                return [{ type: 'no-op' }];
+            }
+
+            return [actions.addSprite(sprite), actions.setActiveSprite(null)];
         })
     ));
 
@@ -82,13 +86,17 @@ export class SpritesEffects {
                 return result;
             })
         )),
-        map(result => {
+        switchMap(result => {
             const { sprite, index } = result;
             const isUpdated = Boolean(sprite.id);
             const message = isUpdated ? 'Successfully updated the sprite.' : 'Failed to update the sprite.';
             this._snackBar.open(message, isUpdated ? 'Ok' : 'Got it');
 
-            return isUpdated ? actions.updateSprite({ payload: sprite, index }) : { type: 'no-op' };
+            if (!isUpdated) {
+                return [{ type: 'no-op' }];
+            }
+
+            return [actions.updateSprite({ payload: sprite, index }), actions.setActiveSprite(null)];
         })
     ));
 
