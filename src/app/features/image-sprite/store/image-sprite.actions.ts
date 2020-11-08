@@ -12,5 +12,6 @@ export const startGetSpritesRemote = createAction(`${spriteManagerSource} Start 
 export const getSpritesRemote = createAction(`${spriteManagerSource} Get Sprites Remote`);
 export const addSpriteRemote = createAction(`${spriteManagerSource} Add Sprite Remote`, props<SpriteFile>());
 export const updateSpriteRemote = createAction(`${spriteManagerSource} Update Sprite Remote`, props<SpriteFile>());
+export const editSpriteRemote = createAction(`${spriteManagerSource} Edit Sprite Remote`, props<{ payload: SpriteFile, isNew: boolean }>());
 export const deleteSpriteRemote = createAction(`${spriteManagerSource} Delete Sprite Remote`, props<SpriteFile>());
 export const toggleIsSpriteLoaded = createAction(`${spriteManagerSource} Toggle Is Sprite Loaded`);

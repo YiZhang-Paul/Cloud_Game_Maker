@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { from, Observable, of } from 'rxjs';
 import { filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
+import imageCompression from 'browser-image-compression';
 
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 import { FileUtility } from '../../../core/utility/file.utility';
@@ -23,6 +25,18 @@ export class SpritesEffects {
         ofType(actions.getSpritesRemote),
         mergeMap(() => this._cloudStorageHttp.getSprites()),
         switchMap(sprites => [actions.addSprites({ payload: sprites }), actions.toggleIsSpriteLoaded()])
+    ));
+
+    public editSpriteRemote$ = createEffect(() => this._actions$.pipe(
+        ofType(actions.editSpriteRemote),
+        mergeMap(payload => this.compressFile(payload.payload).pipe(
+            map(sprite => ({ sprite, isNew: payload.isNew }))
+        )),
+        map(result => {
+            const { sprite, isNew } = result;
+
+            return isNew ? actions.addSpriteRemote(sprite) : actions.updateSpriteRemote(sprite);
+        })
     ));
 
     public addSpriteRemote$ = createEffect(() => this._actions$.pipe(
@@ -102,5 +116,17 @@ export class SpritesEffects {
         sprite.name = FileUtility.handleDuplicateName(names, sprite.name);
 
         return sprite;
+    }
+
+    private compressFile(file: SpriteFile): Observable<SpriteFile> {
+        const promise = imageCompression(file.content, { maxSizeMB: 0.2 });
+
+        return from(promise).pipe(
+            mergeMap(content => {
+                file.content = new Blob([content], { type: content.type });
+
+                return of(file);
+            })
+        );
     }
 }
