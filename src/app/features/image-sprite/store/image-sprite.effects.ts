@@ -30,26 +30,21 @@ export class SpritesEffects {
     public editSpriteRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.editSpriteRemote),
         mergeMap(payload => this.compressFile(payload.payload).pipe(
-            map(sprite => ({ sprite, isNew: payload.isNew }))
-        )),
-        map(result => {
-            const { sprite, isNew } = result;
+            map(sprite => {
+                if (payload.isNew) {
+                    return actions.addSpriteRemote(sprite);
+                }
 
-            return isNew ? actions.addSpriteRemote(sprite) : actions.updateSpriteRemote(sprite);
-        })
+                return actions.updateSpriteRemote(sprite);
+            })
+        ))
     ));
 
     public addSpriteRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.addSpriteRemote),
         withLatestFrom(this._store.select(selectors.getAllSprites)),
         map(([sprite, sprites]) => this.setUniqueName(sprite, sprites)),
-        mergeMap(sprite => this._cloudStorageHttp.addSprite(sprite).pipe(
-            map(id => {
-                sprite.id = id;
-
-                return sprite;
-            })
-        )),
+        mergeMap(sprite => this._cloudStorageHttp.addSprite(sprite).pipe(map(id => sprite.setId(id)))),
         switchMap(sprite => {
             const isAdded = Boolean(sprite.id);
             const message = isAdded ? 'Successfully added the sprite.' : 'Failed to add the sprite.';
@@ -80,11 +75,7 @@ export class SpritesEffects {
             return ({ sprite: updated, index });
         }),
         mergeMap(result => this._cloudStorageHttp.updateSprite(result.sprite).pipe(
-            map(id => {
-                result.sprite.id = id;
-
-                return result;
-            })
+            map(id => ({ ...result, sprite: result.sprite.setId(id) }))
         )),
         switchMap(result => {
             const { sprite, index } = result;
@@ -103,15 +94,13 @@ export class SpritesEffects {
     public deleteSpriteRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.deleteSpriteRemote),
         mergeMap(sprite => this._cloudStorageHttp.deleteSprite(sprite).pipe(
-            map(isDeleted => ({ sprite, isDeleted }))
-        )),
-        map(result => {
-            const { sprite, isDeleted } = result;
-            const message = isDeleted ? 'Successfully removed the sprite.' : 'Failed to remove the sprite.';
-            this._snackBar.open(message, isDeleted ? 'Ok' : 'Got it');
+            map(isDeleted => {
+                const message = isDeleted ? 'Successfully removed the sprite.' : 'Failed to remove the sprite.';
+                this._snackBar.open(message, isDeleted ? 'Ok' : 'Got it');
 
-            return isDeleted ? actions.deleteSprite(sprite) : { type: 'no-op' };
-        })
+                return isDeleted ? actions.deleteSprite(sprite) : { type: 'no-op' };
+            })
+        ))
     ));
 
     constructor(private _actions$: Actions,
@@ -130,11 +119,8 @@ export class SpritesEffects {
         const promise = imageCompression(file.content, { maxSizeMB: 0.2 });
 
         return from(promise).pipe(
-            mergeMap(content => {
-                file.content = new Blob([content], { type: content.type });
-
-                return of(file);
-            })
+            mergeMap(content => of(new Blob([content], { type: content.type }))),
+            map(content => file.setContent(content))
         );
     }
 }

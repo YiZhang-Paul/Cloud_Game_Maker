@@ -49,7 +49,7 @@ export class SceneManagerComponent implements OnInit {
         this._store.dispatch(store.actions.addSceneRemote(new Scene()));
     }
 
-    public async onDelete(scene: Scene): Promise<void> {
+    public onDelete(scene: Scene): void {
         const title = 'Are you sure?';
         const message = 'The scene will be permanently removed.';
 
@@ -59,8 +59,10 @@ export class SceneManagerComponent implements OnInit {
             height: '175px'
         });
 
-        if (await dialog.afterClosed().toPromise()) {
-            this._store.dispatch(store.actions.deleteSceneRemote(scene));
-        }
+        dialog.afterClosed().subscribe(confirmed => {
+            if (confirmed) {
+                this._store.dispatch(store.actions.deleteSceneRemote(scene));
+            }
+        });
     }
 }

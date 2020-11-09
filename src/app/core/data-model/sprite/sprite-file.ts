@@ -36,12 +36,18 @@ export class SpriteFile {
         sprite.mime = 'image/jpeg';
         sprite.extension = 'jpg';
 
-        return callback().pipe(
-            map(content => {
-                sprite.content = content;
+        return callback().pipe(map(content => sprite.setContent(content)));
+    }
 
-                return sprite;
-            })
-        );
+    public setId(id: string): SpriteFile {
+        this.id = id;
+
+        return this;
+    }
+
+    public setContent(content: Blob): SpriteFile {
+        this.content = content;
+
+        return this;
     }
 }
