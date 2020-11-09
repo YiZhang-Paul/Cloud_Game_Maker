@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
 import { store } from '../store';
 import { Scene } from '../../../core/data-model/scene/scene';
@@ -16,33 +17,21 @@ import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm
 })
 export class SceneManagerComponent implements OnInit {
     public toolbarOptions = [MiniToolbarOption.Create, MiniToolbarOption.Search];
-    private _hasScenes$: Observable<boolean>;
-    private _isSceneLoaded$: Observable<boolean>;
-    private _filteredScenes$: Observable<Scene[]>;
+    public hasScenes$: Observable<boolean>;
+    public isSceneLoaded$: Observable<boolean>;
+    public filteredScenes$: Observable<Scene[]>;
 
     constructor(private _store: Store, private _dialog: MatDialog) { }
 
-    get hasScenes$(): Observable<boolean> {
-        return this._hasScenes$;
-    }
-
-    get isSceneLoaded$(): Observable<boolean> {
-        return this._isSceneLoaded$;
-    }
-
-    get filteredScenes$(): Observable<Scene[]> {
-        return this._filteredScenes$;
-    }
-
     public ngOnInit(): void {
         this._store.dispatch(store.actions.startGetScenesRemote());
-        this._hasScenes$ = this._store.select(store.selectors.hasScenes);
-        this._isSceneLoaded$ = this._store.select(store.selectors.isSceneLoaded);
+        this.hasScenes$ = this._store.select(store.selectors.hasScenes);
+        this.isSceneLoaded$ = this._store.select(store.selectors.isSceneLoaded);
         this.onSceneSearch('');
     }
 
     public onSceneSearch(keyword: string): void {
-        this._filteredScenes$ = this._store.select(store.selectors.getFilteredScenes, keyword);
+        this.filteredScenes$ = this._store.select(store.selectors.getFilteredScenes, keyword);
     }
 
     public onSceneCreate(): void {
@@ -59,10 +48,9 @@ export class SceneManagerComponent implements OnInit {
             height: '175px'
         });
 
-        dialog.afterClosed().subscribe(confirmed => {
-            if (confirmed) {
-                this._store.dispatch(store.actions.deleteSceneRemote(scene));
-            }
-        });
+        dialog.afterClosed().pipe(
+            filter(_ => _),
+            map(() => this._store.dispatch(store.actions.deleteSceneRemote(scene)))
+        );
     }
 }
