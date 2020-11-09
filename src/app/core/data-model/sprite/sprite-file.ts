@@ -1,4 +1,6 @@
 import { v4 as uuid } from 'uuid';
+import { bindCallback, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { FileSystemFileEntry } from 'ngx-file-drop';
 
 export class SpriteFile {
@@ -27,13 +29,19 @@ export class SpriteFile {
         return sprite;
     }
 
-    public static async fromFileEntry(file: FileSystemFileEntry): Promise<SpriteFile> {
+    public static fromFileEntry(file: FileSystemFileEntry): Observable<SpriteFile> {
+        const callback = bindCallback(file.file);
         const sprite = new SpriteFile();
         sprite.name = file.name.replace(/\.[^.]*$/g, '');
-        sprite.content = await new Promise(resolve => file.file(resolve));
-        sprite.mime = sprite.content.type;
-        sprite.extension = sprite.content.type.includes('png') ? 'png' : 'jpg';
+        sprite.mime = 'image/jpeg';
+        sprite.extension = 'jpg';
 
-        return sprite;
+        return callback().pipe(
+            map(content => {
+                sprite.content = content;
+
+                return sprite;
+            })
+        );
     }
 }

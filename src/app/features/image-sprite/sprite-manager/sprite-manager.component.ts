@@ -12,44 +12,28 @@ import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
     styleUrls: ['./sprite-manager.component.scss']
 })
 export class SpriteManagerComponent implements OnInit {
-    private _hasSprites$: Observable<boolean>;
-    private _isSpriteLoaded$: Observable<boolean>;
-    private _filteredSprites$: Observable<SpriteFile[]>;
-    private _activeSprite$: Observable<SpriteFile>;
+    public hasSprites$: Observable<boolean>;
+    public isSpriteLoaded$: Observable<boolean>;
+    public filteredSprites$: Observable<SpriteFile[]>;
+    public activeSprite$: Observable<SpriteFile>;
 
     constructor(private _store: Store) { }
 
-    get hasSprites$(): Observable<boolean> {
-        return this._hasSprites$;
-    }
-
-    get isSpriteLoaded$(): Observable<boolean> {
-        return this._isSpriteLoaded$;
-    }
-
-    get filteredSprites$(): Observable<SpriteFile[]> {
-        return this._filteredSprites$;
-    }
-
-    get activeSprite$(): Observable<SpriteFile> {
-        return this._activeSprite$;
-    }
-
     public ngOnInit(): void {
         this._store.dispatch(store.actions.startGetSpritesRemote());
-        this._hasSprites$ = this._store.select(store.selectors.hasSprites);
-        this._isSpriteLoaded$ = this._store.select(store.selectors.isSpriteLoaded);
-        this._activeSprite$ = this._store.select(store.selectors.getActiveSprite);
+        this.hasSprites$ = this._store.select(store.selectors.hasSprites);
+        this.isSpriteLoaded$ = this._store.select(store.selectors.isSpriteLoaded);
+        this.activeSprite$ = this._store.select(store.selectors.getActiveSprite);
         this.onFileSearch('');
     }
 
-    public async onFileSelect(files: NgxFileDropEntry[]): Promise<void> {
+    public onFileSelect(files: NgxFileDropEntry[]): void {
         const file = files[0]?.fileEntry as FileSystemFileEntry;
-        this.setActiveSprite(await SpriteFile.fromFileEntry(file));
+        SpriteFile.fromFileEntry(file).subscribe(this.setActiveSprite);
     }
 
     public onFileSearch(keyword: string): void {
-        this._filteredSprites$ = this._store.select(store.selectors.getFilteredSprites, keyword);
+        this.filteredSprites$ = this._store.select(store.selectors.getFilteredSprites, keyword);
     }
 
     public onFileEdit(file: SpriteFile, saveAsNew = false): void {
