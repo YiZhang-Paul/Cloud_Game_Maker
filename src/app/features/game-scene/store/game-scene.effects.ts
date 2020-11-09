@@ -16,22 +16,26 @@ export class ScenesEffects {
 
     public startGetScenesRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.startGetScenesRemote),
-        switchMap(() => [actions.toggleIsSceneLoaded(), actions.getScenesRemote()])
+        switchMap(() => [
+            actions.setIsSceneLoaded({ payload: false }),
+            actions.getScenesRemote()
+        ])
     ));
 
     public getScenesRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.getScenesRemote),
         mergeMap(() => this._cloudStorageHttp.getScenes()),
-        switchMap(scenes => [actions.addScenes({ payload: scenes }), actions.toggleIsSceneLoaded()])
+        switchMap(scenes => [
+            actions.addScenes({ payload: scenes }),
+            actions.setIsSceneLoaded({ payload: true })
+        ])
     ));
 
     public addSceneRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.addSceneRemote),
         withLatestFrom(this._store.select(selectors.getAllScenes)),
         map(([scene, scenes]) => this.setUniqueName(scene, scenes)),
-        mergeMap(scene => this._cloudStorageHttp.addScene(scene).pipe(
-            map(id => ({ ...scene, id }))
-        )),
+        mergeMap(scene => this._cloudStorageHttp.addScene(scene).pipe(map(id => scene.setId(id)))),
         map(scene => {
             const isAdded = Boolean(scene.id);
             const message = isAdded ? 'Successfully added the scene.' : 'Failed to add the scene.';
@@ -44,15 +48,13 @@ export class ScenesEffects {
     public deleteSceneRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.deleteSceneRemote),
         mergeMap(scene => this._cloudStorageHttp.deleteScene(scene).pipe(
-            map(isDeleted => ({ scene, isDeleted }))
-        )),
-        map(result => {
-            const { scene, isDeleted } = result;
-            const message = isDeleted ? 'Successfully removed the scene.' : 'Failed to remove the scene.';
-            this._snackBar.open(message, isDeleted ? 'Ok' : 'Got it');
+            map(isDeleted => {
+                const message = isDeleted ? 'Successfully removed the scene.' : 'Failed to remove the scene.';
+                this._snackBar.open(message, isDeleted ? 'Ok' : 'Got it');
 
-            return isDeleted ? actions.deleteScene(scene) : { type: 'no-op' };
-        })
+                return isDeleted ? actions.deleteScene(scene) : { type: 'no-op' };
+            })
+        ))
     ));
 
     constructor(private _actions$: Actions,
@@ -62,8 +64,8 @@ export class ScenesEffects {
 
     private setUniqueName(scene: Scene, scenes: Scene[]): Scene {
         const names = scenes.map(_ => _.name);
-        const name = FileUtility.handleDuplicateName(names, scene.name, '_', '');
+        scene.name = FileUtility.handleDuplicateName(names, scene.name, '_', '');
 
-        return { ...scene, name };
+        return scene;
     }
 }

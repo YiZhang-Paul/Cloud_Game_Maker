@@ -11,4 +11,4 @@ export const startGetScenesRemote = createAction(`${source} Start Get Scenes Rem
 export const getScenesRemote = createAction(`${source} Get Scenes Remote`);
 export const addSceneRemote = createAction(`${source} Add Scene Remote`, props<Scene>());
 export const deleteSceneRemote = createAction(`${source} Delete Scene Remote`, props<Scene>());
-export const toggleIsSceneLoaded = createAction(`${source} Toggle Is Scene Loaded`);
+export const setIsSceneLoaded = createAction(`${source} Set Is Scene Loaded`, props<{ payload: boolean }>());

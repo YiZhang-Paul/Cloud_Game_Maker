@@ -17,8 +17,8 @@ function deleteScene(state: IGameSceneState, scene: Scene): IGameSceneState {
     return { ...state, scenes: state.scenes.filter(_ => _.id !== scene.id) };
 }
 
-function toggleIsSceneLoaded(state: IGameSceneState): IGameSceneState {
-    return { ...state, isSceneLoaded: !state.isSceneLoaded };
+function setIsSceneLoaded(state: IGameSceneState, props: { payload: boolean }): IGameSceneState {
+    return { ...state, isSceneLoaded: props.payload };
 }
 
 const _scenesReducer = createReducer(
@@ -26,7 +26,7 @@ const _scenesReducer = createReducer(
     on(actions.addScenes, addScenes),
     on(actions.addScene, addScene),
     on(actions.deleteScene, deleteScene),
-    on(actions.toggleIsSceneLoaded, toggleIsSceneLoaded)
+    on(actions.setIsSceneLoaded, setIsSceneLoaded)
 );
 
 export function scenesReducer(state: IGameSceneState, action: Action): IGameSceneState {
