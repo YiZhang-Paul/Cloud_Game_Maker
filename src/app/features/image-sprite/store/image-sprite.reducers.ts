@@ -28,8 +28,8 @@ function deleteSprite(state: IImageSpriteState, sprite: SpriteFile): IImageSprit
     return { ...state, sprites: state.sprites.filter(_ => _.id !== sprite.id) };
 }
 
-function toggleIsSpriteLoaded(state: IImageSpriteState): IImageSpriteState {
-    return { ...state, isSpriteLoaded: !state.isSpriteLoaded };
+function setIsSpriteLoaded(state: IImageSpriteState, props: { payload: boolean }): IImageSpriteState {
+    return { ...state, isSpriteLoaded: props.payload };
 }
 
 const _spritesReducer = createReducer(
@@ -39,7 +39,7 @@ const _spritesReducer = createReducer(
     on(actions.addSprite, addSprite),
     on(actions.updateSprite, updateSprite),
     on(actions.deleteSprite, deleteSprite),
-    on(actions.toggleIsSpriteLoaded, toggleIsSpriteLoaded)
+    on(actions.setIsSpriteLoaded, setIsSpriteLoaded)
 );
 
 export function spritesReducer(state: IImageSpriteState, action: Action): IImageSpriteState {

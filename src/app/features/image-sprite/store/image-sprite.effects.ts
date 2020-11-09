@@ -18,13 +18,19 @@ export class SpritesEffects {
 
     public startGetSpritesRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.startGetSpritesRemote),
-        switchMap(() => [actions.toggleIsSpriteLoaded(), actions.getSpritesRemote()])
+        switchMap(() => [
+            actions.setIsSpriteLoaded({ payload: false }),
+            actions.getSpritesRemote()
+        ])
     ));
 
     public getSpritesRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.getSpritesRemote),
         mergeMap(() => this._cloudStorageHttp.getSprites()),
-        switchMap(sprites => [actions.addSprites({ payload: sprites }), actions.toggleIsSpriteLoaded()])
+        switchMap(sprites => [
+            actions.addSprites({ payload: sprites }),
+            actions.setIsSpriteLoaded({ payload: true })
+        ])
     ));
 
     public editSpriteRemote$ = createEffect(() => this._actions$.pipe(
@@ -87,7 +93,10 @@ export class SpritesEffects {
                 return [{ type: 'no-op' }];
             }
 
-            return [actions.updateSprite({ payload: sprite, index }), actions.setActiveSprite(null)];
+            return [
+                actions.updateSprite({ payload: sprite, index }),
+                actions.setActiveSprite(null)
+            ];
         })
     ));
 
