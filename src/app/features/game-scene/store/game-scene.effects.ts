@@ -26,7 +26,7 @@ export class ScenesEffects {
         ofType(actions.getScenesRemote),
         mergeMap(() => this._cloudStorageHttp.getScenes()),
         switchMap(scenes => [
-            actions.addScenes({ payload: scenes }),
+            actions.setScenes({ payload: scenes }),
             actions.setIsSceneLoaded({ payload: true })
         ])
     ));
