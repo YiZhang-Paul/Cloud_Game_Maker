@@ -32,17 +32,13 @@ export class CloudStorageHttpService {
         return this._http.delete<boolean>(endpoint).pipe(catchError(() => of(false)));
     }
 
-    public async getSprite(sprite: SpriteFile): Promise<SpriteFile> {
-        try {
-            const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.id)}`;
-            const buffer = await this._http.get(endpoint, { responseType: 'arraybuffer' }).toPromise();
-            sprite.content = new Blob([buffer], { type: sprite.mime });
+    public getSpriteContent(sprite: SpriteFile): Observable<Blob> {
+        const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.id)}`;
 
-            return sprite;
-        }
-        catch {
-            return null;
-        }
+        return this._http.get(endpoint, { responseType: 'arraybuffer' }).pipe(
+            mergeMap(buffer => of(new Blob([buffer], { type: sprite.mime }))),
+            catchError(() => of(null))
+        );
     }
 
     public getSprites(): Observable<SpriteFile[]> {
