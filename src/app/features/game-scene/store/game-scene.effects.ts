@@ -35,7 +35,9 @@ export class ScenesEffects {
         ofType(actions.addSceneRemote),
         withLatestFrom(this._store.select(selectors.getAllScenes)),
         map(([scene, scenes]) => this.setUniqueName(scene, scenes)),
-        mergeMap(scene => this._cloudStorageHttp.addScene(scene).pipe(map(id => scene.setId(id)))),
+        mergeMap(scene => this._cloudStorageHttp.addScene(scene).pipe(
+            map(id => ({ ...scene, id }))
+        )),
         map(scene => {
             const isAdded = Boolean(scene.id);
             const message = isAdded ? 'Successfully added the scene.' : 'Failed to add the scene.';
@@ -64,8 +66,8 @@ export class ScenesEffects {
 
     private setUniqueName(scene: Scene, scenes: Scene[]): Scene {
         const names = scenes.map(_ => _.name);
-        scene.name = FileUtility.handleDuplicateName(names, scene.name, '_', '');
+        const name = FileUtility.handleDuplicateName(names, scene.name, '_', '');
 
-        return scene;
+        return { ...scene, name };
     }
 }
