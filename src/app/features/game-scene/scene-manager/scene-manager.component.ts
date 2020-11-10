@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
 
 import { store } from '../store';
 import { Scene } from '../../../core/data-model/scene/scene';
@@ -48,9 +47,10 @@ export class SceneManagerComponent implements OnInit {
             height: '175px'
         });
 
-        dialog.afterClosed().pipe(
-            filter(_ => _),
-            map(() => this._store.dispatch(store.actions.deleteSceneRemote(scene)))
-        );
+        dialog.afterClosed().subscribe(_ => {
+            if (_) {
+                this._store.dispatch(store.actions.deleteSceneRemote(scene));
+            }
+        });
     }
 }
