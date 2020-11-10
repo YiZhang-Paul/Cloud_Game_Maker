@@ -8,6 +8,7 @@ export const addScene = createAction(`${source} Add Scene`, props<Scene>());
 export const deleteScene = createAction(`${source} Delete Scene`, props<Scene>());
 export const addActiveScene = createAction(`${source} Add Active Scene`, props<Scene>());
 export const setActiveScene = createAction(`${source} Set Active Scene`, props<Scene>());
+export const deleteActiveScene = createAction(`${source} Delete Active Scene`, props<Scene>());
 export const setScenes = createAction(`${source} Set Scenes`, props<{ payload: Scene[] }>());
 export const startGetScenesRemote = createAction(`${source} Start Get Scenes Remote`);
 export const getScenesRemote = createAction(`${source} Get Scenes Remote`);
