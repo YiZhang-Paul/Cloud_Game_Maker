@@ -4,10 +4,14 @@ export const key = 'gameScene';
 
 export interface IGameSceneState {
     scenes: Scene[];
+    activeScene: Scene | null;
+    activeScenes: Scene[];
     isSceneLoaded: boolean;
 }
 
 export const initialState: IGameSceneState = {
     scenes: [],
+    activeScene: null,
+    activeScenes: [],
     isSceneLoaded: true
 };

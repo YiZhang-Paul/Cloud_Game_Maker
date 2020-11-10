@@ -15,7 +15,7 @@
         </div>
 
         <div *ngIf="(filteredScenes$ | async).length" class="scenes" fxLayout="column" fxLayoutGap="4px">
-            <div *ngFor="let scene of filteredScenes$ | async" fxLayoutAlign="start center">
+            <div *ngFor="let scene of filteredScenes$ | async" (click)="onSceneOpen(scene)" fxLayoutAlign="start center">
                 <span>{{ scene.name }}</span>
                 <button (click)="onDelete(scene)">Delete</button>
             </div>

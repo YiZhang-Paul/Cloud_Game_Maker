@@ -13,6 +13,18 @@ function deleteScene(state: IGameSceneState, scene: Scene): IGameSceneState {
     return { ...state, scenes: state.scenes.filter(_ => _.id !== scene.id) };
 }
 
+function addActiveScene(state: IGameSceneState, scene: Scene): IGameSceneState {
+    if (state.activeScenes.some(_ => _.id === scene.id)) {
+        return state;
+    }
+
+    return { ...state, activeScenes: [...state.activeScenes, scene] };
+}
+
+function setActiveScene(state: IGameSceneState, scene: Scene): IGameSceneState {
+    return { ...state, activeScene: scene };
+}
+
 function setScenes(state: IGameSceneState, props: { payload: Scene[] }): IGameSceneState {
     return { ...state, scenes: props.payload };
 }
@@ -25,6 +37,8 @@ const _scenesReducer = createReducer(
     initialState,
     on(actions.addScene, addScene),
     on(actions.deleteScene, deleteScene),
+    on(actions.addActiveScene, addActiveScene),
+    on(actions.setActiveScene, setActiveScene),
     on(actions.setScenes, setScenes),
     on(actions.setIsSceneLoaded, setIsSceneLoaded)
 );

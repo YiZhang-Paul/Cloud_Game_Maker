@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 import { store } from '../store';
 import { Scene } from '../../../core/data-model/scene/scene';
@@ -35,6 +35,11 @@ export class SceneManagerComponent implements OnInit {
 
     public onSceneCreate(): void {
         this._store.dispatch(store.actions.addSceneRemote(new Scene()));
+    }
+
+    public onSceneOpen(scene: Scene): void {
+        this._store.dispatch(store.actions.addActiveScene(scene));
+        this._store.dispatch(store.actions.setActiveScene(scene));
     }
 
     public onDelete(scene: Scene): void {
