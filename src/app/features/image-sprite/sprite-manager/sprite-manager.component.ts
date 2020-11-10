@@ -29,7 +29,7 @@ export class SpriteManagerComponent implements OnInit {
 
     public onFileSelect(files: NgxFileDropEntry[]): void {
         const file = files[0]?.fileEntry as FileSystemFileEntry;
-        SpriteFile.fromFileEntry(file).subscribe(this.setActiveSprite);
+        SpriteFile.fromFileEntry(file).subscribe(sprite => this.setActiveSprite(sprite));
     }
 
     public onFileSearch(keyword: string): void {

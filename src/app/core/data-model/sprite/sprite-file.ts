@@ -12,8 +12,8 @@ export class SpriteFile {
     public extension: string;
     public thumbnailUrl: string;
 
-    get isImported(): boolean {
-        return this.id.includes('/');
+    public static isImported(file: SpriteFile): boolean {
+        return file.id.includes('/');
     }
 
     public static fromSpriteFile(file: SpriteFile, fromRemote = false): SpriteFile {
@@ -36,18 +36,6 @@ export class SpriteFile {
         sprite.mime = 'image/jpeg';
         sprite.extension = 'jpg';
 
-        return callback().pipe(map(content => sprite.setContent(content)));
-    }
-
-    public setId(id: string): SpriteFile {
-        this.id = id;
-
-        return this;
-    }
-
-    public setContent(content: Blob): SpriteFile {
-        this.content = content;
-
-        return this;
+        return callback().pipe(map(content => ({ ...sprite, content })));
     }
 }

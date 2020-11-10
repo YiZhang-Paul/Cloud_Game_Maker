@@ -50,7 +50,9 @@ export class SpritesEffects {
         ofType(actions.addSpriteRemote),
         withLatestFrom(this._store.select(selectors.getAllSprites)),
         map(([sprite, sprites]) => this.setUniqueName(sprite, sprites)),
-        mergeMap(sprite => this._cloudStorageHttp.addSprite(sprite).pipe(map(id => sprite.setId(id)))),
+        mergeMap(sprite => this._cloudStorageHttp.addSprite(sprite).pipe(
+            map(id => ({ ...sprite, id }))
+        )),
         switchMap(sprite => {
             const isAdded = Boolean(sprite.id);
             const message = isAdded ? 'Successfully added the sprite.' : 'Failed to add the sprite.';
@@ -81,7 +83,7 @@ export class SpritesEffects {
             return ({ sprite: updated, index });
         }),
         mergeMap(result => this._cloudStorageHttp.updateSprite(result.sprite).pipe(
-            map(id => ({ ...result, sprite: result.sprite.setId(id) }))
+            map(id => ({ ...result, sprite: { ...result.sprite, id } }))
         )),
         switchMap(result => {
             const { sprite, index } = result;
@@ -119,9 +121,9 @@ export class SpritesEffects {
 
     private setUniqueName(sprite: SpriteFile, sprites: SpriteFile[]): SpriteFile {
         const names = sprites.map(_ => _.name);
-        sprite.name = FileUtility.handleDuplicateName(names, sprite.name);
+        const name = FileUtility.handleDuplicateName(names, sprite.name);
 
-        return sprite;
+        return { ...sprite, name };
     }
 
     private compressFile(file: SpriteFile): Observable<SpriteFile> {
@@ -129,7 +131,7 @@ export class SpritesEffects {
 
         return from(promise).pipe(
             mergeMap(content => of(new Blob([content], { type: content.type }))),
-            map(content => file.setContent(content))
+            map(content => ({ ...file, content }))
         );
     }
 }
