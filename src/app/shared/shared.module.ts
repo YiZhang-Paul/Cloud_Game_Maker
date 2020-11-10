@@ -11,6 +11,7 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 import { ImageCropperModule } from 'ngx-image-cropper';
 
 import { FilePickerComponent } from './components/buttons/file-picker/file-picker.component';
+import { FileTabComponent } from './components/buttons/file-tab/file-tab.component';
 import { EditableTextBoxComponent } from './components/inputs/editable-text-box/editable-text-box.component';
 import { ConfirmPopupComponent } from './components/popups/confirm-popup/confirm-popup.component';
 import { ImageBlobDisplayComponent } from './components/inputs/image-blob-display/image-blob-display.component';
@@ -19,6 +20,7 @@ import { MiniToolbarComponent } from './components/toolbars/mini-toolbar/mini-to
 @NgModule({
     declarations: [
         FilePickerComponent,
+        FileTabComponent,
         EditableTextBoxComponent,
         ConfirmPopupComponent,
         ImageBlobDisplayComponent,
@@ -57,6 +59,7 @@ import { MiniToolbarComponent } from './components/toolbars/mini-toolbar/mini-to
         DragDropModule,
         ImageCropperModule,
         FilePickerComponent,
+        FileTabComponent,
         EditableTextBoxComponent,
         ImageBlobDisplayComponent,
         MiniToolbarComponent
