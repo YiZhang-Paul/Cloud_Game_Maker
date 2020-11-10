@@ -1,7 +1,13 @@
-<div class="container">
-    <div *ngIf="!scene" fxLayoutAlign="center center" fxFlex>
+<div class="container" fxLayout="column">
+    <div *ngIf="!(activeScene$ | async)" fxLayoutAlign="center center" fxFlex>
         <span>no active scene</span>
     </div>
 
-    <div *ngIf="scene" class="viewport" fxFlex></div>
+    <ng-container *ngIf="activeScene$ | async">
+        <div class="file-tabs" fxLayoutAlign="start center" fxFlex="5vh">
+            <div *ngFor="let tab of activeScenes$ | async">{{ tab.name }}</div>
+        </div>
+
+        <div class="viewport" fxFlex></div>
+    </ng-container>
 </div>
