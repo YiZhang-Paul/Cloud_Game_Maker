@@ -7,7 +7,8 @@
         <div class="file-tabs" fxLayoutAlign="start center" fxFlex="5vh">
             <app-file-tab *ngFor="let scene of activeScenes$ | async"
                 [name]="scene.name"
-                [isActive]="(activeScene$ | async).id === scene.id">
+                [isActive]="(activeScene$ | async).id === scene.id"
+                (tabSelect)="onSceneSelected(scene)">
             </app-file-tab>
         </div>
 

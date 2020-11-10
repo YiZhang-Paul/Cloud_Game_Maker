@@ -21,4 +21,8 @@ export class SceneBuilderComponent implements OnInit {
         this.activeScenes$ = this._store.select(store.selectors.getActiveScenes);
         this.activeScene$ = this._store.select(store.selectors.getActiveScene);
     }
+
+    public onSceneSelected(scene: Scene): void {
+        this._store.dispatch(store.actions.setActiveScene(scene));
+    }
 }
