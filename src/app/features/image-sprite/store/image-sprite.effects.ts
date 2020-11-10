@@ -16,6 +16,13 @@ import * as actions from './image-sprite.actions';
 @Injectable()
 export class SpritesEffects {
 
+    public setActiveSpriteRemote$ = createEffect(() => this._actions$.pipe(
+        ofType(actions.setActiveSpriteRemote),
+        mergeMap(sprite => this._cloudStorageHttp.getSpriteContent(sprite).pipe(
+            map(content => actions.setActiveSprite({ ...sprite, content }))
+        ))
+    ));
+
     public startGetSpritesRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.startGetSpritesRemote),
         switchMap(() => [

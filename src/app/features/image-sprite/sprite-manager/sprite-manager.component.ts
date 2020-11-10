@@ -44,6 +44,15 @@ export class SpriteManagerComponent implements OnInit {
         this._store.dispatch(store.actions.deleteSpriteRemote(file));
     }
 
+    public onFileEditStart(file: SpriteFile): void {
+        if (file.content) {
+            this.setActiveSprite(file);
+        }
+        else {
+            this._store.dispatch(store.actions.setActiveSpriteRemote(file));
+        }
+    }
+
     public setActiveSprite(file: SpriteFile): void {
         this._store.dispatch(store.actions.setActiveSprite(file));
     }
