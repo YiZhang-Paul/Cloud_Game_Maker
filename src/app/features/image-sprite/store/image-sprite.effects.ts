@@ -35,7 +35,7 @@ export class SpritesEffects {
         ofType(actions.getSpritesRemote),
         mergeMap(() => this._cloudStorageHttp.getSprites()),
         switchMap(sprites => [
-            actions.addSprites({ payload: sprites }),
+            actions.setSprites({ payload: sprites }),
             actions.setIsSpriteLoaded({ payload: true })
         ])
     ));
