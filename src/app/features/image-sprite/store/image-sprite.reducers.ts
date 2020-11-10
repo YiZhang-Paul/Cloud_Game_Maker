@@ -9,6 +9,10 @@ function setActiveSprite(state: IImageSpriteState, sprite: SpriteFile): IImageSp
     return { ...state, activeSprite: sprite };
 }
 
+function resetActiveSprite(state: IImageSpriteState): IImageSpriteState {
+    return { ...state, activeSprite: null };
+}
+
 function addSprites(state: IImageSpriteState, props: { payload: SpriteFile[] }): IImageSpriteState {
     return { ...state, sprites: [...state.sprites, ...props.payload] };
 }
@@ -35,6 +39,7 @@ function setIsSpriteLoaded(state: IImageSpriteState, props: { payload: boolean }
 const _spritesReducer = createReducer(
     initialState,
     on(actions.setActiveSprite, setActiveSprite),
+    on(actions.resetActiveSprite, resetActiveSprite),
     on(actions.addSprites, addSprites),
     on(actions.addSprite, addSprite),
     on(actions.updateSprite, updateSprite),

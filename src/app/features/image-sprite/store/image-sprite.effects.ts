@@ -69,7 +69,7 @@ export class SpritesEffects {
                 return [{ type: 'no-op' }];
             }
 
-            return [actions.addSprite(sprite), actions.setActiveSprite(null)];
+            return [actions.addSprite(sprite), actions.resetActiveSprite()];
         })
     ));
 
@@ -104,7 +104,7 @@ export class SpritesEffects {
 
             return [
                 actions.updateSprite({ payload: sprite, index }),
-                actions.setActiveSprite(null)
+                actions.resetActiveSprite()
             ];
         })
     ));
