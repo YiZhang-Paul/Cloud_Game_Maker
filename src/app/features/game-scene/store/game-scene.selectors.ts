@@ -24,9 +24,9 @@ export const getActiveScene = createSelector(
     (state: IGameSceneState) => state.activeScene
 );
 
-export const isSceneLoaded = createSelector(
+export const hasFetchedScenes = createSelector(
     getFeatureState,
-    (state: IGameSceneState) => state.isSceneLoaded
+    (state: IGameSceneState) => state.hasFetchedScenes
 );
 
 export const getFilteredScenes = createSelector(

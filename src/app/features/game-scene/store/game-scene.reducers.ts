@@ -43,8 +43,8 @@ function setScenes(state: IGameSceneState, props: { payload: Scene[] }): IGameSc
     return { ...state, scenes: props.payload };
 }
 
-function setIsSceneLoaded(state: IGameSceneState, props: { payload: boolean }): IGameSceneState {
-    return { ...state, isSceneLoaded: props.payload };
+function setHasFetchedScenes(state: IGameSceneState, props: { payload: boolean }): IGameSceneState {
+    return { ...state, hasFetchedScenes: props.payload };
 }
 
 const _scenesReducer = createReducer(
@@ -55,7 +55,7 @@ const _scenesReducer = createReducer(
     on(actions.setActiveScene, setActiveScene),
     on(actions.deleteActiveScene, deleteActiveScene),
     on(actions.setScenes, setScenes),
-    on(actions.setIsSceneLoaded, setIsSceneLoaded)
+    on(actions.setHasFetchedScenes, setHasFetchedScenes)
 );
 
 export function scenesReducer(state: IGameSceneState, action: Action): IGameSceneState {

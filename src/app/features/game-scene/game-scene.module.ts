@@ -18,7 +18,7 @@ import { SceneManagerComponent } from './scene-manager/scene-manager.component';
         CommonModule,
         SharedModule,
         StoreModule.forFeature(store.state.key, store.reducers.scenesReducer),
-        EffectsModule.forFeature(Object.keys(store.effects).map(_ => store.effects[_]))
+        EffectsModule.forFeature(store.effects)
     ],
     exports: [
         SceneBuilderComponent,

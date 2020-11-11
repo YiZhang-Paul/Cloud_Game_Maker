@@ -17,7 +17,7 @@ export class ScenesEffects {
     public startGetScenesRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.startGetScenesRemote),
         switchMap(() => [
-            actions.setIsSceneLoaded({ payload: false }),
+            actions.setHasFetchedScenes({ payload: false }),
             actions.getScenesRemote()
         ])
     ));
@@ -27,7 +27,7 @@ export class ScenesEffects {
         mergeMap(() => this._cloudStorageHttp.getScenes()),
         switchMap(scenes => [
             actions.setScenes({ payload: scenes }),
-            actions.setIsSceneLoaded({ payload: true })
+            actions.setHasFetchedScenes({ payload: true })
         ])
     ));
 

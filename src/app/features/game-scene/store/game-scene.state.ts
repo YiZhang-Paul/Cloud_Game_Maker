@@ -6,12 +6,12 @@ export interface IGameSceneState {
     scenes: Scene[];
     activeScene: Scene | null;
     activeScenes: Scene[];
-    isSceneLoaded: boolean;
+    hasFetchedScenes: boolean;
 }
 
 export const initialState: IGameSceneState = {
     scenes: [],
     activeScene: null,
     activeScenes: [],
-    isSceneLoaded: true
+    hasFetchedScenes: true
 };
