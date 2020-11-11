@@ -10,11 +10,6 @@ function matchScenes(scenes: Scene[], filter: string): Scene[] {
 
 export const getFeatureState = (state: { [key]: IGameSceneModuleState }) => state[key];
 
-export const hasScenes = createSelector(
-    getFeatureState,
-    (state: IGameSceneModuleState) => state.scenesState.scenes.length > 0
-);
-
 export const getAllScenes = createSelector(
     getFeatureState,
     (state: IGameSceneModuleState) => state.scenesState.scenes

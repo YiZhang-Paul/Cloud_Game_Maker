@@ -16,17 +16,17 @@ import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm
 })
 export class SceneManagerComponent implements OnInit {
     public toolbarOptions = [MiniToolbarOption.Create, MiniToolbarOption.Search];
-    public hasScenes$: Observable<boolean>;
-    public hasFetchedScenes$: Observable<boolean>;
+    public allScenes$: Observable<Scene[]>;
     public filteredScenes$: Observable<Scene[]>;
+    public hasFetchedScenes$: Observable<boolean>;
 
     constructor(private _store: Store, private _dialog: MatDialog) { }
 
     public ngOnInit(): void {
         this._store.dispatch(store.actions.startGetScenesRemote());
-        this.hasScenes$ = this._store.select(store.selectors.hasScenes);
-        this.hasFetchedScenes$ = this._store.select(store.selectors.hasFetchedScenes);
+        this.allScenes$ = this._store.select(store.selectors.getAllScenes);
         this.onSceneSearch('');
+        this.hasFetchedScenes$ = this._store.select(store.selectors.hasFetchedScenes);
     }
 
     public onSceneSearch(keyword: string): void {

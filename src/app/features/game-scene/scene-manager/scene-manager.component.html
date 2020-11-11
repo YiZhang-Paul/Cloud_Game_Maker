@@ -1,10 +1,10 @@
 <div *ngIf="hasFetchedScenes$ | async" class="container">
-    <div *ngIf="!(hasScenes$ | async)" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="7px" fxFlex>
+    <div *ngIf="!(allScenes$ | async).length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="7px" fxFlex>
         <span>no scenes found.</span>
         <button (click)="onSceneCreate()">Create Scene</button>
     </div>
 
-    <div *ngIf="hasScenes$ | async" fxLayout="column" fxFlex>
+    <div *ngIf="(allScenes$ | async).length" fxLayout="column" fxFlex>
         <app-mini-toolbar [activeOptions]="toolbarOptions"
             (fileCreate)="onSceneCreate()"
             (fileSearch)="onSceneSearch($event.toLowerCase())">
