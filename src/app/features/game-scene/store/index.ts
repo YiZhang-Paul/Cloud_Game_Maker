@@ -1,13 +1,13 @@
-import * as state from './game-scene.state';
-import * as selectors from './game-scene.selectors';
-import * as actions from './game-scene.actions';
-import * as reducers from './game-scene.reducers';
-import * as effects from './game-scene.effects';
+import * as state from './state';
+import * as selectors from './selectors';
+import { actions } from './actions';
+import { reducers } from './reducers';
+import { ScenesEffects } from './effects';
 
 export const store = {
     state,
     selectors,
     actions,
     reducers,
-    effects
+    effects: [ScenesEffects]
 };

@@ -1,17 +1,17 @@
-<div *ngIf="isLoaded" class="container">
-    <app-sprite-editor *ngIf="editing"
-        [file]="editing"
+<div *ngIf="isSpriteLoaded$ | async" class="container">
+    <app-sprite-editor *ngIf="activeSprite$ | async"
+        [file]="activeSprite$ | async"
         (importNew)="onFileEdit($event, true)"
         (overwrite)="onFileEdit($event)"
         (saveAsNew)="onFileEdit($event, true)"
-        (cancel)="editing = null"
+        (cancel)="onFileEditCancel()"
         cdkDragBoundary="body"
         cdkDrag>
 
         <div cdkDragHandle></div>
     </app-sprite-editor>
 
-    <div *ngIf="!files.length" fxLayoutAlign="center center" fxFlex>
+    <div *ngIf="!(hasSprites$ | async)" fxLayoutAlign="center center" fxFlex>
         <app-file-picker [message]="'no sprite available'"
             [buttonText]="'Import Sprite'"
             [allowExtension]="['png', 'jpg']"
@@ -19,19 +19,19 @@
         </app-file-picker>
     </div>
 
-    <div *ngIf="files.length" fxLayout="column" fxFlex>
+    <div *ngIf="(hasSprites$ | async)" fxLayout="column" fxFlex>
         <app-mini-toolbar (filePick)="onFileSelect($event)"
-            (fileSearch)="filter = $event.toLowerCase()">
+            (fileSearch)="onFileSearch($event.toLowerCase())">
         </app-mini-toolbar>
 
-        <div *ngIf="!filteredFiles.length" fxLayoutAlign="center center" fxFlex>
+        <div *ngIf="!(filteredSprites$ | async).length" fxLayoutAlign="center center" fxFlex>
             <span>no matching sprites found.</span>
         </div>
 
-        <div *ngIf="filteredFiles.length" class="sprite-files" fxLayout="row wrap" fxLayoutAlign="space-between">
-            <app-sprite-thumbnail-item *ngFor="let file of filteredFiles"
+        <div *ngIf="(filteredSprites$ | async).length" class="sprite-files" fxLayout="row wrap" fxLayoutAlign="space-between">
+            <app-sprite-thumbnail-item *ngFor="let file of filteredSprites$ | async"
                 [file]="file"
-                (editStart)="editing = file"
+                (editStart)="onFileEditStart(file)"
                 (delete)="onFileDelete(file)">
             </app-sprite-thumbnail-item>
         </div>

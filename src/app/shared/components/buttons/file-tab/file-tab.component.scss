@@ -1,0 +1,41 @@
+:host,
+.container {
+    height: 100%;
+}
+
+.container {
+    color: black;
+    background-color: rgb(170, 170, 170);
+
+    &:hover {
+        cursor: pointer;
+        background-color: rgb(155, 155, 155);
+    }
+
+    &:hover > div:last-of-type {
+        opacity: 1;
+    }
+
+    & > div:first-of-type {
+        padding-left: 30px;
+    }
+
+    & > div:last-of-type {
+        color: white;
+        opacity: 0;
+    }
+}
+
+.active {
+    $active-color: rgb(125, 125, 125);
+    color: white;
+    background-color: $active-color;
+
+    &:hover {
+        background-color: $active-color;
+    }
+
+    & > div:last-of-type {
+        opacity: 1;
+    }
+}

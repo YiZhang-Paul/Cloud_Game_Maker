@@ -1,10 +1,10 @@
-<div *ngIf="isLoaded" class="container">
-    <div *ngIf="!(hasScenes$ | async)" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="7px" fxFlex>
+<div *ngIf="hasFetchedScenes$ | async" class="container">
+    <div *ngIf="!(allScenes$ | async).length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="7px" fxFlex>
         <span>no scenes found.</span>
-        <button (click)="onSceneCreate()">Create Scene</button>
+        <button (click)="onSceneCreate()" [disabled]="!(canAddScene$ | async)">Create Scene</button>
     </div>
 
-    <div *ngIf="hasScenes$ | async" fxLayout="column" fxFlex>
+    <div *ngIf="(allScenes$ | async).length" fxLayout="column" fxFlex>
         <app-mini-toolbar [activeOptions]="toolbarOptions"
             (fileCreate)="onSceneCreate()"
             (fileSearch)="onSceneSearch($event.toLowerCase())">
@@ -15,7 +15,7 @@
         </div>
 
         <div *ngIf="(filteredScenes$ | async).length" class="scenes" fxLayout="column" fxLayoutGap="4px">
-            <div *ngFor="let scene of filteredScenes$ | async" fxLayoutAlign="start center">
+            <div *ngFor="let scene of filteredScenes$ | async" (click)="onSceneOpen(scene)" fxLayoutAlign="start center">
                 <span>{{ scene.name }}</span>
                 <button (click)="onDelete(scene)">Delete</button>
             </div>

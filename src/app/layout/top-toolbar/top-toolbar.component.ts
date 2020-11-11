@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
     selector: 'app-top-toolbar',
@@ -6,6 +6,4 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angul
     styleUrls: ['./top-toolbar.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopToolbarComponent {
-    @Output() public createScene = new EventEmitter();
-}
+export class TopToolbarComponent { }

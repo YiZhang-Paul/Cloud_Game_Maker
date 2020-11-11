@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 
+import { store } from '../store';
 import { Scene } from '../../../core/data-model/scene/scene';
 import { MiniToolbarOption } from '../../../core/enum/mini-toolbar-option.enum';
 import { ConfirmPopupOption } from '../../../core/data-model/generic/options/confirm-popup-option';
-import { CloudStorageHttpService } from '../../../core/service/http/cloud-storage-http/cloud-storage-http.service';
-import { FileUtility } from '../../../core/utility/file.utility';
 import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm-popup/confirm-popup.component';
 
 @Component({
@@ -16,43 +16,35 @@ import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm
 })
 export class SceneManagerComponent implements OnInit {
     public toolbarOptions = [MiniToolbarOption.Create, MiniToolbarOption.Search];
-    public filter = '';
-    private _isLoaded = false;
-    private _scenes: Scene[] = [];
+    public allScenes$: Observable<Scene[]>;
+    public filteredScenes$: Observable<Scene[]>;
+    public hasFetchedScenes$: Observable<boolean>;
+    public canAddScene$: Observable<boolean>;
 
-    constructor(private _cloudStorageHttp: CloudStorageHttpService,
-                private _dialog: MatDialog,
-                private _snackBar: MatSnackBar) { }
+    constructor(private _store: Store, private _dialog: MatDialog) { }
 
-    get isLoaded(): boolean {
-        return this._isLoaded;
+    public ngOnInit(): void {
+        this._store.dispatch(store.actions.getScenesRemote());
+        this.allScenes$ = this._store.select(store.selectors.getAllScenes);
+        this.onSceneSearch('');
+        this.hasFetchedScenes$ = this._store.select(store.selectors.hasFetchedScenes);
+        this.canAddScene$ = this._store.select(store.selectors.canAddScene);
     }
 
-    get scenes(): Scene[] {
-        return this._scenes;
+    public onSceneSearch(keyword: string): void {
+        this.filteredScenes$ = this._store.select(store.selectors.getFilteredScenes, keyword);
     }
 
-    get filteredScenes(): Scene[] {
-        return this._scenes.filter(_ => _.name.toLowerCase().includes(this.filter ?? ''));
+    public onSceneCreate(): void {
+        this._store.dispatch(store.actions.addSceneRemote(new Scene()));
     }
 
-    public async ngOnInit(): Promise<void> {
-        this._scenes = await this._cloudStorageHttp.getScenes();
-        this._isLoaded = true;
+    public onSceneOpen(scene: Scene): void {
+        this._store.dispatch(store.actions.addActiveScene(scene));
+        this._store.dispatch(store.actions.setActiveScene(scene));
     }
 
-    public async onSceneCreate(): Promise<void> {
-        const scene = new Scene();
-        const names = this._scenes.map(_ => _.name);
-        scene.name = FileUtility.handleDuplicateName(names, scene.name, '_', '');
-        scene.id = await this._cloudStorageHttp.addScene(scene);
-
-        if (scene.id) {
-            this._scenes.push(scene);
-        }
-    }
-
-    public async onDelete(scene: Scene): Promise<void> {
+    public onDelete(scene: Scene): void {
         const title = 'Are you sure?';
         const message = 'The scene will be permanently removed.';
 
@@ -62,15 +54,10 @@ export class SceneManagerComponent implements OnInit {
             height: '175px'
         });
 
-        if (!await dialog.afterClosed().toPromise()) {
-            return;
-        }
-
-        if (await this._cloudStorageHttp.deleteScene(scene)) {
-            this._scenes = this._scenes.filter(_ => _.id !== scene.id);
-        }
-        else {
-            this._snackBar.open('Failed to remove the scene.', 'Ok');
-        }
+        dialog.afterClosed().subscribe(_ => {
+            if (_) {
+                this._store.dispatch(store.actions.deleteSceneRemote(scene));
+            }
+        });
     }
 }

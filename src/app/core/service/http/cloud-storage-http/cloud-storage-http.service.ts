@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
+import { catchError, mergeMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
 import { environment } from '../../../../../environments/environment';
@@ -19,89 +19,58 @@ export class CloudStorageHttpService {
         return this._http.get<Scene[]>(`${this._api}/scenes`).pipe(catchError(() => of([])));
     }
 
-    public async addScene(scene: Scene): Promise<string> {
-        try {
-            const endpoint = `${this._api}/scenes`;
+    public addScene(scene: Scene): Observable<string> {
+        const endpoint = `${this._api}/scenes`;
+        const responseType = 'text';
 
-            return await this._http.post(endpoint, scene, { responseType: 'text' }).toPromise();
-        }
-        catch {
-            return null;
-        }
+        return this._http.post(endpoint, scene, { responseType }).pipe(catchError(() => of(null)));
     }
 
-    public async deleteScene(scene: Scene): Promise<boolean> {
-        try {
-            const endpoint = `${this._api}/scenes/${encodeURIComponent(scene.id)}`;
+    public deleteScene(scene: Scene): Observable<boolean> {
+        const endpoint = `${this._api}/scenes/${encodeURIComponent(scene.id)}`;
 
-            return await this._http.delete<boolean>(endpoint).toPromise();
-        }
-        catch {
-            return false;
-        }
+        return this._http.delete<boolean>(endpoint).pipe(catchError(() => of(false)));
     }
 
-    public async getSprite(sprite: SpriteFile): Promise<SpriteFile> {
-        try {
-            const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.id)}`;
-            const buffer = await this._http.get(endpoint, { responseType: 'arraybuffer' }).toPromise();
-            sprite.content = new Blob([buffer], { type: sprite.mime });
+    public getSpriteContent(sprite: SpriteFile): Observable<Blob> {
+        const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.id)}`;
 
-            return sprite;
-        }
-        catch {
-            return null;
-        }
+        return this._http.get(endpoint, { responseType: 'arraybuffer' }).pipe(
+            mergeMap(buffer => of(new Blob([buffer], { type: sprite.mime }))),
+            catchError(() => of(null))
+        );
     }
 
-    public async getSprites(): Promise<SpriteFile[]> {
-        try {
-            const endpoint = `${this._api}/sprites`;
-            const sprites = await this._http.get<SpriteFile[]>(endpoint).toPromise();
+    public getSprites(): Observable<SpriteFile[]> {
+        const endpoint = `${this._api}/sprites`;
 
-            return sprites.map(_ => SpriteFile.fromSpriteFile(_, true));
-        }
-        catch {
-            return [];
-        }
+        return this._http.get<SpriteFile[]>(endpoint).pipe(
+            mergeMap(sprites => of(sprites.map(_ => SpriteFile.fromSpriteFile(_, true)))),
+            catchError(() => of([]))
+        );
     }
 
-    public async addSprite(sprite: SpriteFile): Promise<string> {
-        try {
-            const endpoint = `${this._api}/sprites`;
-            const data = new FormData();
-            data.append('file', sprite.content);
-            data.append('spriteJson', JSON.stringify(sprite));
+    public addSprite(sprite: SpriteFile): Observable<string> {
+        const endpoint = `${this._api}/sprites`;
+        const data = new FormData();
+        data.append('file', sprite.content);
+        data.append('spriteJson', JSON.stringify(sprite));
 
-            return await this._http.post(endpoint, data, { responseType: 'text' }).toPromise();
-        }
-        catch {
-            return null;
-        }
+        return this._http.post(endpoint, data, { responseType: 'text' }).pipe(catchError(() => of(null)));
     }
 
-    public async updateSprite(sprite: SpriteFile): Promise<string> {
-        try {
-            const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.originated)}`;
-            const data = new FormData();
-            data.append('file', sprite.content);
-            data.append('spriteJson', JSON.stringify(sprite));
+    public updateSprite(sprite: SpriteFile): Observable<string> {
+        const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.originated)}`;
+        const data = new FormData();
+        data.append('file', sprite.content);
+        data.append('spriteJson', JSON.stringify(sprite));
 
-            return await this._http.put(endpoint, data, { responseType: 'text' }).toPromise();
-        }
-        catch {
-            return null;
-        }
+        return this._http.put(endpoint, data, { responseType: 'text' }).pipe(catchError(() => of(null)));
     }
 
-    public async deleteSprite(sprite: SpriteFile): Promise<boolean> {
-        try {
-            const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.id)}`;
+    public deleteSprite(sprite: SpriteFile): Observable<boolean> {
+        const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.id)}`;
 
-            return await this._http.delete<boolean>(endpoint).toPromise();
-        }
-        catch {
-            return false;
-        }
+        return this._http.delete<boolean>(endpoint).pipe(catchError(() => of(false)));
     }
 }

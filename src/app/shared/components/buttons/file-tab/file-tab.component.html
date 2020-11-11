@@ -1,0 +1,9 @@
+<div class="container" [ngClass]="{ 'active': isActive }" (click)="tabSelect.emit()" fxLayout="row">
+    <div fxLayoutAlign="center center" fxFlex>
+        <span>{{ name }}</span>
+    </div>
+
+    <div fxLayoutAlign="center center" fxFlex="30px">
+        <span (click)="tabClose.emit()">X</span>
+    </div>
+</div>

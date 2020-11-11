@@ -1,5 +1,5 @@
 <div class="container" fxLayout="column">
-    <app-top-toolbar (createScene)="onCreateScene()"></app-top-toolbar>
+    <app-top-toolbar></app-top-toolbar>
 
     <div class="content" fxLayout="row" fxFlex>
         <app-tool-set-panel #toolSet [tools]="tools" [ngSwitch]="toolSet.activeTool" fxFlex="20">
@@ -9,7 +9,7 @@
         </app-tool-set-panel>
 
         <div fxLayout="column" fxFlex="60">
-            <app-scene-builder [scene]="activeScene" fxFlex="75"></app-scene-builder>
+            <app-scene-builder fxFlex="75"></app-scene-builder>
             <div fxFlex="25"></div>
         </div>
 

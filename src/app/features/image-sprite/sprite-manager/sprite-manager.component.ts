@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
-import imageCompression from 'browser-image-compression';
 
+import { store } from '../store';
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
-import { FileUtility } from '../../../core/utility/file.utility';
-import { CloudStorageHttpService } from '../../../core/service/http/cloud-storage-http/cloud-storage-http.service';
 
 @Component({
     selector: 'app-sprite-manager',
@@ -13,98 +12,52 @@ import { CloudStorageHttpService } from '../../../core/service/http/cloud-storag
     styleUrls: ['./sprite-manager.component.scss']
 })
 export class SpriteManagerComponent implements OnInit {
-    public editing: SpriteFile;
-    public filter = '';
-    private _isLoaded = false;
-    private _files: SpriteFile[] = [];
+    public hasSprites$: Observable<boolean>;
+    public isSpriteLoaded$: Observable<boolean>;
+    public filteredSprites$: Observable<SpriteFile[]>;
+    public activeSprite$: Observable<SpriteFile>;
 
-    constructor(private _cloudStorageHttp: CloudStorageHttpService, private _snackbar: MatSnackBar) { }
+    constructor(private _store: Store) { }
 
-    get isLoaded(): boolean {
-        return this._isLoaded;
+    public ngOnInit(): void {
+        this._store.dispatch(store.actions.startGetSpritesRemote());
+        this.hasSprites$ = this._store.select(store.selectors.hasSprites);
+        this.isSpriteLoaded$ = this._store.select(store.selectors.isSpriteLoaded);
+        this.activeSprite$ = this._store.select(store.selectors.getActiveSprite);
+        this.onFileSearch('');
     }
 
-    get files(): SpriteFile[] {
-        return this._files;
-    }
-
-    get filteredFiles(): SpriteFile[] {
-        return this._files.filter(_ => _.name.toLowerCase().includes(this.filter ?? ''));
-    }
-
-    public async ngOnInit(): Promise<void> {
-        this._files = await this._cloudStorageHttp.getSprites();
-        this._isLoaded = true;
-    }
-
-    public async onFileSelect(files: NgxFileDropEntry[]): Promise<void> {
+    public onFileSelect(files: NgxFileDropEntry[]): void {
         const file = files[0]?.fileEntry as FileSystemFileEntry;
-        this.editing = await SpriteFile.fromFileEntry(file);
+        SpriteFile.fromFileEntry(file).subscribe(sprite => this.setActiveSprite(sprite));
     }
 
-    public async onFileEdit(file: SpriteFile, saveAsNew = false): Promise<void> {
-        let succeeded = false;
-        const content = await imageCompression(file.content, { maxSizeMB: 0.2 });
-        file.content = new Blob([content], { type: content.type });
+    public onFileSearch(keyword: string): void {
+        this.filteredSprites$ = this._store.select(store.selectors.getFilteredSprites, keyword);
+    }
 
-        if (saveAsNew) {
-            succeeded = await this.addFile(file);
+    public onFileEdit(file: SpriteFile, saveAsNew = false): void {
+        this._store.dispatch(store.actions.editSpriteRemote({ payload: file, isNew: saveAsNew }));
+    }
+
+    public onFileDelete(file: SpriteFile): void {
+        this._store.dispatch(store.actions.deleteSpriteRemote(file));
+    }
+
+    public onFileEditStart(file: SpriteFile): void {
+        if (file.content) {
+            this.setActiveSprite(file);
         }
         else {
-            succeeded = await this.updateFile(file);
-        }
-
-        if (succeeded) {
-            this.editing = null;
+            this._store.dispatch(store.actions.setActiveSpriteRemote(file));
         }
     }
 
-    public async onFileDelete(file: SpriteFile): Promise<void> {
-        if (!await this._cloudStorageHttp.deleteSprite(file)) {
-            this._snackbar.open('Failed to delete sprite file.', 'Ok');
-
-            return;
-        }
-
-        this._files = this._files.filter(_ => _ !== file);
+    public onFileEditCancel(): void {
+        this._store.dispatch(store.actions.resetActiveSprite());
     }
 
-    private async addFile(file: SpriteFile): Promise<boolean> {
-        const names = this._files.map(_ => _.name);
-        file.name = FileUtility.handleDuplicateName(names, file.name);
-        const id = await this._cloudStorageHttp.addSprite(file);
-
-        if (id) {
-            file.id = id;
-            this._files.unshift(file);
-        }
-        else {
-            this._snackbar.open('Failed to add sprite file.', 'Ok');
-        }
-
-        return Boolean(id);
-    }
-
-    private async updateFile(file: SpriteFile): Promise<boolean> {
-        const index = this._files.findIndex(_ => _.id === file.originated);
-
-        if (index === -1) {
-            return false;
-        }
-
-        const names = this._files.map(_ => _.name);
-        const hasNewName = file.name !== this._files[index].name;
-        file.name = hasNewName ? FileUtility.handleDuplicateName(names, file.name) : file.name;
-        const id = await this._cloudStorageHttp.updateSprite(file);
-
-        if (id) {
-            file.id = id;
-            this._files[index] = file;
-        }
-        else {
-            this._snackbar.open('Failed to update sprite file.', 'Ok');
-        }
-
-        return Boolean(id);
+    private setActiveSprite(file: SpriteFile): void {
+        this._store.dispatch(store.actions.setActiveSprite(file));
     }
 }
