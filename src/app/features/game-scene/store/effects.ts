@@ -8,8 +8,8 @@ import { Scene } from '../../../core/data-model/scene/scene';
 import { FileUtility } from '../../../core/utility/file.utility';
 import { CloudStorageHttpService } from '../../../core/service/http/cloud-storage-http/cloud-storage-http.service';
 
-import * as selectors from './game-scene.selectors';
-import * as actions from './game-scene.actions';
+import * as selectors from './selectors';
+import { actions } from './actions';
 
 @Injectable()
 export class ScenesEffects {

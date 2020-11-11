@@ -2,8 +2,8 @@ import { Action, createReducer, on } from '@ngrx/store';
 
 import { Scene } from '../../../core/data-model/scene/scene';
 
-import { IGameSceneState, initialState } from './game-scene.state';
-import * as actions from './game-scene.actions';
+import { IGameSceneState, initialState } from './state';
+import { actions } from './actions';
 
 function addScene(state: IGameSceneState, scene: Scene): IGameSceneState {
     return { ...state, scenes: [...state.scenes, scene] };

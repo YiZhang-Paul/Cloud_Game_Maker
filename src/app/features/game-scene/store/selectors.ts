@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import { IGameSceneState, key } from './game-scene.state';
+import { IGameSceneState, key } from './state';
 
 export const getFeatureState = (state: { [key]: IGameSceneState }) => state[key];
 
@@ -14,9 +14,11 @@ export const getAllScenes = createSelector(
     (state: IGameSceneState) => state.scenes
 );
 
-export const getActiveScenes = createSelector(
+export const getFilteredScenes = createSelector(
     getFeatureState,
-    (state: IGameSceneState) => state.activeScenes
+    (state: IGameSceneState, filter: string) => {
+        return state.scenes.filter(_ => _.name.toLowerCase().includes(filter ?? ''));
+    }
 );
 
 export const getActiveScene = createSelector(
@@ -24,14 +26,12 @@ export const getActiveScene = createSelector(
     (state: IGameSceneState) => state.activeScene
 );
 
+export const getActiveScenes = createSelector(
+    getFeatureState,
+    (state: IGameSceneState) => state.activeScenes
+);
+
 export const hasFetchedScenes = createSelector(
     getFeatureState,
     (state: IGameSceneState) => state.hasFetchedScenes
-);
-
-export const getFilteredScenes = createSelector(
-    getFeatureState,
-    (state: IGameSceneState, filter: string) => {
-        return state.scenes.filter(_ => _.name.toLowerCase().includes(filter ?? ''));
-    }
 );
