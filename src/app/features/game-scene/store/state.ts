@@ -5,6 +5,7 @@ export const key = 'gameScene';
 export interface IScenesState {
     scenes: Scene[];
     hasFetchedScenes: boolean;
+    canAddScene: boolean;
 }
 
 export interface IActiveSceneState {
@@ -19,7 +20,8 @@ export interface IGameSceneModuleState {
 
 export const initialScenesState: IScenesState = {
     scenes: [],
-    hasFetchedScenes: false
+    hasFetchedScenes: false,
+    canAddScene: true
 };
 
 export const initialActiveSceneState: IActiveSceneState = {

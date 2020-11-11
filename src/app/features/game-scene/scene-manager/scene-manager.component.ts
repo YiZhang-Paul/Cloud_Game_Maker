@@ -19,6 +19,7 @@ export class SceneManagerComponent implements OnInit {
     public allScenes$: Observable<Scene[]>;
     public filteredScenes$: Observable<Scene[]>;
     public hasFetchedScenes$: Observable<boolean>;
+    public canAddScene$: Observable<boolean>;
 
     constructor(private _store: Store, private _dialog: MatDialog) { }
 
@@ -27,6 +28,7 @@ export class SceneManagerComponent implements OnInit {
         this.allScenes$ = this._store.select(store.selectors.getAllScenes);
         this.onSceneSearch('');
         this.hasFetchedScenes$ = this._store.select(store.selectors.hasFetchedScenes);
+        this.canAddScene$ = this._store.select(store.selectors.canAddScene);
     }
 
     public onSceneSearch(keyword: string): void {

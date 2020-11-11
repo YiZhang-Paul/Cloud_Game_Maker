@@ -16,22 +16,24 @@ function setScenes(state: IScenesState, props: { payload: Scene[] }): IScenesSta
     return { ...state, scenes: props.payload };
 }
 
-function setHasFetchedScenes(state: IScenesState): IScenesState {
-    return { ...state, hasFetchedScenes: true };
+function setHasFetchedScenes(state: IScenesState, props: { payload: boolean }): IScenesState {
+    return { ...state, hasFetchedScenes: props.payload };
 }
 
-function resetHasFetchedScenes(state: IScenesState): IScenesState {
-    return { ...state, hasFetchedScenes: false };
+function setCanAddScene(state: IScenesState, props: { payload: boolean }): IScenesState {
+    return { ...state, canAddScene: props.payload };
 }
 
 const _scenesReducer = createReducer(
     initialScenesState,
-    on(actions.getScenesRemote, resetHasFetchedScenes),
     on(actions.addScene, addScene),
     on(actions.deleteScene, deleteScene),
+    on(actions.getScenesRemote, _ => setHasFetchedScenes(_, { payload: false })),
+    on(actions.addSceneRemote, _ => setCanAddScene(_, { payload: false })),
+    on(actions.deleteSceneRemote, _ => setCanAddScene(_, { payload: false })),
     on(actions.setScenes, setScenes),
     on(actions.setHasFetchedScenes, setHasFetchedScenes),
-    on(actions.resetHasFetchedScenes, resetHasFetchedScenes)
+    on(actions.setCanAddScene, setCanAddScene)
 );
 
 export function scenesReducer(state: IScenesState, action: Action): IScenesState {

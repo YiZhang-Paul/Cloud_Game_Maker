@@ -19,7 +19,7 @@ export class ScenesEffects {
         mergeMap(() => this._cloudStorageHttp.getScenes()),
         switchMap(scenes => [
             actions.setScenes({ payload: scenes }),
-            actions.setHasFetchedScenes()
+            actions.setHasFetchedScenes({ payload: true })
         ])
     ));
 
@@ -30,12 +30,16 @@ export class ScenesEffects {
         mergeMap(scene => this._cloudStorageHttp.addScene(scene).pipe(
             map(id => ({ ...scene, id }))
         )),
-        map(scene => {
+        switchMap(scene => {
             const isAdded = Boolean(scene.id);
             const message = isAdded ? 'Successfully added the scene.' : 'Failed to add the scene.';
             this._snackBar.open(message, isAdded ? 'Ok' : 'Got it');
 
-            return isAdded ? actions.addScene(scene) : { type: 'no-op' };
+            if (!isAdded) {
+                return [actions.setCanAddScene({ payload: true })];
+            }
+
+            return [actions.addScene(scene), actions.setCanAddScene({ payload: true })];
         })
     ));
 
@@ -47,10 +51,14 @@ export class ScenesEffects {
                 this._snackBar.open(message, isDeleted ? 'Ok' : 'Got it');
 
                 if (!isDeleted) {
-                    return [{ type: 'no-op' }];
+                    return [actions.setCanAddScene({ payload: true })];
                 }
 
-                return [actions.deleteScene(scene), actions.deleteActiveScene(scene)];
+                return [
+                    actions.deleteScene(scene),
+                    actions.deleteActiveScene(scene),
+                    actions.setCanAddScene({ payload: true })
+                ];
             })
         ))
     ));

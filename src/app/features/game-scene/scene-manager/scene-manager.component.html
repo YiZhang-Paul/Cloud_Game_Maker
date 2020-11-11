@@ -1,7 +1,7 @@
 <div *ngIf="hasFetchedScenes$ | async" class="container">
     <div *ngIf="!(allScenes$ | async).length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="7px" fxFlex>
         <span>no scenes found.</span>
-        <button (click)="onSceneCreate()">Create Scene</button>
+        <button (click)="onSceneCreate()" [disabled]="!(canAddScene$ | async)">Create Scene</button>
     </div>
 
     <div *ngIf="(allScenes$ | async).length" fxLayout="column" fxFlex>
