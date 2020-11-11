@@ -1,37 +1,41 @@
 import { createSelector } from '@ngrx/store';
 
-import { IGameSceneState, key } from './state';
+import { Scene } from '../../../core/data-model/scene/scene';
 
-export const getFeatureState = (state: { [key]: IGameSceneState }) => state[key];
+import { IGameSceneModuleState, key } from './state';
+
+function matchScenes(scenes: Scene[], filter: string): Scene[] {
+    return scenes.filter(_ => _.name.toLowerCase().includes(filter ?? ''));
+}
+
+export const getFeatureState = (state: { [key]: IGameSceneModuleState }) => state[key];
 
 export const hasScenes = createSelector(
     getFeatureState,
-    (state: IGameSceneState) => state.scenes.length > 0
+    (state: IGameSceneModuleState) => state.scenesState.scenes.length > 0
 );
 
 export const getAllScenes = createSelector(
     getFeatureState,
-    (state: IGameSceneState) => state.scenes
+    (state: IGameSceneModuleState) => state.scenesState.scenes
 );
 
 export const getFilteredScenes = createSelector(
     getFeatureState,
-    (state: IGameSceneState, filter: string) => {
-        return state.scenes.filter(_ => _.name.toLowerCase().includes(filter ?? ''));
-    }
-);
-
-export const getActiveScene = createSelector(
-    getFeatureState,
-    (state: IGameSceneState) => state.activeScene
-);
-
-export const getActiveScenes = createSelector(
-    getFeatureState,
-    (state: IGameSceneState) => state.activeScenes
+    (state: IGameSceneModuleState, filter: string) => matchScenes(state.scenesState.scenes, filter)
 );
 
 export const hasFetchedScenes = createSelector(
     getFeatureState,
-    (state: IGameSceneState) => state.hasFetchedScenes
+    (state: IGameSceneModuleState) => state.scenesState.hasFetchedScenes
+);
+
+export const getActiveScene = createSelector(
+    getFeatureState,
+    (state: IGameSceneModuleState) => state.activeSceneState.activeScene
+);
+
+export const getActiveScenes = createSelector(
+    getFeatureState,
+    (state: IGameSceneModuleState) => state.activeSceneState.activeScenes
 );

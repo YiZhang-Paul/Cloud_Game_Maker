@@ -2,16 +2,27 @@ import { Scene } from '../../../core/data-model/scene/scene';
 
 export const key = 'gameScene';
 
-export interface IGameSceneState {
+export interface IScenesState {
     scenes: Scene[];
-    activeScene: Scene | null;
-    activeScenes: Scene[];
     hasFetchedScenes: boolean;
 }
 
-export const initialState: IGameSceneState = {
+export interface IActiveSceneState {
+    activeScene: Scene | null;
+    activeScenes: Scene[];
+}
+
+export interface IGameSceneModuleState {
+    scenesState: IScenesState;
+    activeSceneState: IActiveSceneState;
+}
+
+export const initialScenesState: IScenesState = {
     scenes: [],
-    activeScene: null,
-    activeScenes: [],
     hasFetchedScenes: true
+};
+
+export const initialActiveSceneState: IActiveSceneState = {
+    activeScene: null,
+    activeScenes: []
 };
