@@ -14,20 +14,12 @@ import { actions } from './actions';
 @Injectable()
 export class ScenesEffects {
 
-    public startGetScenesRemote$ = createEffect(() => this._actions$.pipe(
-        ofType(actions.startGetScenesRemote),
-        switchMap(() => [
-            actions.setHasFetchedScenes({ payload: false }),
-            actions.getScenesRemote()
-        ])
-    ));
-
     public getScenesRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.getScenesRemote),
         mergeMap(() => this._cloudStorageHttp.getScenes()),
         switchMap(scenes => [
             actions.setScenes({ payload: scenes }),
-            actions.setHasFetchedScenes({ payload: true })
+            actions.setHasFetchedScenes()
         ])
     ));
 

@@ -19,7 +19,7 @@ export interface IGameSceneModuleState {
 
 export const initialScenesState: IScenesState = {
     scenes: [],
-    hasFetchedScenes: true
+    hasFetchedScenes: false
 };
 
 export const initialActiveSceneState: IActiveSceneState = {

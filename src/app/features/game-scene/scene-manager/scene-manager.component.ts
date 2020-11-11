@@ -23,7 +23,7 @@ export class SceneManagerComponent implements OnInit {
     constructor(private _store: Store, private _dialog: MatDialog) { }
 
     public ngOnInit(): void {
-        this._store.dispatch(store.actions.startGetScenesRemote());
+        this._store.dispatch(store.actions.getScenesRemote());
         this.allScenes$ = this._store.select(store.selectors.getAllScenes);
         this.onSceneSearch('');
         this.hasFetchedScenes$ = this._store.select(store.selectors.hasFetchedScenes);
