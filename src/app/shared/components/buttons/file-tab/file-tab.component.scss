@@ -4,13 +4,25 @@
 }
 
 .container {
-    padding: 0 12px;
     color: black;
     background-color: rgb(170, 170, 170);
 
     &:hover {
         cursor: pointer;
         background-color: rgb(155, 155, 155);
+    }
+
+    &:hover > div:last-of-type {
+        opacity: 1;
+    }
+
+    & > div:first-of-type {
+        padding-left: 30px;
+    }
+
+    & > div:last-of-type {
+        color: white;
+        opacity: 0;
     }
 }
 
@@ -21,5 +33,9 @@
 
     &:hover {
         background-color: $active-color;
+    }
+
+    & > div:last-of-type {
+        opacity: 1;
     }
 }

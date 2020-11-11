@@ -10,4 +10,5 @@ export class FileTabComponent {
     @Input() public name = '';
     @Input() public isActive = false;
     @Output() public tabSelect = new EventEmitter();
+    @Output() public tabClose = new EventEmitter();
 }
