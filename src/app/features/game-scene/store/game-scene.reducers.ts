@@ -32,7 +32,7 @@ function deleteActiveScene(state: IGameSceneState, scene: Scene): IGameSceneStat
         return state;
     }
 
-    const nextIndex = index ? index - 1 : 0;
+    const nextIndex = index ? index - 1 : 1;
     const activeScene = state.activeScenes.length === 1 ? null : state.activeScenes[nextIndex];
     const activeScenes = state.activeScenes.filter(_ => _.id !== scene.id);
 
