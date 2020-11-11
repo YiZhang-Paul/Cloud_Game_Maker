@@ -53,7 +53,11 @@ export class SpriteManagerComponent implements OnInit {
         }
     }
 
-    public setActiveSprite(file: SpriteFile): void {
+    public onFileEditCancel(): void {
+        this._store.dispatch(store.actions.resetActiveSprite());
+    }
+
+    private setActiveSprite(file: SpriteFile): void {
         this._store.dispatch(store.actions.setActiveSprite(file));
     }
 }
