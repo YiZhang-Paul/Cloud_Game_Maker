@@ -12,19 +12,19 @@ import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
     styleUrls: ['./sprite-manager.component.scss']
 })
 export class SpriteManagerComponent implements OnInit {
-    public hasSprites$: Observable<boolean>;
-    public isSpriteLoaded$: Observable<boolean>;
+    public allSprites$: Observable<SpriteFile[]>;
     public filteredSprites$: Observable<SpriteFile[]>;
     public activeSprite$: Observable<SpriteFile>;
+    public hasFetchedSprites$: Observable<boolean>;
 
     constructor(private _store: Store) { }
 
     public ngOnInit(): void {
-        this._store.dispatch(store.actions.startGetSpritesRemote());
-        this.hasSprites$ = this._store.select(store.selectors.hasSprites);
-        this.isSpriteLoaded$ = this._store.select(store.selectors.isSpriteLoaded);
-        this.activeSprite$ = this._store.select(store.selectors.getActiveSprite);
+        this._store.dispatch(store.actions.getSpritesRemote());
+        this.allSprites$ = this._store.select(store.selectors.getAllSprites);
         this.onFileSearch('');
+        this.activeSprite$ = this._store.select(store.selectors.getActiveSprite);
+        this.hasFetchedSprites$ = this._store.select(store.selectors.hasFetchedSprites);
     }
 
     public onFileSelect(files: NgxFileDropEntry[]): void {
@@ -37,7 +37,12 @@ export class SpriteManagerComponent implements OnInit {
     }
 
     public onFileEdit(file: SpriteFile, saveAsNew = false): void {
-        this._store.dispatch(store.actions.editSpriteRemote({ payload: file, isNew: saveAsNew }));
+        if (saveAsNew) {
+            this._store.dispatch(store.actions.addSpriteRemote(file));
+        }
+        else {
+            this._store.dispatch(store.actions.updateSpriteRemote(file));
+        }
     }
 
     public onFileDelete(file: SpriteFile): void {
@@ -49,7 +54,7 @@ export class SpriteManagerComponent implements OnInit {
             this.setActiveSprite(file);
         }
         else {
-            this._store.dispatch(store.actions.setActiveSpriteRemote(file));
+            this._store.dispatch(store.actions.setActiveSpriteLazyLoad(file));
         }
     }
 
