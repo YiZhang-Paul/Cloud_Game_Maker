@@ -5,7 +5,7 @@
     </div>
 
     <div *ngIf="(allScenes$ | async).length" fxLayout="column" fxFlex>
-        <app-mini-toolbar [activeOptions]="toolbarOptions"
+        <app-mini-toolbar [actionOptions]="toolbarOptions$ | async"
             (fileCreate)="onSceneCreate()"
             (fileSearch)="onSceneSearch($event.toLowerCase())">
         </app-mini-toolbar>

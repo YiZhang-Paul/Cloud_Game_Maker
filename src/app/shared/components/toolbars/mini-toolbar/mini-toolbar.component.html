@@ -1,12 +1,17 @@
 <div class="container" fxLayoutAlign="start center" fxLayoutGap="7px">
-    <ng-container *ngFor="let option of activeOptions" [ngSwitch]="option">
+    <ng-container *ngFor="let option of actionOptions" [ngSwitch]="option.type">
         <app-file-picker *ngSwitchCase="options.FilePick"
             [buttonText]="'+'"
             (fileSelect)="filePick.emit($event)"
             [allowExtension]="['png', 'jpg']">
         </app-file-picker>
 
-        <button *ngSwitchCase="options.Create" (click)="fileCreate.emit()">+</button>
+        <button *ngSwitchCase="options.Create"
+            (click)="fileCreate.emit()"
+            [disabled]="option.isDisabled">
+
+            +
+        </button>
 
         <input *ngSwitchCase="options.Search"
             type="text"

@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
 import { store } from '../store';
 import { Scene } from '../../../core/data-model/scene/scene';
+import { ToolbarActionOption } from '../../../core/data-model/generic/options/toolbar-action-option';
 import { MiniToolbarOption } from '../../../core/enum/mini-toolbar-option.enum';
 import { ConfirmPopupOption } from '../../../core/data-model/generic/options/confirm-popup-option';
 import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm-popup/confirm-popup.component';
@@ -15,11 +17,11 @@ import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm
     styleUrls: ['./scene-manager.component.scss']
 })
 export class SceneManagerComponent implements OnInit {
-    public toolbarOptions = [MiniToolbarOption.Create, MiniToolbarOption.Search];
     public allScenes$: Observable<Scene[]>;
     public filteredScenes$: Observable<Scene[]>;
     public hasFetchedScenes$: Observable<boolean>;
     public canAddScene$: Observable<boolean>;
+    public toolbarOptions$: Observable<ToolbarActionOption[]>;
 
     constructor(private _store: Store, private _dialog: MatDialog) { }
 
@@ -29,6 +31,13 @@ export class SceneManagerComponent implements OnInit {
         this.onSceneSearch('');
         this.hasFetchedScenes$ = this._store.select(store.selectors.hasFetchedScenes);
         this.canAddScene$ = this._store.select(store.selectors.canAddScene);
+
+        this.toolbarOptions$ = this.canAddScene$.pipe(
+            map(_ => [
+                new ToolbarActionOption(MiniToolbarOption.Create, !_),
+                new ToolbarActionOption(MiniToolbarOption.Search)
+            ])
+        );
     }
 
     public onSceneSearch(keyword: string): void {
