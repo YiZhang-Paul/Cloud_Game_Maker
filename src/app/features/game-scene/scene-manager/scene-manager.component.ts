@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 
 import { store } from '../store';
 import { Scene } from '../../../core/data-model/scene/scene';
+import { SceneLayer } from '../../../core/data-model/scene/scene-layer';
 import { ToolbarActionOption } from '../../../core/data-model/generic/options/toolbar-action-option';
 import { MiniToolbarOption } from '../../../core/enum/mini-toolbar-option.enum';
 import { ConfirmPopupOption } from '../../../core/data-model/generic/options/confirm-popup-option';
@@ -45,7 +46,9 @@ export class SceneManagerComponent implements OnInit {
     }
 
     public onSceneCreate(): void {
-        this._store.dispatch(store.actions.addSceneRemote(new Scene()));
+        const layers = [new SceneLayer()];
+        const scene: Scene = { ...new Scene(), layers };
+        this._store.dispatch(store.actions.addSceneRemote(scene));
     }
 
     public onSceneOpen(scene: Scene): void {
