@@ -4,7 +4,7 @@
     </div>
 
     <ng-container *ngIf="activeScene$ | async">
-        <div class="file-tabs" fxLayoutAlign="start center" fxFlex="5vh">
+        <div fxLayoutAlign="start center" fxFlex="5vh">
             <app-file-tab *ngFor="let scene of activeScenes$ | async"
                 [name]="scene.name"
                 [isActive]="(activeScene$ | async).id === scene.id"
@@ -13,14 +13,6 @@
             </app-file-tab>
         </div>
 
-        <div #viewport class="viewport" fxFlex>
-            <div *ngFor="let layer of (activeScene$ | async).layers" fxLayout="column">
-                <div class="grid-row" *ngFor="let row of layer.grids" fxLayout="row" fxFlex="100px">
-                    <div class="grid" *ngFor="let grid of row" fxFlex="100px">
-
-                    </div>
-                </div>
-            </div>
-        </div>
+        <app-scene-viewport [scene]="activeScene$ | async" fxFlex></app-scene-viewport>
     </ng-container>
 </div>
