@@ -52,8 +52,7 @@ export class SceneManagerComponent implements OnInit {
     }
 
     public onSceneOpen(scene: Scene): void {
-        this._store.dispatch(store.actions.addActiveScene(scene));
-        this._store.dispatch(store.actions.setActiveScene(scene));
+        this._store.dispatch(store.actions.openActiveScene(scene));
     }
 
     public onDelete(scene: Scene): void {

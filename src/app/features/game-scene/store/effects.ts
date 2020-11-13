@@ -63,6 +63,23 @@ export class ScenesEffects {
         ))
     ));
 
+    public openActiveScene$ = createEffect(() => this._actions$.pipe(
+        ofType(actions.openActiveScene),
+        mergeMap(scene => this._cloudStorageHttp.getSceneContent(scene)),
+        switchMap(scene => {
+            if (!scene) {
+                this._snackBar.open('Failed to fetch the scene from remote server.', 'Got it');
+
+                return [{ type: 'no-op' }];
+            }
+
+            return [
+                actions.addActiveScene(scene),
+                actions.setActiveScene(scene)
+            ];
+        })
+    ));
+
     constructor(private _actions$: Actions,
                 private _store: Store,
                 private _cloudStorageHttp: CloudStorageHttpService,

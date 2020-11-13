@@ -1,6 +1,6 @@
 import { Color } from '../generic/color';
 
 export class SceneGrid {
-    public sprite: string;
+    public spriteId: string;
     public color = new Color();
 }
