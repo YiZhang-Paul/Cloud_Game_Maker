@@ -11,6 +11,14 @@
         overflow: hidden;
     }
 
+    &.draggable:hover {
+        cursor: grab;
+    }
+
+    &.moveable:hover {
+        cursor: grabbing;
+    }
+
     div {
         background-color: transparent;
     }
