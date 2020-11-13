@@ -1,0 +1,9 @@
+<div #viewport class="container">
+    <div *ngFor="let layer of scene.layers" fxLayout="column">
+        <div class="grid-row" *ngFor="let row of layer.grids" fxLayout="row" fxFlex="100px">
+            <div class="grid" *ngFor="let grid of row" fxFlex="100px">
+
+            </div>
+        </div>
+    </div>
+</div>
