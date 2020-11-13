@@ -14,12 +14,10 @@ export class SceneViewportComponent {
     private _hasFocus = true;
     private _canDragPointer = false;
     private _canMoveCamera = false;
-    private _pointerX = 0;
-    private _pointerY = 0;
     private _deltaX = 0;
     private _deltaY = 0;
-    private _viewportX = 0;
-    private _viewportY = 0;
+    private _pointerX = 0;
+    private _pointerY = 0;
 
     get viewportStyle(): { [key: string]: boolean } {
         return {
@@ -56,8 +54,8 @@ export class SceneViewportComponent {
     @HostListener('document:mouseup')
     public onDocumentMouseup(): void {
         this._canMoveCamera = false;
-        this._viewportX += this._deltaX;
-        this._viewportY += this._deltaY;
+        this.scene.viewportXY.x += this._deltaX;
+        this.scene.viewportXY.y += this._deltaY;
         [this._deltaX, this._deltaY] = [0, 0];
     }
 
