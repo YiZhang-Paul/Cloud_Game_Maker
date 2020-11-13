@@ -13,6 +13,14 @@
             </app-file-tab>
         </div>
 
-        <div class="viewport" fxFlex></div>
+        <div #viewport class="viewport" fxFlex>
+            <div *ngFor="let layer of (activeScene$ | async).layers" fxLayout="column">
+                <div class="grid-row" *ngFor="let row of layer.grids" fxLayout="row" fxFlex="100px">
+                    <div class="grid" *ngFor="let grid of row" fxFlex="100px">
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </ng-container>
 </div>

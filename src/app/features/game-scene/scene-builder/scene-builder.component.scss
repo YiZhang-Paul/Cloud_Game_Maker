@@ -5,5 +5,30 @@
 
     .viewport {
         background-color: rgb(25, 25, 25);
+
+        & > div {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        div {
+            background-color: transparent;
+        }
+
+        .grid {
+            $grid-line-color: lime;
+            border-top: 1px solid $grid-line-color;
+            border-left: 1px solid $grid-line-color;
+        }
+
+        .grid-row:nth-child(1) > .grid {
+            border-top: none;
+        }
+
+        .grid-row > .grid:nth-child(1) {
+            border-left: none;
+        }
     }
 }
