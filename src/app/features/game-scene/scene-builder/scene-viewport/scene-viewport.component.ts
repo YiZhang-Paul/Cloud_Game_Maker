@@ -53,10 +53,12 @@ export class SceneViewportComponent {
 
     @HostListener('document:mouseup')
     public onDocumentMouseup(): void {
-        this._canMoveCamera = false;
-        this.scene.viewportXY.x += this._deltaX;
-        this.scene.viewportXY.y += this._deltaY;
-        [this._deltaX, this._deltaY] = [0, 0];
+        if (this._canMoveCamera) {
+            this._canMoveCamera = false;
+            this.scene.viewportXY.x += this._deltaX;
+            this.scene.viewportXY.y += this._deltaY;
+            [this._deltaX, this._deltaY] = [0, 0];
+        }
     }
 
     @HostListener('document:mousemove', ['$event'])
