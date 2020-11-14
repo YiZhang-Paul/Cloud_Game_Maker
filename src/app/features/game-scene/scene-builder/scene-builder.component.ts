@@ -29,4 +29,8 @@ export class SceneBuilderComponent implements OnInit {
     public onSceneClose(scene: Scene): void {
         this._store.dispatch(store.actions.deleteActiveScene(scene));
     }
+
+    public onSceneChange(scene: Scene): void {
+        this._store.dispatch(store.actions.setActiveScene(scene));
+    }
 }

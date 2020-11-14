@@ -13,6 +13,9 @@
             </app-file-tab>
         </div>
 
-        <app-scene-viewport [scene]="activeScene$ | async" fxFlex></app-scene-viewport>
+        <app-scene-viewport [scene]="activeScene$ | async"
+            (sceneChange)="onSceneChange($event)"
+            fxFlex>
+        </app-scene-viewport>
     </ng-container>
 </div>

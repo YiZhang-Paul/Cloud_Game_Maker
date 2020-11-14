@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 
+import { Point } from '../../../../core/data-model/generic/point';
 import { Scene } from '../../../../core/data-model/scene/scene';
 
 @Component({
@@ -10,6 +11,7 @@ import { Scene } from '../../../../core/data-model/scene/scene';
 })
 export class SceneViewportComponent {
     @Input() public scene: Scene;
+    @Output() public sceneChange = new EventEmitter<Scene>();
     @ViewChild('viewport') private _viewport: ElementRef;
     private _hasFocus = true;
     private _canDragPointer = false;
@@ -55,8 +57,9 @@ export class SceneViewportComponent {
     public onDocumentMouseup(): void {
         if (this._canMoveCamera) {
             this._canMoveCamera = false;
-            this.scene.viewportXY.x += this._deltaX;
-            this.scene.viewportXY.y += this._deltaY;
+            const { x, y } = this.scene.viewportXY;
+            const point = new Point(x + this._deltaX, y + this._deltaY);
+            this.sceneChange.emit({ ...this.scene, viewportXY: point });
             [this._deltaX, this._deltaY] = [0, 0];
         }
     }
