@@ -16,10 +16,9 @@ export class SceneViewportComponent {
     private _hasFocus = true;
     private _canDragPointer = false;
     private _canMoveCamera = false;
+    private _pointerXY = new Point();
     private _deltaX = 0;
     private _deltaY = 0;
-    private _pointerX = 0;
-    private _pointerY = 0;
 
     get viewportStyle(): { [key: string]: boolean } {
         return {
@@ -46,7 +45,7 @@ export class SceneViewportComponent {
     public onDocumentMousedown(event: MouseEvent): void {
         if (this._canDragPointer) {
             this._canMoveCamera = true;
-            [this._pointerX, this._pointerY] = [event.clientX, event.clientY];
+            this._pointerXY = new Point(event.clientX, event.clientY);
         }
         else {
             this._hasFocus = this._viewport?.nativeElement?.contains(event.target);
@@ -67,8 +66,8 @@ export class SceneViewportComponent {
     @HostListener('document:mousemove', ['$event'])
     public onDocumentMousemove(event: MouseEvent): void {
         if (this._canMoveCamera) {
-            this._deltaX = event.clientX - this._pointerX;
-            this._deltaY = event.clientY - this._pointerY;
+            this._deltaX = event.clientX - this._pointerXY.x;
+            this._deltaY = event.clientY - this._pointerXY.y;
         }
     }
 }
