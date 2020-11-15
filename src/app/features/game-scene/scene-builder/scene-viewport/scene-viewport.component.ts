@@ -22,10 +22,30 @@ export class SceneViewportComponent implements AfterViewInit {
     private _pointerXY = new Point();
     private _deltaXY = new Point();
 
-    get viewportStyle(): { [key: string]: boolean } {
+    get viewportX(): number {
+        return this.scene.viewportXY.x + this._deltaXY.x;
+    }
+
+    get viewportY(): number {
+        return this.scene.viewportXY.y + this._deltaXY.y;
+    }
+
+    get viewportClass(): { [key: string]: boolean } {
         return {
             draggable: this._canDragPointer,
             moveable: this._canMoveCamera
+        };
+    }
+
+    get layerStyle(): { [key: string]: string } {
+        const offsetX = this.viewportX % this.scene.scale;
+        const offsetY = this.viewportY % this.scene.scale;
+
+        return {
+            top: `${-offsetY}px`,
+            left: `${-offsetX}px`,
+            width: `calc(100% + ${offsetX}px)`,
+            height: `calc(100% + ${offsetY}px)`,
         };
     }
 
@@ -90,14 +110,11 @@ export class SceneViewportComponent implements AfterViewInit {
             return;
         }
 
-        const startX = this.scene.viewportXY.x + this._deltaXY.x;
-        const startY = this.scene.viewportXY.y + this._deltaXY.y;
-        const endX = startX + this._viewport.nativeElement.clientWidth;
-        const endY = startY + this._viewport.nativeElement.clientHeight;
-        const startColumn = Math.floor(startX / this.scene.scale);
-        const startRow = Math.floor(startY / this.scene.scale);
-        const endColumn = Math.floor(endX / this.scene.scale);
-        const endRow = Math.floor(endY / this.scene.scale);
+        const { clientWidth, clientHeight } = this._viewport.nativeElement;
+        const startColumn = Math.floor(this.viewportX / this.scene.scale);
+        const startRow = Math.floor(this.viewportY / this.scene.scale);
+        const endColumn = Math.floor((this.viewportX + clientWidth) / this.scene.scale);
+        const endRow = Math.floor((this.viewportY + clientHeight) / this.scene.scale);
         this.columns = GenericUtility.getNumberRange(startColumn, endColumn);
         this.rows = GenericUtility.getNumberRange(startRow, endRow);
     }
