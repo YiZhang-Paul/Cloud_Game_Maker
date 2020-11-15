@@ -6,10 +6,16 @@ html, body {
     box-sizing: border-box;
 }
 
+body .mat-dialog-container {
+    padding: 15px;
+}
+
 .cdk-drag {
     z-index: 999;
 }
 
-body .mat-dialog-container {
-    padding: 15px;
+.no-select {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
