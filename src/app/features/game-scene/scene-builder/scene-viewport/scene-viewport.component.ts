@@ -23,11 +23,19 @@ export class SceneViewportComponent implements AfterViewInit {
     private _deltaXY = new Point();
 
     get viewportX(): number {
-        return this.scene.viewportXY.x + this._deltaXY.x;
+        const { layers, scale, viewportXY } = this.scene;
+        const totalWidth = layers[0].grids[0].length * scale;
+        const maxX = totalWidth - this._viewport?.nativeElement?.clientWidth ?? 0;
+
+        return GenericUtility.limitValue(viewportXY.x + this._deltaXY.x, 0, maxX);
     }
 
     get viewportY(): number {
-        return this.scene.viewportXY.y + this._deltaXY.y;
+        const { layers, scale, viewportXY } = this.scene;
+        const totalHeight = layers[0].grids.length * scale;
+        const maxY = totalHeight - this._viewport?.nativeElement?.clientHeight ?? 0;
+
+        return GenericUtility.limitValue(viewportXY.y + this._deltaXY.y, 0, maxY);
     }
 
     get viewportClass(): { [key: string]: boolean } {
@@ -90,7 +98,7 @@ export class SceneViewportComponent implements AfterViewInit {
     @HostListener('document:mouseup')
     public onDocumentMouseup(): void {
         if (this._canMoveCamera) {
-            const viewportXY = Point.add(this.scene.viewportXY, this._deltaXY);
+            const viewportXY = new Point(this.viewportX, this.viewportY);
             this.sceneChange.emit({ ...this.scene, viewportXY });
             this._deltaXY = new Point(0, 0);
             this._canMoveCamera = false;
