@@ -2,6 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmi
 
 import { Point } from '../../../../core/data-model/generic/point';
 import { Scene } from '../../../../core/data-model/scene/scene';
+import { GenericUtility } from '../../../../core/utility/generic-utility/generic.utility';
 
 @Component({
     selector: 'app-scene-viewport',
@@ -97,7 +98,7 @@ export class SceneViewportComponent implements AfterViewInit {
         const startRow = Math.floor(startY / this.scene.scale);
         const endColumn = Math.floor(endX / this.scene.scale);
         const endRow = Math.floor(endY / this.scene.scale);
-        this.columns = new Array(endColumn - startColumn + 1).fill(0).map((_, i) => i + startColumn);
-        this.rows = new Array(endRow - startRow + 1).fill(0).map((_, i) => i + startRow);
+        this.columns = GenericUtility.getNumberRange(startColumn, endColumn);
+        this.rows = GenericUtility.getNumberRange(startRow, endRow);
     }
 }
