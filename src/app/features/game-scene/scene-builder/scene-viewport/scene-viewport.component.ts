@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmi
 
 import { Scene } from '../../../../core/data-model/scene/scene';
 import { Point } from '../../../../../engine/core/data-model/generic/point';
-import { Camera } from '../../../../../engine/rendering/camera/camera';
+import { EditorCamera2D } from '../../../../../engine/rendering/editor-camera-2d/editor-camera-2d';
 
 @Component({
     selector: 'app-scene-viewport',
@@ -18,7 +18,7 @@ export class SceneViewportComponent implements AfterViewInit {
     private _canDragPointer = false;
     private _canMoveCamera = false;
     private _pointerXY = new Point();
-    private _camera: Camera;
+    private _camera: EditorCamera2D;
 
     get viewportClass(): { [key: string]: boolean } {
         return {
@@ -45,7 +45,7 @@ export class SceneViewportComponent implements AfterViewInit {
             const position = new Point(viewportXY.x, viewportXY.y);
             const rows = layers[0].grids.length;
             const columns = layers[0].grids[0].length;
-            this._camera = new Camera(width, height, position, rows, columns, scale);
+            this._camera = new EditorCamera2D(width, height, position, rows, columns, scale);
             this.renderViewport();
         });
     }
@@ -111,35 +111,6 @@ export class SceneViewportComponent implements AfterViewInit {
     }
 
     private renderViewport(): void {
-        for (let i = 0; i < this.scene.layers.length; ++i) {
-            this.drawViewport(i);
-        }
-
-        this.drawGridLines();
-    }
-
-    private drawViewport(index: number): void { }
-
-    private drawGridLines(): void {
-        const canvas = this._camera.getCanvas('grid-line-layer');
-        const context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.strokeStyle = 'rgb(0, 255, 0)';
-
-        for (let i = 0; i < this._camera.renderColumns; ++i) {
-            const x = i * this._camera.scale;
-            context.beginPath();
-            context.moveTo(x, 0);
-            context.lineTo(x, canvas.height);
-            context.stroke();
-        }
-
-        for (let i = 0; i < this._camera.renderRows; ++i) {
-            const y = i * this._camera.scale;
-            context.beginPath();
-            context.moveTo(0, y);
-            context.lineTo(canvas.width, y);
-            context.stroke();
-        }
+        this._camera.drawGridLines();
     }
 }
