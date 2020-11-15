@@ -69,6 +69,14 @@ export class Camera {
         this._scale = GenericUtility.limitValue(this._scale + delta, 30, 200);
     }
 
+    public getCanvas(id: string): HTMLCanvasElement {
+        const canvas = document.getElementById(id) as HTMLCanvasElement;
+        canvas.width = this.renderWidth;
+        canvas.height = this.renderHeight;
+
+        return canvas;
+    }
+
     public setRenderArea(): void {
         const { width, height } = this._dimension;
         this._renderRows = Math.ceil(height / this._scale) + 1;

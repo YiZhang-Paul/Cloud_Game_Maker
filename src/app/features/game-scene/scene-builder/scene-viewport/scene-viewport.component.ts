@@ -123,10 +123,8 @@ export class SceneViewportComponent implements AfterViewInit {
     private drawViewport(index: number): void { }
 
     private drawGridLines(): void {
-        const canvas = document.getElementById('grid-line-layer') as HTMLCanvasElement;
+        const canvas = this._camera.getCanvas('grid-line-layer');
         const context = canvas.getContext('2d');
-        canvas.width = this._camera.renderWidth;
-        canvas.height = this._camera.renderHeight;
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.strokeStyle = 'rgb(0, 255, 0)';
 
