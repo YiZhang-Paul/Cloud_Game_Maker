@@ -17,8 +17,7 @@ export class SceneViewportComponent {
     private _canDragPointer = false;
     private _canMoveCamera = false;
     private _pointerXY = new Point();
-    private _deltaX = 0;
-    private _deltaY = 0;
+    private _deltaXY = new Point();
 
     get viewportStyle(): { [key: string]: boolean } {
         return {
@@ -64,19 +63,17 @@ export class SceneViewportComponent {
     @HostListener('document:mouseup')
     public onDocumentMouseup(): void {
         if (this._canMoveCamera) {
+            const viewportXY = Point.add(this.scene.viewportXY, this._deltaXY);
+            this.sceneChange.emit({ ...this.scene, viewportXY });
+            this._deltaXY = new Point(0, 0);
             this._canMoveCamera = false;
-            const { x, y } = this.scene.viewportXY;
-            const point = new Point(x + this._deltaX, y + this._deltaY);
-            this.sceneChange.emit({ ...this.scene, viewportXY: point });
-            [this._deltaX, this._deltaY] = [0, 0];
         }
     }
 
     @HostListener('document:mousemove', ['$event'])
-    public onDocumentMousemove(event: MouseEvent): void {
+    public onDocumentMousemove({ clientX, clientY }: MouseEvent): void {
         if (this._canMoveCamera) {
-            this._deltaX = event.clientX - this._pointerXY.x;
-            this._deltaY = event.clientY - this._pointerXY.y;
+            this._deltaXY = new Point(clientX - this._pointerXY.x, clientY - this._pointerXY.y);
         }
     }
 }
