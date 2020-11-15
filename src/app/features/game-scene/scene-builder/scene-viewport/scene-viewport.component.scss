@@ -5,9 +5,8 @@
     background-color: rgb(25, 25, 25);
     overflow: hidden;
 
-    & > div {
+    canvas {
         position: absolute;
-        overflow: hidden;
     }
 
     &.draggable:hover {
@@ -16,23 +15,5 @@
 
     &.moveable:hover {
         cursor: grabbing;
-    }
-
-    div {
-        background-color: transparent;
-    }
-
-    .grid {
-        $grid-line-color: lime;
-        border-top: 1px solid $grid-line-color;
-        border-left: 1px solid $grid-line-color;
-    }
-
-    .grid-row:nth-child(1) > .grid {
-        border-top: none;
-    }
-
-    .grid-row > .grid:nth-child(1) {
-        border-left: none;
     }
 }

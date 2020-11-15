@@ -1,9 +1,6 @@
 <div #viewport class="container" [ngClass]="viewportClass">
-    <div [ngStyle]="layerStyle" *ngFor="let layer of scene.layers" fxLayout="column">
-        <div class="grid-row" *ngFor="let row of rows" fxLayout="row" [fxFlex]="scene.scale + 'px'">
-            <div class="grid" *ngFor="let column of columns" [fxFlex]="scene.scale + 'px'">
-
-            </div>
-        </div>
-    </div>
+    <canvas *ngFor="let layer of scene.layers; let i = index"
+        [ngStyle]="layerStyle"
+        [id]="'layer-' + i">
+    </canvas>
 </div>

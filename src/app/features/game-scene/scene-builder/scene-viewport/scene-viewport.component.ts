@@ -46,14 +46,11 @@ export class SceneViewportComponent implements AfterViewInit {
     }
 
     get layerStyle(): { [key: string]: string } {
-        const offsetX = this.viewportX % this.scene.scale;
-        const offsetY = this.viewportY % this.scene.scale;
-
         return {
-            top: `${-offsetY}px`,
-            left: `${-offsetX}px`,
-            width: `calc(100% + ${offsetX}px)`,
-            height: `calc(100% + ${offsetY}px)`,
+            top: `${-this.viewportY % this.scene.scale}px`,
+            left: `${-this.viewportX % this.scene.scale}px`,
+            width: `${this.columns.length * this.scene.scale}px`,
+            height: `${this.rows.length * this.scene.scale}px`
         };
     }
 
@@ -128,6 +125,10 @@ export class SceneViewportComponent implements AfterViewInit {
         }
 
         this.setViewportArea();
+
+        for (let i = 0; i < this.scene.layers.length; ++i) {
+            this.drawViewport(i);
+        }
     }
 
     private setViewportArea(): void {
@@ -138,5 +139,23 @@ export class SceneViewportComponent implements AfterViewInit {
         const endRow = Math.floor((this.viewportY + clientHeight) / this.scene.scale);
         this.columns = GenericUtility.getValueRange(startColumn, endColumn);
         this.rows = GenericUtility.getValueRange(startRow, endRow);
+    }
+
+    private drawViewport(index: number): void {
+        const canvas = document.getElementById(`layer-${index}`) as HTMLCanvasElement;
+        const context = canvas.getContext('2d');
+        const gridWidth = this.scene.scale;
+        canvas.width = this.columns.length * gridWidth;
+        canvas.height = this.rows.length * gridWidth;
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (const row of this.rows) {
+            for (const column of this.columns) {
+                const x = (column - this.columns[0]) * gridWidth;
+                const y = (row - this.rows[0]) * gridWidth;
+                context.strokeStyle = 'lime';
+                context.strokeRect(x, y, gridWidth, gridWidth);
+            }
+        }
     }
 }
