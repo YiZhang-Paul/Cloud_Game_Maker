@@ -1,7 +1,7 @@
 <div #viewport class="container" [ngClass]="viewportStyle">
     <div *ngFor="let layer of scene.layers" fxLayout="column">
-        <div class="grid-row" *ngFor="let row of layer.grids" fxLayout="row" [fxFlex]="scene.scale + 'px'">
-            <div class="grid" *ngFor="let grid of row" [fxFlex]="scene.scale + 'px'">
+        <div class="grid-row" *ngFor="let row of rows" fxLayout="row" [fxFlex]="scene.scale + 'px'">
+            <div class="grid" *ngFor="let column of columns" [fxFlex]="scene.scale + 'px'">
 
             </div>
         </div>

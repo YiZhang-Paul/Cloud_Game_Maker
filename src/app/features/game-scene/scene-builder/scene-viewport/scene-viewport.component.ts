@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 
 import { Point } from '../../../../core/data-model/generic/point';
 import { Scene } from '../../../../core/data-model/scene/scene';
@@ -9,10 +9,12 @@ import { Scene } from '../../../../core/data-model/scene/scene';
     styleUrls: ['./scene-viewport.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SceneViewportComponent {
+export class SceneViewportComponent implements AfterViewInit {
     @Input() public scene: Scene;
     @Output() public sceneChange = new EventEmitter<Scene>();
     @ViewChild('viewport') private _viewport: ElementRef;
+    public columns: number[] = [];
+    public rows: number[] = [];
     private _hasFocus = true;
     private _canDragPointer = false;
     private _canMoveCamera = false;
@@ -24,6 +26,10 @@ export class SceneViewportComponent {
             draggable: this._canDragPointer,
             moveable: this._canMoveCamera
         };
+    }
+
+    public ngAfterViewInit(): void {
+        setTimeout(() => this.renderLayer());
     }
 
     @HostListener('document:wheel', ['$event'])
@@ -74,6 +80,24 @@ export class SceneViewportComponent {
     public onDocumentMousemove({ clientX, clientY }: MouseEvent): void {
         if (this._canMoveCamera) {
             this._deltaXY = new Point(this._pointerXY.x - clientX, this._pointerXY.y - clientY);
+            this.renderLayer();
         }
+    }
+
+    private renderLayer(): void {
+        if (!this._viewport) {
+            return;
+        }
+
+        const startX = this.scene.viewportXY.x + this._deltaXY.x;
+        const startY = this.scene.viewportXY.y + this._deltaXY.y;
+        const endX = startX + this._viewport.nativeElement.clientWidth;
+        const endY = startY + this._viewport.nativeElement.clientHeight;
+        const startColumn = Math.floor(startX / this.scene.scale);
+        const startRow = Math.floor(startY / this.scene.scale);
+        const endColumn = Math.floor(endX / this.scene.scale);
+        const endRow = Math.floor(endY / this.scene.scale);
+        this.columns = new Array(endColumn - startColumn + 1).fill(0).map((_, i) => i + startColumn);
+        this.rows = new Array(endRow - startRow + 1).fill(0).map((_, i) => i + startRow);
     }
 }
