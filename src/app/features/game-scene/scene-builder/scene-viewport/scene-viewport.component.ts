@@ -98,6 +98,14 @@ export class SceneViewportComponent implements AfterViewInit {
         }
     }
 
+    @HostListener('document:mousemove', ['$event'])
+    public onDocumentMousemove({ clientX, clientY }: MouseEvent): void {
+        if (this._canMoveCamera) {
+            this._deltaXY = new Point(this._pointerXY.x - clientX, this._pointerXY.y - clientY);
+            this.renderLayer();
+        }
+    }
+
     @HostListener('document:mouseup')
     public onDocumentMouseup(): void {
         if (this._canMoveCamera) {
@@ -106,14 +114,6 @@ export class SceneViewportComponent implements AfterViewInit {
             this.sceneChange.emit(this.scene);
             this._deltaXY = new Point(0, 0);
             this._canMoveCamera = false;
-        }
-    }
-
-    @HostListener('document:mousemove', ['$event'])
-    public onDocumentMousemove({ clientX, clientY }: MouseEvent): void {
-        if (this._canMoveCamera) {
-            this._deltaXY = new Point(this._pointerXY.x - clientX, this._pointerXY.y - clientY);
-            this.renderLayer();
         }
     }
 
