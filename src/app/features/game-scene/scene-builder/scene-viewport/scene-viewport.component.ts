@@ -73,7 +73,7 @@ export class SceneViewportComponent {
     @HostListener('document:mousemove', ['$event'])
     public onDocumentMousemove({ clientX, clientY }: MouseEvent): void {
         if (this._canMoveCamera) {
-            this._deltaXY = new Point(clientX - this._pointerXY.x, clientY - this._pointerXY.y);
+            this._deltaXY = new Point(this._pointerXY.x - clientX, this._pointerXY.y - clientY);
         }
     }
 }
