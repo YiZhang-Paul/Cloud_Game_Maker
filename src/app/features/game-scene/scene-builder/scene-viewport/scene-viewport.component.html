@@ -1,6 +1,8 @@
 <div #viewport class="container" [ngClass]="viewportClass">
     <canvas *ngFor="let layer of scene.layers; let i = index"
-        [ngStyle]="layerStyle"
-        [id]="'layer-' + i">
+        [id]="'layer-' + i"
+        [ngStyle]="layerStyle">
     </canvas>
+
+    <canvas id="grid-line-layer" [ngStyle]="layerStyle"></canvas>
 </div>

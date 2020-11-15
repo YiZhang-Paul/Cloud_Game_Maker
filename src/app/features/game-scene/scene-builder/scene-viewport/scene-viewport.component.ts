@@ -129,6 +129,8 @@ export class SceneViewportComponent implements AfterViewInit {
         for (let i = 0; i < this.scene.layers.length; ++i) {
             this.drawViewport(i);
         }
+
+        this.drawGridLines();
     }
 
     private setViewportArea(): void {
@@ -141,21 +143,31 @@ export class SceneViewportComponent implements AfterViewInit {
         this.rows = GenericUtility.getValueRange(startRow, endRow);
     }
 
-    private drawViewport(index: number): void {
-        const canvas = document.getElementById(`layer-${index}`) as HTMLCanvasElement;
+    private drawViewport(index: number): void { }
+
+    private drawGridLines(): void {
+        const canvas = document.getElementById('grid-line-layer') as HTMLCanvasElement;
         const context = canvas.getContext('2d');
         const gridWidth = this.scene.scale;
         canvas.width = this.columns.length * gridWidth;
         canvas.height = this.rows.length * gridWidth;
         context.clearRect(0, 0, canvas.width, canvas.height);
+        context.strokeStyle = 'lime';
+
+        for (const column of this.columns) {
+            const x = (column - this.columns[0]) * gridWidth;
+            context.beginPath();
+            context.moveTo(x, 0);
+            context.lineTo(x, canvas.height);
+            context.stroke();
+        }
 
         for (const row of this.rows) {
-            for (const column of this.columns) {
-                const x = (column - this.columns[0]) * gridWidth;
-                const y = (row - this.rows[0]) * gridWidth;
-                context.strokeStyle = 'lime';
-                context.strokeRect(x, y, gridWidth, gridWidth);
-            }
+            const y = (row - this.rows[0]) * gridWidth;
+            context.beginPath();
+            context.moveTo(0, y);
+            context.lineTo(canvas.width, y);
+            context.stroke();
         }
     }
 }
