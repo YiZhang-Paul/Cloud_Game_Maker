@@ -2,14 +2,14 @@ import { Dimension2D } from '../../core/data-model/generic/dimension-2d';
 import { Point } from '../../core/data-model/generic/point';
 import { GenericUtility } from '../../core/utility/generic-utility/generic.utility';
 
-export class Camera {
-    private _dimension = new Dimension2D();
-    private _position = new Point();
-    private _totalRows = 0;
-    private _totalColumns = 0;
-    private _renderRows = 0;
-    private _renderColumns = 0;
-    private _scale = 100;
+export class Camera2D {
+    protected _dimension = new Dimension2D();
+    protected _position = new Point();
+    protected _totalRows = 0;
+    protected _totalColumns = 0;
+    protected _renderRows = 0;
+    protected _renderColumns = 0;
+    protected _scale = 100;
 
     constructor(
         width: number,
@@ -80,7 +80,7 @@ export class Camera {
         return canvas;
     }
 
-    private setRenderArea(): void {
+    protected setRenderArea(): void {
         const { width, height } = this._dimension;
         this._renderRows = Math.ceil(height / this._scale) + 1;
         this._renderColumns = Math.ceil(width / this._scale) + 1;
