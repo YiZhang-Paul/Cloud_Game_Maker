@@ -5,7 +5,7 @@
 
     <ng-container *ngIf="activeScene$ | async">
         <div fxLayoutAlign="start center" fxFlex="5vh">
-            <app-file-tab *ngFor="let scene of activeScenes$ | async"
+            <app-file-tab *ngFor="let scene of openedScenes$ | async"
                 [name]="scene.name"
                 [isActive]="(activeScene$ | async).id === scene.id"
                 (tabSelect)="onSceneSelected(scene)"

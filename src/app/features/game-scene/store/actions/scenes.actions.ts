@@ -4,7 +4,9 @@ import { Scene } from '../../../../core/data-model/scene/scene';
 
 const source = '[Scene Manager]';
 
+export const openScene = createAction(`${source} Open Scene`, props<Scene>());
 export const addScene = createAction(`${source} Add Scene`, props<Scene>());
+export const updateScene = createAction(`${source} Update Scene`, props<Scene>());
 export const deleteScene = createAction(`${source} Delete Scene`, props<Scene>());
 export const setScenes = createAction(`${source} Set Scenes`, props<{ payload: Scene[] }>());
 export const getScenesRemote = createAction(`${source} Get Scenes Remote`);

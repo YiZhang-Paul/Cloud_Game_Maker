@@ -2,39 +2,38 @@ import { Action, createReducer, on } from '@ngrx/store';
 
 import { IActiveSceneState, initialActiveSceneState } from '../state';
 import { actions } from '../actions';
-import { Scene } from '../../../../core/data-model/scene/scene';
 
-function setActiveScene(state: IActiveSceneState, scene: Scene): IActiveSceneState {
-    return { ...state, activeScene: scene };
+function setActiveSceneId(state: IActiveSceneState, props: { payload: string | null }): IActiveSceneState {
+    return { ...state, activeSceneId: props.payload };
 }
 
-function addActiveScene(state: IActiveSceneState, scene: Scene): IActiveSceneState {
-    if (state.activeScenes.some(_ => _.id === scene.id)) {
+function addOpenedSceneId(state: IActiveSceneState, props: { payload: string }): IActiveSceneState {
+    if (state.openedSceneIds.some(_ => _ === props.payload)) {
         return state;
     }
 
-    return { ...state, activeScenes: [...state.activeScenes, scene] };
+    return { ...state, openedSceneIds: [...state.openedSceneIds, props.payload] };
 }
 
-function deleteActiveScene(state: IActiveSceneState, scene: Scene): IActiveSceneState {
-    const index = state.activeScenes.findIndex(_ => _.id === scene.id);
+function deleteOpenedSceneId(state: IActiveSceneState, props: { payload: string }): IActiveSceneState {
+    const index = state.openedSceneIds.findIndex(_ => _ === props.payload);
 
     if (index === -1) {
         return state;
     }
 
     const nextIndex = index ? index - 1 : 1;
-    const activeScene = state.activeScenes.length === 1 ? null : state.activeScenes[nextIndex];
-    const activeScenes = state.activeScenes.filter(_ => _.id !== scene.id);
+    const activeSceneId = state.openedSceneIds.length === 1 ? null : state.openedSceneIds[nextIndex];
+    const openedSceneIds = state.openedSceneIds.filter(_ => _ !== props.payload);
 
-    return { ...state, activeScene, activeScenes };
+    return { ...state, activeSceneId, openedSceneIds };
 }
 
 const _activeSceneReducer = createReducer(
     initialActiveSceneState,
-    on(actions.setActiveScene, setActiveScene),
-    on(actions.addActiveScene, addActiveScene),
-    on(actions.deleteActiveScene, deleteActiveScene)
+    on(actions.setActiveSceneId, setActiveSceneId),
+    on(actions.addOpenedSceneId, addOpenedSceneId),
+    on(actions.deleteOpenedSceneId, deleteOpenedSceneId)
 );
 
 export function activeSceneReducer(state: IActiveSceneState, action: Action): IActiveSceneState {

@@ -52,7 +52,7 @@ export class SceneManagerComponent implements OnInit {
     }
 
     public onSceneOpen(scene: Scene): void {
-        this._store.dispatch(store.actions.openActiveScene(scene));
+        this._store.dispatch(store.actions.openScene(scene));
     }
 
     public onDelete(scene: Scene): void {
