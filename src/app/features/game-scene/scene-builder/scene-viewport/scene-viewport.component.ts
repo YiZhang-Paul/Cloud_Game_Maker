@@ -57,8 +57,8 @@ export class SceneViewportComponent implements AfterViewInit {
     public onDocumentScroll(event: WheelEvent): void {
         if (this._viewport?.nativeElement?.contains(event.target)) {
             const delta = event.deltaY > 0 ? 10 : -10;
-            const scale = Math.max(10, this.scene.scale + delta);
-            this.sceneChange.emit({ ...this.scene, scale: Math.min(250, scale) });
+            const scale = GenericUtility.limitValue(this.scene.scale + delta, 10, 250);
+            this.sceneChange.emit({ ...this.scene, scale });
         }
     }
 
@@ -115,7 +115,7 @@ export class SceneViewportComponent implements AfterViewInit {
         const startRow = Math.floor(this.viewportY / this.scene.scale);
         const endColumn = Math.floor((this.viewportX + clientWidth) / this.scene.scale);
         const endRow = Math.floor((this.viewportY + clientHeight) / this.scene.scale);
-        this.columns = GenericUtility.getNumberRange(startColumn, endColumn);
-        this.rows = GenericUtility.getNumberRange(startRow, endRow);
+        this.columns = GenericUtility.getValueRange(startColumn, endColumn);
+        this.rows = GenericUtility.getValueRange(startRow, endRow);
     }
 }
