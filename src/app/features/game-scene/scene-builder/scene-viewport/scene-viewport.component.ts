@@ -65,8 +65,10 @@ export class SceneViewportComponent implements AfterViewInit {
     public onDocumentScroll(event: WheelEvent): void {
         if (this._viewport?.nativeElement?.contains(event.target)) {
             const delta = event.deltaY > 0 ? 10 : -10;
-            const scale = GenericUtility.limitValue(this.scene.scale + delta, 10, 250);
-            this.sceneChange.emit({ ...this.scene, scale });
+            const scale = GenericUtility.limitValue(this.scene.scale + delta, 30, 200);
+            this.scene = { ...this.scene, scale };
+            this.sceneChange.emit(this.scene);
+            this.renderLayer();
         }
     }
 
@@ -80,6 +82,7 @@ export class SceneViewportComponent implements AfterViewInit {
     @HostListener('document:keyup', ['$event'])
     public onDocumentKeyup(event: KeyboardEvent): void {
         if (event.code === 'Space') {
+            this._canMoveCamera = false;
             this._canDragPointer = false;
         }
     }
@@ -99,7 +102,8 @@ export class SceneViewportComponent implements AfterViewInit {
     public onDocumentMouseup(): void {
         if (this._canMoveCamera) {
             const viewportXY = new Point(this.viewportX, this.viewportY);
-            this.sceneChange.emit({ ...this.scene, viewportXY });
+            this.scene = { ...this.scene, viewportXY };
+            this.sceneChange.emit(this.scene);
             this._deltaXY = new Point(0, 0);
             this._canMoveCamera = false;
         }
@@ -118,6 +122,10 @@ export class SceneViewportComponent implements AfterViewInit {
             return;
         }
 
+        this.setViewportArea();
+    }
+
+    private setViewportArea(): void {
         const { clientWidth, clientHeight } = this._viewport.nativeElement;
         const startColumn = Math.floor(this.viewportX / this.scene.scale);
         const startRow = Math.floor(this.viewportY / this.scene.scale);
