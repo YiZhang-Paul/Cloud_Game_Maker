@@ -5,7 +5,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { Scene } from '../../../core/data-model/scene/scene';
-import { FileUtility } from '../../../core/utility/file.utility';
+import { FileUtility } from '../../../core/utility/file-utility/file.utility';
 import { CloudStorageHttpService } from '../../../core/service/http/cloud-storage-http/cloud-storage-http.service';
 
 import * as selectors from './selectors';

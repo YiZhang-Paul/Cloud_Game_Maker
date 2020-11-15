@@ -7,7 +7,7 @@ import { filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators
 import imageCompression from 'browser-image-compression';
 
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
-import { FileUtility } from '../../../core/utility/file.utility';
+import { FileUtility } from '../../../core/utility/file-utility/file.utility';
 import { CloudStorageHttpService } from '../../../core/service/http/cloud-storage-http/cloud-storage-http.service';
 
 import * as selectors from './selectors';
