@@ -24,6 +24,7 @@ export class Camera {
         this._totalRows = totalRows;
         this._totalColumns = totalColumns;
         this._scale = scale;
+        this.setRenderArea();
     }
 
     get position(): Point {
@@ -63,10 +64,12 @@ export class Camera {
         const maxY = this._totalRows * this._scale - this._dimension.height;
         this._position.x = GenericUtility.limitValue(this.position.x + deltaX, 0, maxX);
         this._position.y = GenericUtility.limitValue(this.position.y + deltaY, 0, maxY);
+        this.setRenderArea();
     }
 
     public changeScale(delta: number): void {
         this._scale = GenericUtility.limitValue(this._scale + delta, 30, 200);
+        this.setRenderArea();
     }
 
     public getCanvas(id: string): HTMLCanvasElement {
@@ -77,7 +80,7 @@ export class Camera {
         return canvas;
     }
 
-    public setRenderArea(): void {
+    private setRenderArea(): void {
         const { width, height } = this._dimension;
         this._renderRows = Math.ceil(height / this._scale) + 1;
         this._renderColumns = Math.ceil(width / this._scale) + 1;

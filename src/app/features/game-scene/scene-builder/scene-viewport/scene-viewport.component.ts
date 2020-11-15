@@ -111,8 +111,6 @@ export class SceneViewportComponent implements AfterViewInit {
     }
 
     private renderViewport(): void {
-        this._camera.setRenderArea();
-
         for (let i = 0; i < this.scene.layers.length; ++i) {
             this.drawViewport(i);
         }
