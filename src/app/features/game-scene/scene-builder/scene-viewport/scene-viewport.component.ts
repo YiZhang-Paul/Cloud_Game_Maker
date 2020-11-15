@@ -27,6 +27,15 @@ export class SceneViewportComponent {
         };
     }
 
+    @HostListener('document:wheel', ['$event'])
+    public onDocumentScroll(event: WheelEvent): void {
+        if (this._viewport?.nativeElement?.contains(event.target)) {
+            const delta = event.deltaY > 0 ? 10 : -10;
+            const scale = Math.max(10, this.scene.scale + delta);
+            this.sceneChange.emit({ ...this.scene, scale: Math.min(250, scale) });
+        }
+    }
+
     @HostListener('document:keydown', ['$event'])
     public onDocumentKeydown(event: KeyboardEvent): void {
         if (this._hasFocus && event.code === 'Space') {
