@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 
 import { store } from '../store';
@@ -24,7 +24,7 @@ export class SpriteManagerComponent implements OnInit {
     public draggedSprite$: Observable<SpriteFile>;
     public draggedSpriteStartXY$: Observable<Point>;
     public hasFetchedSprites$: Observable<boolean>;
-    public draggedSpriteStyle$: Observable<{ [key: string]: string }>;
+    public draggedSpriteStyle: { [key: string]: string };
 
     constructor(private _store: Store, private _dialog: MatDialog) { }
 
@@ -36,14 +36,24 @@ export class SpriteManagerComponent implements OnInit {
         this.draggedSprite$ = this._store.select(store.selectors.getDraggedSprite);
         this.draggedSpriteStartXY$ = this._store.select(store.selectors.getDraggedSpriteStartXY);
         this.hasFetchedSprites$ = this._store.select(store.selectors.hasFetchedSprites);
+        this.draggedSpriteStartXY$.pipe(tap(point => this.setDraggedSpriteStyle(point)));
+    }
 
-        this.draggedSpriteStyle$ = this.draggedSpriteStartXY$.pipe(
-            filter(_ => Boolean(_)),
-            map(point => ({
+    @HostListener('document:mousemove', ['$event'])
+    public onDocumentMousemove({ clientX, clientY }: MouseEvent): void {
+        this.setDraggedSpriteStyle(new Point(clientX, clientY));
+    }
+
+    private setDraggedSpriteStyle(point: Point): void {
+        if (point) {
+            this.draggedSpriteStyle = {
                 top: `calc(${point.y}px - 7.5vh)`,
                 left: `calc(${point.x}px - 7.5vh * 0.9)`
-            }))
-        );
+            };
+        }
+        else {
+            this.draggedSpriteStyle = null;
+        }
     }
 
     public onFileSelect(files: NgxFileDropEntry[]): void {
@@ -99,7 +109,7 @@ export class SpriteManagerComponent implements OnInit {
         this._store.dispatch(store.actions.resetActiveSprite());
     }
 
-    public onFileDragStart(pointerXY: Point, file: SpriteFile): void {
+    public onFileDragBegin(pointerXY: Point, file: SpriteFile): void {
         this._store.dispatch(store.actions.setDraggedSpriteStartXY({ payload: pointerXY }));
         this._store.dispatch(store.actions.setDraggedSprite({ payload: file }));
     }

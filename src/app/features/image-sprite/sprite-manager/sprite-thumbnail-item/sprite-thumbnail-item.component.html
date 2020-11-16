@@ -5,7 +5,7 @@
     fxLayout="column"
     fxLayoutAlign="space-between">
 
-    <div fxLayoutAlign="center center" fxLayoutGap="5px">
+    <div *ngIf="!isReadonly" fxLayoutAlign="center center" fxLayoutGap="5px">
         <button (mousedown)="ignoreDrag($event)" (click)="editStart.emit()">Edit</button>
         <button (mousedown)="ignoreDrag($event)" (click)="delete.emit()">Delete</button>
     </div>

@@ -11,10 +11,11 @@ import { SpriteFile } from '../../../../core/data-model/sprite/sprite-file';
 })
 export class SpriteThumbnailItemComponent {
     @Input() public file: SpriteFile;
+    @Input() public isReadonly = false;
     @Output() public editStart = new EventEmitter<Point>();
     @Output() public delete = new EventEmitter();
     @Output() public nameChange = new EventEmitter<string>();
-    @Output() public dragStart = new EventEmitter();
+    @Output() public dragBegin = new EventEmitter();
     @Output() public dragCancel = new EventEmitter();
     @ViewChild('nameInput') private _nameInput: ElementRef;
     private _isEditingName = false;
@@ -31,7 +32,7 @@ export class SpriteThumbnailItemComponent {
     public onHoldStart(event: MouseEvent): void {
         this._holdTimer = setTimeout(() => {
             if (this._holdTimer) {
-                this.dragStart.emit(new Point(event.clientX, event.clientY));
+                this.dragBegin.emit(new Point(event.clientX, event.clientY));
                 this._holdTimer = null;
             }
         }, 1000);
@@ -51,7 +52,7 @@ export class SpriteThumbnailItemComponent {
     }
 
     public toggleNameEdit(type: string): void {
-        if (type === 'blur' && !this._isEditingName) {
+        if (this.isReadonly || type === 'blur' && !this._isEditingName) {
             return;
         }
 

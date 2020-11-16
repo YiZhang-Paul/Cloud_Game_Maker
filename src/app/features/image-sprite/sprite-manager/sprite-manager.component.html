@@ -13,8 +13,9 @@
 
     <app-sprite-thumbnail-item *ngIf="draggedSprite$ | async"
         class="dragged-thumbnail"
-        [ngStyle]="draggedSpriteStyle$ | async"
+        [ngStyle]="draggedSpriteStyle"
         [file]="draggedSprite$ | async"
+        [isReadonly]="true"
         (dragCancel)="onFileDragCancel()">
     </app-sprite-thumbnail-item>
 
@@ -41,7 +42,7 @@
                 (editStart)="onFileEditStart(file)"
                 (delete)="onFileDelete(file)"
                 (nameChange)="onFileNameChange($event, file)"
-                (dragStart)="onFileDragStart($event, file)">
+                (dragBegin)="onFileDragBegin($event, file)">
             </app-sprite-thumbnail-item>
         </div>
     </div>
