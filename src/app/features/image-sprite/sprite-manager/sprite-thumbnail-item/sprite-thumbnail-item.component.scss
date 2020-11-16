@@ -63,7 +63,7 @@
 }
 
 .drag-mode {
-    $inner-gap: 3px;
+    $inner-gap: 2px;
     $panel-height: calc(100% - #{$inner-gap} * 2);
     background-color: rgb(143, 203, 238);
 

@@ -37,7 +37,7 @@
     .dragged-thumbnail {
         position: absolute;
         z-index: 999;
-        width: calc(#{$item-dimension} * 0.9);
-        height: calc(#{$item-dimension} * 0.9);
+        width: calc(#{$item-dimension} * 0.6);
+        height: calc(#{$item-dimension} * 0.6);
     }
 }
