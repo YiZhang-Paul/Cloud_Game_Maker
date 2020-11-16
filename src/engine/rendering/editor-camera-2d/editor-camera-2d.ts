@@ -28,11 +28,9 @@ export class EditorCamera2D extends Camera2D {
     public highlightGrid(left: number, top: number, id: string): void {
         const canvas = this.getCanvas(id);
         const context = canvas.getContext('2d');
-        const row = Math.floor((this.position.y + top + this.offsetY) / this._scale);
-        const column = Math.floor((this.position.x + left + this.offsetX) / this._scale);
-        const x = column * this._scale - this.offsetX;
-        const y = row * this._scale - this.offsetY;
+        const row = Math.floor((this.position.y + top) / this._scale);
+        const column = Math.floor((this.position.x + left) / this._scale);
         context.strokeStyle = 'rgb(255, 255, 0)';
-        context.strokeRect(x, y, this._scale, this._scale);
+        context.strokeRect(column * this._scale, row * this._scale, this._scale, this._scale);
     }
 }
