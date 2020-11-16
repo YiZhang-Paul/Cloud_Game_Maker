@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
+import { Point } from '../../../../../engine/core/data-model/generic/point';
 import { SpriteFile } from '../../../../core/data-model/sprite/sprite-file';
 
 @Component({
@@ -10,11 +11,14 @@ import { SpriteFile } from '../../../../core/data-model/sprite/sprite-file';
 })
 export class SpriteThumbnailItemComponent {
     @Input() public file: SpriteFile;
-    @Output() public editStart = new EventEmitter();
+    @Output() public editStart = new EventEmitter<Point>();
     @Output() public delete = new EventEmitter();
     @Output() public nameChange = new EventEmitter<string>();
+    @Output() public dragStart = new EventEmitter();
+    @Output() public dragCancel = new EventEmitter();
     @ViewChild('nameInput') private _nameInput: ElementRef;
     private _isEditingName = false;
+    private _holdTimer: number;
 
     get isEditingName(): boolean {
         return this._isEditingName;
@@ -22,6 +26,28 @@ export class SpriteThumbnailItemComponent {
 
     get editedName(): string {
         return this._nameInput?.nativeElement?.value?.trim() ?? '';
+    }
+
+    public onHoldStart(event: MouseEvent): void {
+        this._holdTimer = setTimeout(() => {
+            if (this._holdTimer) {
+                this.dragStart.emit(new Point(event.clientX, event.clientY));
+                this._holdTimer = null;
+            }
+        }, 1000);
+    }
+
+    public onHoldCancel(): void {
+        this.dragCancel.emit();
+
+        if (this._holdTimer) {
+            clearTimeout(this._holdTimer);
+            this._holdTimer = null;
+        }
+    }
+
+    public ignoreDrag(event: MouseEvent): void {
+        event.stopPropagation();
     }
 
     public toggleNameEdit(type: string): void {

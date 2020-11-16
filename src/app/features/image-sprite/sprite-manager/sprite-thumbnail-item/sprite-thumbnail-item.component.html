@@ -1,13 +1,20 @@
-<div class="container no-select" fxLayout="column" fxLayoutAlign="space-between">
+<div class="container no-select"
+    (mousedown)="onHoldStart($event)"
+    (mouseup)="onHoldCancel()"
+    (mouseleave)="onHoldCancel()"
+    fxLayout="column"
+    fxLayoutAlign="space-between">
+
     <div fxLayoutAlign="center center" fxLayoutGap="5px">
-        <button (click)="editStart.emit()">Edit</button>
-        <button (click)="delete.emit()">Delete</button>
+        <button (mousedown)="ignoreDrag($event)" (click)="editStart.emit()">Edit</button>
+        <button (mousedown)="ignoreDrag($event)" (click)="delete.emit()">Delete</button>
     </div>
 
     <app-image-blob-display *ngIf="file.content" [blob]="file.content"></app-image-blob-display>
     <img *ngIf="!file.content" [src]="file.thumbnailUrl" />
 
     <span *ngIf="!isEditingName"
+        (mousedown)="ignoreDrag($event)"
         (click)="toggleNameEdit()"
         fxFlexAlign="center">
 

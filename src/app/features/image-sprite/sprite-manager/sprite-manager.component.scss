@@ -14,6 +14,11 @@
         background-color: rgb(255, 255, 255);
     }
 
+    .dragged-thumbnail {
+        position: absolute;
+        z-index: 999;
+    }
+
     app-mini-toolbar {
         height: 35px;
     }

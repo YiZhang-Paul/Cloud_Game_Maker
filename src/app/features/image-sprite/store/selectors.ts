@@ -29,3 +29,13 @@ export const getActiveSprite = createSelector(
     getFeatureState,
     (state: IImageSpriteState) => state.activeSpriteState.activeSprite
 );
+
+export const getDraggedSprite = createSelector(
+    getFeatureState,
+    (state: IImageSpriteState) => state.activeSpriteState.draggedSprite
+);
+
+export const getDraggedSpriteStartXY = createSelector(
+    getFeatureState,
+    (state: IImageSpriteState) => state.activeSpriteState.draggedSpriteStartXY
+);

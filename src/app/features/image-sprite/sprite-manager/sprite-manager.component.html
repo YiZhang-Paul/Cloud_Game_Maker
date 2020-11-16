@@ -11,6 +11,13 @@
         <div cdkDragHandle></div>
     </app-sprite-editor>
 
+    <app-sprite-thumbnail-item *ngIf="draggedSprite$ | async"
+        class="dragged-thumbnail"
+        [ngStyle]="draggedSpriteStyle$ | async"
+        [file]="draggedSprite$ | async"
+        (dragCancel)="onFileDragCancel()">
+    </app-sprite-thumbnail-item>
+
     <div *ngIf="!(allSprites$ | async).length" fxLayoutAlign="center center" fxFlex>
         <app-file-picker [message]="'no sprite available'"
             [buttonText]="'Import Sprite'"
@@ -33,7 +40,8 @@
                 [file]="file"
                 (editStart)="onFileEditStart(file)"
                 (delete)="onFileDelete(file)"
-                (nameChange)="onFileNameChange($event, file)">
+                (nameChange)="onFileNameChange($event, file)"
+                (dragStart)="onFileDragStart($event, file)">
             </app-sprite-thumbnail-item>
         </div>
     </div>

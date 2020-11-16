@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 
 import { store } from '../store';
+import { Point } from '../../../../engine/core/data-model/generic/point';
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 import { ConfirmActionOption } from '../../../core/data-model/generic/options/confirm-action-option';
 import { ConfirmPopupOption } from '../../../core/data-model/generic/options/confirm-popup-option';
@@ -19,7 +21,10 @@ export class SpriteManagerComponent implements OnInit {
     public allSprites$: Observable<SpriteFile[]>;
     public filteredSprites$: Observable<SpriteFile[]>;
     public activeSprite$: Observable<SpriteFile>;
+    public draggedSprite$: Observable<SpriteFile>;
+    public draggedSpriteStartXY$: Observable<Point>;
     public hasFetchedSprites$: Observable<boolean>;
+    public draggedSpriteStyle$: Observable<{ [key: string]: string }>;
 
     constructor(private _store: Store, private _dialog: MatDialog) { }
 
@@ -28,7 +33,17 @@ export class SpriteManagerComponent implements OnInit {
         this.allSprites$ = this._store.select(store.selectors.getAllSprites);
         this.onFileSearch('');
         this.activeSprite$ = this._store.select(store.selectors.getActiveSprite);
+        this.draggedSprite$ = this._store.select(store.selectors.getDraggedSprite);
+        this.draggedSpriteStartXY$ = this._store.select(store.selectors.getDraggedSpriteStartXY);
         this.hasFetchedSprites$ = this._store.select(store.selectors.hasFetchedSprites);
+
+        this.draggedSpriteStyle$ = this.draggedSpriteStartXY$.pipe(
+            filter(_ => Boolean(_)),
+            map(point => ({
+                top: `calc(${point.y}px - 7.5vh)`,
+                left: `calc(${point.x}px - 7.5vh * 0.9)`
+            }))
+        );
     }
 
     public onFileSelect(files: NgxFileDropEntry[]): void {
@@ -82,6 +97,16 @@ export class SpriteManagerComponent implements OnInit {
 
     public onFileEditCancel(): void {
         this._store.dispatch(store.actions.resetActiveSprite());
+    }
+
+    public onFileDragStart(pointerXY: Point, file: SpriteFile): void {
+        this._store.dispatch(store.actions.setDraggedSpriteStartXY({ payload: pointerXY }));
+        this._store.dispatch(store.actions.setDraggedSprite({ payload: file }));
+    }
+
+    public onFileDragCancel(): void {
+        this._store.dispatch(store.actions.setDraggedSpriteStartXY({ payload: null }));
+        this._store.dispatch(store.actions.setDraggedSprite({ payload: null }));
     }
 
     private setActiveSprite(file: SpriteFile): void {
