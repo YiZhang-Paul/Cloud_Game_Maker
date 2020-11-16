@@ -75,11 +75,6 @@ export class SceneViewportComponent implements AfterViewInit {
         }
     }
 
-    @HostListener('document:dragstart', ['$event'])
-    public onDocumentDragstart(event: DragEvent): void {
-        event.preventDefault();
-    }
-
     @HostListener('document:mousedown', ['$event'])
     public onDocumentMousedown(event: MouseEvent): void {
         if (this._canDragPointer) {
