@@ -66,7 +66,7 @@ export class CloudStorageHttpService {
     }
 
     public updateSprite(sprite: SpriteFile): Observable<string> {
-        const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.originated)}`;
+        const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.originated ?? sprite.id)}`;
         const data = new FormData();
         data.append('file', sprite.content);
         data.append('spriteJson', JSON.stringify(sprite));

@@ -55,26 +55,19 @@ export class SpritesEffects {
 
     public updateSpriteRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.updateSpriteRemote),
-        mergeMap(sprite => this.compressFile(sprite)),
+        mergeMap(sprite => this.ensureCompressedFile(sprite)),
         withLatestFrom(this._store.select(selectors.getAllSprites)),
         map(([sprite, sprites]) => {
-            const index = sprites.findIndex(_ => _.id === sprite.originated);
+            const id = sprite.originated ?? sprite.id;
 
-            return ({ sprite, sprites, index });
+            return ({ sprite, sprites, index: sprites.findIndex(_ => _.id === id) });
         }),
         filter(result => result.index !== -1),
-        map(result => {
-            const { sprite, sprites, index } = result;
-            const hasNewName = sprite.name !== sprites[index].name;
-            const updated = hasNewName ? this.setUniqueName(sprite, sprites) : sprite;
-
-            return ({ sprite: updated, index });
-        }),
+        map(({ sprite, sprites, index }) => ({ sprite: this.ensureUniqueName(sprite, sprites, index), index })),
         mergeMap(result => this._cloudStorageHttp.updateSprite(result.sprite).pipe(
             map(id => ({ ...result, sprite: { ...result.sprite, id } }))
         )),
-        switchMap(result => {
-            const { sprite, index } = result;
+        switchMap(({ sprite, index }) => {
             const isUpdated = Boolean(sprite.id);
             const message = isUpdated ? 'Successfully updated the sprite.' : 'Failed to update the sprite.';
             this._snackBar.open(message, isUpdated ? 'Ok' : 'Got it');
@@ -107,6 +100,12 @@ export class SpritesEffects {
                 private _cloudStorageHttp: CloudStorageHttpService,
                 private _snackBar: MatSnackBar) { }
 
+    private ensureUniqueName(sprite: SpriteFile, sprites: SpriteFile[], index: number): SpriteFile {
+        const hasNewName = sprite.name !== sprites[index].name;
+
+        return hasNewName ? this.setUniqueName(sprite, sprites) : sprite;
+    }
+
     private setUniqueName(sprite: SpriteFile, sprites: SpriteFile[]): SpriteFile {
         const names = sprites.map(_ => _.name);
         const name = FileUtility.handleDuplicateName(names, sprite.name);
@@ -114,12 +113,22 @@ export class SpritesEffects {
         return { ...sprite, name };
     }
 
-    private compressFile(file: SpriteFile): Observable<SpriteFile> {
-        const promise = imageCompression(file.content, { maxSizeMB: 0.2 });
+    private ensureCompressedFile(sprite: SpriteFile): Observable<SpriteFile> {
+        if (sprite.content) {
+            return this.compressFile(sprite);
+        }
+
+        return this._cloudStorageHttp.getSpriteContent(sprite).pipe(
+            map(content => ({ ...sprite, content }))
+        );
+    }
+
+    private compressFile(sprite: SpriteFile): Observable<SpriteFile> {
+        const promise = imageCompression(sprite.content, { maxSizeMB: 0.2 });
 
         return from(promise).pipe(
             mergeMap(content => of(new Blob([content], { type: content.type }))),
-            map(content => ({ ...file, content }))
+            map(content => ({ ...sprite, content }))
         );
     }
 }
