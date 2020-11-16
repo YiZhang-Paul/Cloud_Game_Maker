@@ -50,26 +50,16 @@ export class SceneViewportComponent implements AfterViewInit {
         });
     }
 
-    @HostListener('document:wheel', ['$event'])
-    public onDocumentScroll(event: WheelEvent): void {
-        if (this._viewport?.nativeElement?.contains(event.target)) {
-            this._camera.changeScale(event.deltaY > 0 ? 10 : -10);
-            this.scene = { ...this.scene, scale: this._camera.scale };
-            this.sceneChange.emit(this.scene);
-            this.renderViewport();
-        }
-    }
-
     @HostListener('document:keydown', ['$event'])
-    public onDocumentKeydown(event: KeyboardEvent): void {
-        if (this._hasFocus && event.code === 'Space') {
+    public onDocumentKeydown({ code }: KeyboardEvent): void {
+        if (this._hasFocus && code === 'Space') {
             this._canDragPointer = true;
         }
     }
 
     @HostListener('document:keyup', ['$event'])
-    public onDocumentKeyup(event: KeyboardEvent): void {
-        if (event.code === 'Space') {
+    public onDocumentKeyup({ code }: KeyboardEvent): void {
+        if (code === 'Space') {
             this._canDragPointer = false;
             this._canMoveCamera = false;
         }
@@ -86,8 +76,7 @@ export class SceneViewportComponent implements AfterViewInit {
         }
     }
 
-    @HostListener('document:mousemove', ['$event'])
-    public onDocumentMousemove({ clientX, clientY }: MouseEvent): void {
+    public onCameraMove({ clientX, clientY }: MouseEvent): void {
         if (this._canMoveCamera) {
             this._camera.move(this._pointerXY.x - clientX, this._pointerXY.y - clientY);
             this._pointerXY = new Point(clientX, clientY);
@@ -95,14 +84,20 @@ export class SceneViewportComponent implements AfterViewInit {
         }
     }
 
-    @HostListener('document:mouseup')
-    public onDocumentMouseup(): void {
+    public onMoveEnd(): void {
         if (this._canMoveCamera) {
             const { x, y } = this._camera.position;
             this.scene = { ...this.scene, viewportXY: new Point(x, y) };
             this.sceneChange.emit(this.scene);
             this._canMoveCamera = false;
         }
+    }
+
+    public onScaleChange(event: WheelEvent): void {
+        this._camera.changeScale(event.deltaY > 0 ? 10 : -10);
+        this.scene = { ...this.scene, scale: this._camera.scale };
+        this.sceneChange.emit(this.scene);
+        this.renderViewport();
     }
 
     private renderViewport(): void {

@@ -1,4 +1,11 @@
-<div #viewport class="container" [ngClass]="viewportClass">
+<div #viewport
+    class="container"
+    [ngClass]="viewportClass"
+    (mousemove)="onCameraMove($event)"
+    (mouseup)="onMoveEnd()"
+    (mouseleave)="onMoveEnd()"
+    (wheel)="onScaleChange($event)">
+
     <canvas *ngFor="let layer of scene.layers; let i = index"
         [id]="'layer-' + i"
         [ngStyle]="layerStyle">
