@@ -35,14 +35,6 @@ export class Camera2D {
         return this._scale;
     }
 
-    get renderColumns(): number {
-        return this._renderColumns;
-    }
-
-    get renderRows(): number {
-        return this._renderRows;
-    }
-
     get renderWidth(): number {
         return this._renderColumns * this._scale;
     }
@@ -82,7 +74,19 @@ export class Camera2D {
 
     protected setRenderArea(): void {
         const { width, height } = this._dimension;
-        this._renderRows = Math.ceil(height / this._scale) + 1;
-        this._renderColumns = Math.ceil(width / this._scale) + 1;
+
+        if (this.offsetY) {
+            this._renderRows = Math.ceil((height - this._scale + this.offsetY) / this._scale) + 1;
+        }
+        else {
+            this._renderRows = Math.ceil(height / this._scale);
+        }
+
+        if (this.offsetX) {
+            this._renderColumns = Math.ceil((width - this._scale + this.offsetX) / this._scale) + 1;
+        }
+        else {
+            this._renderColumns = Math.ceil(width / this._scale);
+        }
     }
 }
