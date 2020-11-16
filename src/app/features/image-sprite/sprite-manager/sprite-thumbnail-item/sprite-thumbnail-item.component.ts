@@ -20,14 +20,22 @@ export class SpriteThumbnailItemComponent {
         return this._isEditingName;
     }
 
-    public toggleNameEdit(): void {
+    public toggleNameEdit(type: string): void {
+        if (type === 'blur' && !this._isEditingName) {
+            return;
+        }
+
         this._isEditingName = !this._isEditingName;
 
         if (!this._isEditingName) {
             this.nameChange.emit(this._nameInput.nativeElement.value);
         }
         else {
-            setTimeout(() => this._nameInput.nativeElement.focus());
+            setTimeout(() => {
+                if (this._isEditingName) {
+                    this._nameInput.nativeElement.focus();
+                }
+            });
         }
     }
 }

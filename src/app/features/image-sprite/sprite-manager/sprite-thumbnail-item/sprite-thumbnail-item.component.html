@@ -18,8 +18,8 @@
         #nameInput
         type="text"
         [ngModel]="file.name"
-        (blur)="toggleNameEdit()"
-        (keyup.enter)="toggleNameEdit()"
+        (blur)="toggleNameEdit('blur')"
+        (keyup.enter)="toggleNameEdit('keyup')"
         fxFlexAlign="center"
         maxLength="40" />
 </div>
