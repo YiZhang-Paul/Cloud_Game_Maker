@@ -61,3 +61,16 @@
         background-color: rgb(27, 111, 236);
     }
 }
+
+.drag-mode {
+    $inner-gap: 3px;
+    $panel-height: calc(100% - #{$inner-gap} * 2);
+    background-color: rgb(143, 203, 238);
+
+    app-image-blob-display,
+    & > img {
+        margin: $inner-gap;
+        min-height: $panel-height;
+        max-height: $panel-height;
+    }
+}

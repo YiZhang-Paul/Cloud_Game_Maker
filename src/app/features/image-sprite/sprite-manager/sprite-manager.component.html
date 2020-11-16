@@ -15,7 +15,7 @@
         class="dragged-thumbnail"
         [ngStyle]="draggedSpriteStyle"
         [file]="draggedSprite$ | async"
-        [isReadonly]="true"
+        [isDragMode]="true"
         (dragCancel)="onFileDragCancel()">
     </app-sprite-thumbnail-item>
 

@@ -14,11 +14,6 @@
         background-color: rgb(255, 255, 255);
     }
 
-    .dragged-thumbnail {
-        position: absolute;
-        z-index: 999;
-    }
-
     app-mini-toolbar {
         height: 35px;
     }
@@ -37,5 +32,12 @@
         &:hover {
             background-color: rgba(180, 180, 180, 0.5);
         }
+    }
+
+    .dragged-thumbnail {
+        position: absolute;
+        z-index: 999;
+        width: calc(#{$item-dimension} * 0.9);
+        height: calc(#{$item-dimension} * 0.9);
     }
 }

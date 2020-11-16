@@ -11,7 +11,7 @@ import { SpriteFile } from '../../../../core/data-model/sprite/sprite-file';
 })
 export class SpriteThumbnailItemComponent {
     @Input() public file: SpriteFile;
-    @Input() public isReadonly = false;
+    @Input() public isDragMode = false;
     @Output() public editStart = new EventEmitter<Point>();
     @Output() public delete = new EventEmitter();
     @Output() public nameChange = new EventEmitter<string>();
@@ -52,7 +52,7 @@ export class SpriteThumbnailItemComponent {
     }
 
     public toggleNameEdit(type: string): void {
-        if (this.isReadonly || type === 'blur' && !this._isEditingName) {
+        if (this.isDragMode || type === 'blur' && !this._isEditingName) {
             return;
         }
 
