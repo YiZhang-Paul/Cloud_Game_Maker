@@ -6,5 +6,20 @@
 
     <app-image-blob-display *ngIf="file.content" [blob]="file.content"></app-image-blob-display>
     <img *ngIf="!file.content" [src]="file.thumbnailUrl" />
-    <span fxFlexAlign="center">{{ file.name }}</span>
+
+    <span *ngIf="!isEditingName"
+        (click)="toggleNameEdit()"
+        fxFlexAlign="center">
+
+        {{ file.name }}
+    </span>
+
+    <input *ngIf="isEditingName"
+        #nameInput
+        type="text"
+        [ngModel]="file.name"
+        (blur)="toggleNameEdit()"
+        (keyup.enter)="toggleNameEdit()"
+        fxFlexAlign="center"
+        maxLength="40" />
 </div>
