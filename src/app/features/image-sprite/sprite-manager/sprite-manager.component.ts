@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 
 import { store } from '../store';
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
+import { ConfirmActionOption } from '../../../core/data-model/generic/options/confirm-action-option';
+import { ConfirmPopupOption } from '../../../core/data-model/generic/options/confirm-popup-option';
+import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm-popup/confirm-popup.component';
 
 @Component({
     selector: 'app-sprite-manager',
@@ -17,7 +21,7 @@ export class SpriteManagerComponent implements OnInit {
     public activeSprite$: Observable<SpriteFile>;
     public hasFetchedSprites$: Observable<boolean>;
 
-    constructor(private _store: Store) { }
+    constructor(private _store: Store, private _dialog: MatDialog) { }
 
     public ngOnInit(): void {
         this._store.dispatch(store.actions.getSpritesRemote());
@@ -34,6 +38,24 @@ export class SpriteManagerComponent implements OnInit {
 
     public onFileSearch(keyword: string): void {
         this.filteredSprites$ = this._store.select(store.selectors.getFilteredSprites, keyword);
+    }
+
+    public onFileNameChange(name: string, file: SpriteFile): void {
+        if (name?.trim()) {
+            this._store.dispatch(store.actions.updateSpriteRemote({ ...file, name }));
+
+            return;
+        }
+
+        const title = 'Invalid file name';
+        const message = 'Please enter a non-empty file name.';
+        const actions = [new ConfirmActionOption('Got It', null)];
+
+        this._dialog.open(ConfirmPopupComponent, {
+            data: new ConfirmPopupOption(title, message, actions),
+            width: '350px',
+            height: '175px'
+        });
     }
 
     public onFileEdit(file: SpriteFile, saveAsNew = false): void {

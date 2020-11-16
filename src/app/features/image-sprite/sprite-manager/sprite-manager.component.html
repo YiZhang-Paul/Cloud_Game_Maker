@@ -32,7 +32,8 @@
             <app-sprite-thumbnail-item *ngFor="let file of filteredSprites$ | async"
                 [file]="file"
                 (editStart)="onFileEditStart(file)"
-                (delete)="onFileDelete(file)">
+                (delete)="onFileDelete(file)"
+                (nameChange)="onFileNameChange($event, file)">
             </app-sprite-thumbnail-item>
         </div>
     </div>
