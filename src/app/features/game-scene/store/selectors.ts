@@ -32,18 +32,14 @@ export const canAddScene = createSelector(
 
 export const getActiveScene = createSelector(
     getFeatureState,
-    (state: IGameSceneModuleState) => {
-        const scenes = state.scenesState.scenes;
-        const id = state.activeSceneState.activeSceneId;
-
-        return scenes.find(_ => _.id === id);
-    }
+    getAllScenes,
+    (state: IGameSceneModuleState, scenes: Scene[]) => scenes.find(_ => _.id === state.activeSceneState.activeSceneId)
 );
 
 export const getOpenedScenes = createSelector(
     getFeatureState,
-    (state: IGameSceneModuleState) => {
-        const scenes = state.scenesState.scenes;
+    getAllScenes,
+    (state: IGameSceneModuleState, scenes: Scene[]) => {
         const ids = new Set(state.activeSceneState.openedSceneIds);
 
         return scenes.filter(_ => ids.has(_.id));

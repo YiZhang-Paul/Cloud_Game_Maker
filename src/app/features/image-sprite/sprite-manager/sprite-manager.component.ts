@@ -6,6 +6,7 @@ import { tap } from 'rxjs/operators';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 
 import { store } from '../store';
+import { store as globalStore } from '../../../store';
 import { Point } from '../../../../engine/core/data-model/generic/point';
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 import { ConfirmActionOption } from '../../../core/data-model/generic/options/confirm-action-option';
@@ -33,8 +34,8 @@ export class SpriteManagerComponent implements OnInit {
         this.allSprites$ = this._store.select(store.selectors.getAllSprites);
         this.onFileSearch('');
         this.activeSprite$ = this._store.select(store.selectors.getActiveSprite);
-        this.draggedSprite$ = this._store.select(store.selectors.getDraggedSprite);
-        this.draggedSpriteStartXY$ = this._store.select(store.selectors.getDraggedSpriteStartXY);
+        this.draggedSprite$ = this._store.select(globalStore.selectors.getDraggedSprite);
+        this.draggedSpriteStartXY$ = this._store.select(globalStore.selectors.getDraggedSpriteStartXY);
         this.hasFetchedSprites$ = this._store.select(store.selectors.hasFetchedSprites);
         this.draggedSpriteStartXY$.pipe(tap(point => this.setDraggedSpriteStyle(point)));
     }
@@ -110,13 +111,13 @@ export class SpriteManagerComponent implements OnInit {
     }
 
     public onFileDragBegin(pointerXY: Point, file: SpriteFile): void {
-        this._store.dispatch(store.actions.setDraggedSpriteStartXY({ payload: pointerXY }));
-        this._store.dispatch(store.actions.setDraggedSprite({ payload: file }));
+        this._store.dispatch(globalStore.actions.setDraggedSpriteStartXY({ payload: pointerXY }));
+        this._store.dispatch(globalStore.actions.setDraggedSprite({ payload: file }));
     }
 
     public onFileDragCancel(): void {
-        this._store.dispatch(store.actions.setDraggedSpriteStartXY({ payload: null }));
-        this._store.dispatch(store.actions.setDraggedSprite({ payload: null }));
+        this._store.dispatch(globalStore.actions.setDraggedSpriteStartXY({ payload: null }));
+        this._store.dispatch(globalStore.actions.setDraggedSprite({ payload: null }));
     }
 
     private setActiveSprite(file: SpriteFile): void {

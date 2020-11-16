@@ -1,4 +1,3 @@
-import { Point } from '../../../../engine/core/data-model/generic/point';
 import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
 
 export const key = 'imageSprite';
@@ -10,8 +9,6 @@ export interface ISpritesState {
 
 export interface IActiveSpriteState {
     activeSprite: SpriteFile | null;
-    draggedSprite: SpriteFile | null;
-    draggedSpriteStartXY: Point | null;
 }
 
 export interface IImageSpriteState {
@@ -25,7 +22,5 @@ export const initialSpritesState: ISpritesState = {
 };
 
 export const initialActiveSpriteState: IActiveSpriteState = {
-    activeSprite: null,
-    draggedSprite: null,
-    draggedSpriteStartXY: null
+    activeSprite: null
 };
