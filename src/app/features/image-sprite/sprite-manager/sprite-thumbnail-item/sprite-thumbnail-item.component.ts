@@ -20,6 +20,10 @@ export class SpriteThumbnailItemComponent {
         return this._isEditingName;
     }
 
+    get editedName(): string {
+        return this._nameInput?.nativeElement?.value?.trim() ?? '';
+    }
+
     public toggleNameEdit(type: string): void {
         if (type === 'blur' && !this._isEditingName) {
             return;
@@ -27,8 +31,8 @@ export class SpriteThumbnailItemComponent {
 
         this._isEditingName = !this._isEditingName;
 
-        if (!this._isEditingName) {
-            this.nameChange.emit(this._nameInput.nativeElement.value);
+        if (!this._isEditingName && this.editedName !== this.file.name) {
+            this.nameChange.emit(this.editedName);
         }
         else {
             setTimeout(() => {
