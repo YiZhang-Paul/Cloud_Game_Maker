@@ -35,7 +35,7 @@ export class SpriteThumbnailItemComponent {
                 this.dragBegin.emit(new Point(event.clientX, event.clientY));
                 this._holdTimer = null;
             }
-        }, 1000);
+        }, 50);
     }
 
     public onHoldCancel(): void {
