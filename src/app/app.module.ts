@@ -4,6 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
+import { store } from './store';
 import { AppRoutingModule } from './app-routing.module';
 import { CoreModule } from './core/core.module';
 import { LayoutModule } from './layout/layout.module';
@@ -17,7 +18,7 @@ import { AppComponent } from './app.component';
     imports: [
         BrowserModule,
         FlexLayoutModule,
-        StoreModule.forRoot({}),
+        StoreModule.forRoot(store.reducers),
         EffectsModule.forRoot([]),
         AppRoutingModule,
         CoreModule,
