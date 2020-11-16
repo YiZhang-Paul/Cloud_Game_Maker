@@ -1,6 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 
 import { Scene } from '../../../../core/data-model/scene/scene';
+import { SpriteFile } from '../../../../core/data-model/sprite/sprite-file';
 import { Point } from '../../../../../engine/core/data-model/generic/point';
 import { EditorCamera2D } from '../../../../../engine/rendering/editor-camera-2d/editor-camera-2d';
 
@@ -12,6 +13,7 @@ import { EditorCamera2D } from '../../../../../engine/rendering/editor-camera-2d
 })
 export class SceneViewportComponent implements AfterViewInit {
     @Input() public scene: Scene;
+    @Input() public draggedSprite: SpriteFile;
     @Output() public sceneChange = new EventEmitter<Scene>();
     @ViewChild('viewport') private _viewport: ElementRef;
     private _hasFocus = true;
@@ -66,21 +68,27 @@ export class SceneViewportComponent implements AfterViewInit {
     }
 
     @HostListener('document:mousedown', ['$event'])
-    public onDocumentMousedown(event: MouseEvent): void {
+    public onDocumentMousedown({ clientX, clientY, target }: MouseEvent): void {
         if (this._canDragPointer) {
             this._canMoveCamera = true;
-            this._pointerXY = new Point(event.clientX, event.clientY);
+            this._pointerXY = new Point(clientX, clientY);
         }
         else {
-            this._hasFocus = this._viewport?.nativeElement?.contains(event.target);
+            this._hasFocus = this._viewport?.nativeElement?.contains(target);
         }
     }
 
-    public onCameraMove({ clientX, clientY }: MouseEvent): void {
+    @HostListener('document:mousemove', ['$event'])
+    public onDocumentMousemove({ clientX, clientY }: MouseEvent): void {
         if (this._canMoveCamera) {
             this._camera.move(this._pointerXY.x - clientX, this._pointerXY.y - clientY);
             this._pointerXY = new Point(clientX, clientY);
             this.renderViewport();
+        }
+        else if (this.draggedSprite) {
+            const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
+            const [x, y] = [Math.ceil(clientX - left), Math.ceil(clientY - top)];
+            this._camera.highlightGrid(x, y, 'highlight-grid-layer');
         }
     }
 
@@ -101,6 +109,6 @@ export class SceneViewportComponent implements AfterViewInit {
     }
 
     private renderViewport(): void {
-        this._camera.drawGridLines();
+        this._camera.drawGridLines('grid-line-layer');
     }
 }

@@ -1,7 +1,7 @@
 <div #viewport
     class="container"
     [ngClass]="viewportClass"
-    (mousemove)="onCameraMove($event)"
+    (mousemove)="onDocumentMousemove($event)"
     (mouseup)="onMoveEnd()"
     (mouseleave)="onMoveEnd()"
     (wheel)="onScaleChange($event)">
@@ -12,4 +12,5 @@
     </canvas>
 
     <canvas id="grid-line-layer" [ngStyle]="layerStyle"></canvas>
+    <canvas id="highlight-grid-layer" [ngStyle]="layerStyle"></canvas>
 </div>
