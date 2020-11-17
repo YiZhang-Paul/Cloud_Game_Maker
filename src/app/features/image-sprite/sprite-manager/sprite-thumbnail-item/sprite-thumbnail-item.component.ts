@@ -30,7 +30,7 @@ export class SpriteThumbnailItemComponent {
     }
 
     public onHoldStart(event: MouseEvent): void {
-        this._holdTimer = setTimeout(() => {
+        this._holdTimer = window.setTimeout(() => {
             if (this._holdTimer) {
                 this.dragBegin.emit(new Point(event.clientX, event.clientY));
                 this._holdTimer = null;
@@ -42,7 +42,7 @@ export class SpriteThumbnailItemComponent {
         this.dragCancel.emit();
 
         if (this._holdTimer) {
-            clearTimeout(this._holdTimer);
+            window.clearTimeout(this._holdTimer);
             this._holdTimer = null;
         }
     }
