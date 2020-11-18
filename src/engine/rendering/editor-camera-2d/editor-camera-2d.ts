@@ -16,9 +16,11 @@ export class EditorCamera2D extends Camera2D {
         const canvas = this.getCanvas(id);
         const context = canvas.getContext('2d');
         const [row, column] = this.getTargetGrid(x, y);
+        const left = column - Math.floor(this._position.x / this._scale);
+        const top = row - Math.floor(this._position.y / this._scale);
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.strokeStyle = 'rgb(255, 255, 0)';
-        context.strokeRect(column * this._scale, row * this._scale, this._scale, this._scale);
+        context.strokeRect(left * this._scale, top * this._scale, this._scale, this._scale);
     }
 
     public drawGridLines(id: string): void {
@@ -45,8 +47,8 @@ export class EditorCamera2D extends Camera2D {
     }
 
     private getTargetGrid(x: number, y: number): [number, number] {
-        const row = Math.floor((this.position.y + y) / this._scale);
-        const column = Math.floor((this.position.x + x) / this._scale);
+        const row = Math.floor((this._position.y + y) / this._scale);
+        const column = Math.floor((this._position.x + x) / this._scale);
 
         return [row, column];
     }
