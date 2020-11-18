@@ -16,7 +16,8 @@ export class SceneViewportComponent implements AfterViewInit {
     @Input() public draggedSprite: SpriteFile;
     @Output() public sceneChange = new EventEmitter<Scene>();
     @ViewChild('viewport') private _viewport: ElementRef;
-    private _hasFocus = true;
+    private _lastDraggedSprite: SpriteFile;
+    private _isHovering = false;
     private _canDragPointer = false;
     private _canMoveCamera = false;
     private _pointerXY = new Point();
@@ -54,7 +55,7 @@ export class SceneViewportComponent implements AfterViewInit {
 
     @HostListener('document:keydown', ['$event'])
     public onDocumentKeydown({ code }: KeyboardEvent): void {
-        if (this._hasFocus && code === 'Space') {
+        if (this._isHovering && code === 'Space') {
             this._canDragPointer = true;
         }
     }
@@ -67,45 +68,73 @@ export class SceneViewportComponent implements AfterViewInit {
         }
     }
 
-    @HostListener('document:mousedown', ['$event'])
-    public onDocumentMousedown({ clientX, clientY, target }: MouseEvent): void {
+    public onScaleChange({ deltaY }: WheelEvent): void {
+        this._camera.changeScale(deltaY > 0 ? 10 : -10);
+        this.scene = { ...this.scene, scale: this._camera.scale };
+        this.sceneChange.emit(this.scene);
+        this.renderViewport();
+    }
+
+    public onMouseEnter(): void {
+        this._isHovering = true;
+    }
+
+    public onMouseLeave(): void {
+        if (this._canMoveCamera) {
+            const { x, y } = this._camera.position;
+            this.scene = { ...this.scene, viewportXY: new Point(x, y) };
+            this.sceneChange.emit(this.scene);
+        }
+
+        this._isHovering = false;
+        this._canDragPointer = false;
+        this._canMoveCamera = false;
+    }
+
+    public onMouseDown({ clientX, clientY }: MouseEvent): void {
         if (this._canDragPointer) {
             this._canMoveCamera = true;
             this._pointerXY = new Point(clientX, clientY);
         }
-        else {
-            this._hasFocus = this._viewport?.nativeElement?.contains(target);
-        }
     }
 
     @HostListener('document:mousemove', ['$event'])
-    public onDocumentMousemove({ clientX, clientY }: MouseEvent): void {
+    public onDocumentMouseMove({ clientX, clientY }: MouseEvent): void {
         if (this._canMoveCamera) {
             this._camera.move(this._pointerXY.x - clientX, this._pointerXY.y - clientY);
             this._pointerXY = new Point(clientX, clientY);
             this.renderViewport();
         }
-        else if (this.draggedSprite) {
+        else if (this.isHovering(clientX, clientY) && this.draggedSprite) {
             const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
             const [x, y] = [Math.ceil(clientX - left), Math.ceil(clientY - top)];
             this._camera.highlightGrid(x, y, 'highlight-grid-layer');
+            this._lastDraggedSprite = this.draggedSprite;
         }
     }
 
-    public onMoveEnd(): void {
+    @HostListener('document:mouseup', ['$event'])
+    public onDocumentMouseUp({ clientX, clientY }: MouseEvent): void {
         if (this._canMoveCamera) {
             const { x, y } = this._camera.position;
             this.scene = { ...this.scene, viewportXY: new Point(x, y) };
             this.sceneChange.emit(this.scene);
-            this._canMoveCamera = false;
         }
+        else if (this.isHovering(clientX, clientY) && this._lastDraggedSprite) {
+            const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
+            const [x, y] = [Math.ceil(clientX - left), Math.ceil(clientY - top)];
+            this._camera.dropSprite(x, y, this.scene.layers[0], this._lastDraggedSprite);
+            this.renderViewport();
+        }
+
+        this._canMoveCamera = false;
+        this._lastDraggedSprite = null;
     }
 
-    public onScaleChange(event: WheelEvent): void {
-        this._camera.changeScale(event.deltaY > 0 ? 10 : -10);
-        this.scene = { ...this.scene, scale: this._camera.scale };
-        this.sceneChange.emit(this.scene);
-        this.renderViewport();
+    private isHovering(x: number, y: number): boolean {
+        const { left, top, right, bottom } = this._viewport.nativeElement.getBoundingClientRect();
+
+        return x >= left && x <= right && y >= top && y <= bottom;
     }
 
     private renderViewport(): void {

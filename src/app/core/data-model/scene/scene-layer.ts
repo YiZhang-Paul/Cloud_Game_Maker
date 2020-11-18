@@ -1,6 +1,7 @@
 import { SceneGrid } from './scene-grid';
 
 export class SceneLayer {
+    public name = 'view layer';
     public grids = SceneLayer.createGrids(200, 200);
 
     public static createGrids(x: number, y: number): SceneGrid[][] {
