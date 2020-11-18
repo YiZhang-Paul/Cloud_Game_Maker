@@ -1,4 +1,4 @@
-<div *ngIf="isSpriteLoaded$ | async" class="container">
+<div *ngIf="hasFetchedSprites$ | async" class="container">
     <app-sprite-editor *ngIf="activeSprite$ | async"
         [file]="activeSprite$ | async"
         (importNew)="onFileEdit($event, true)"
@@ -11,7 +11,15 @@
         <div cdkDragHandle></div>
     </app-sprite-editor>
 
-    <div *ngIf="!(hasSprites$ | async)" fxLayoutAlign="center center" fxFlex>
+    <app-sprite-thumbnail-item *ngIf="draggedSprite$ | async"
+        class="dragged-thumbnail"
+        [ngStyle]="draggedSpriteStyle"
+        [file]="draggedSprite$ | async"
+        [isDragMode]="true"
+        (dragCancel)="onFileDragCancel()">
+    </app-sprite-thumbnail-item>
+
+    <div *ngIf="!(allSprites$ | async).length" fxLayoutAlign="center center" fxFlex>
         <app-file-picker [message]="'no sprite available'"
             [buttonText]="'Import Sprite'"
             [allowExtension]="['png', 'jpg']"
@@ -19,7 +27,7 @@
         </app-file-picker>
     </div>
 
-    <div *ngIf="(hasSprites$ | async)" fxLayout="column" fxFlex>
+    <div *ngIf="(allSprites$ | async).length" fxLayout="column" fxFlex>
         <app-mini-toolbar (filePick)="onFileSelect($event)"
             (fileSearch)="onFileSearch($event.toLowerCase())">
         </app-mini-toolbar>
@@ -32,7 +40,9 @@
             <app-sprite-thumbnail-item *ngFor="let file of filteredSprites$ | async"
                 [file]="file"
                 (editStart)="onFileEditStart(file)"
-                (delete)="onFileDelete(file)">
+                (delete)="onFileDelete(file)"
+                (nameChange)="onFileNameChange($event, file)"
+                (dragBegin)="onFileDragBegin($event, file)">
             </app-sprite-thumbnail-item>
         </div>
     </div>

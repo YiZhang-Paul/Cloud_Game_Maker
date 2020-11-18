@@ -1,10 +1,33 @@
-<div class="container" fxLayout="column" fxLayoutAlign="space-between">
-    <div fxLayoutAlign="center center" fxLayoutGap="5px">
-        <button (click)="editStart.emit()">Edit</button>
-        <button (click)="delete.emit()">Delete</button>
+<div class="container no-select"
+    [ngClass]="{ 'drag-mode': isDragMode }"
+    (mousedown)="onHoldStart($event)"
+    (mouseup)="onHoldCancel()"
+    (mouseleave)="onHoldCancel()"
+    fxLayout="column"
+    fxLayoutAlign="space-between">
+
+    <div *ngIf="!isDragMode" fxLayoutAlign="center center" fxLayoutGap="5px">
+        <button (mousedown)="ignoreDrag($event)" (click)="editStart.emit()">Edit</button>
+        <button (mousedown)="ignoreDrag($event)" (click)="delete.emit()">Delete</button>
     </div>
 
     <app-image-blob-display *ngIf="file.content" [blob]="file.content"></app-image-blob-display>
-    <img *ngIf="!file.content" [src]="file.thumbnailUrl" />
-    <span fxFlexAlign="center">{{ file.name }}</span>
+    <img *ngIf="!file.content" [src]="file.thumbnailUrl" draggable="false" />
+
+    <span *ngIf="!isDragMode && !isEditingName"
+        (mousedown)="ignoreDrag($event)"
+        (click)="toggleNameEdit()"
+        fxFlexAlign="center">
+
+        {{ file.name }}
+    </span>
+
+    <input *ngIf="isEditingName"
+        #nameInput
+        type="text"
+        [ngModel]="file.name"
+        (blur)="toggleNameEdit('blur')"
+        (keyup.enter)="toggleNameEdit('keyup')"
+        fxFlexAlign="center"
+        maxLength="40" />
 </div>

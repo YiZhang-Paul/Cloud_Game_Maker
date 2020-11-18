@@ -9,8 +9,8 @@ export interface IScenesState {
 }
 
 export interface IActiveSceneState {
-    activeScene: Scene | null;
-    activeScenes: Scene[];
+    activeSceneId: string | null;
+    openedSceneIds: string[];
 }
 
 export interface IGameSceneModuleState {
@@ -25,6 +25,6 @@ export const initialScenesState: IScenesState = {
 };
 
 export const initialActiveSceneState: IActiveSceneState = {
-    activeScene: null,
-    activeScenes: []
+    activeSceneId: null,
+    openedSceneIds: []
 };

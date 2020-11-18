@@ -15,6 +15,12 @@ export class CloudStorageHttpService {
 
     constructor(private _http: HttpClient) { }
 
+    public getSceneContent(scene: Scene): Observable<Scene> {
+        const endpoint = `${this._api}/scenes/${encodeURIComponent(scene.id)}`;
+
+        return this._http.get<Scene>(endpoint).pipe(catchError(() => of(null)));
+    }
+
     public getScenes(): Observable<Scene[]> {
         return this._http.get<Scene[]>(`${this._api}/scenes`).pipe(catchError(() => of([])));
     }
@@ -60,7 +66,7 @@ export class CloudStorageHttpService {
     }
 
     public updateSprite(sprite: SpriteFile): Observable<string> {
-        const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.originated)}`;
+        const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.originated ?? sprite.id)}`;
         const data = new FormData();
         data.append('file', sprite.content);
         data.append('spriteJson', JSON.stringify(sprite));

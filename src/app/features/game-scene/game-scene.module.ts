@@ -8,11 +8,13 @@ import { SharedModule } from '../../shared/shared.module';
 import { store } from './store';
 import { SceneBuilderComponent } from './scene-builder/scene-builder.component';
 import { SceneManagerComponent } from './scene-manager/scene-manager.component';
+import { SceneViewportComponent } from './scene-builder/scene-viewport/scene-viewport.component';
 
 @NgModule({
     declarations: [
         SceneBuilderComponent,
-        SceneManagerComponent
+        SceneManagerComponent,
+        SceneViewportComponent
     ],
     imports: [
         CommonModule,
