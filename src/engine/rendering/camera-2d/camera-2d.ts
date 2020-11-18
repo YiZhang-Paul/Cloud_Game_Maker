@@ -64,7 +64,13 @@ export class Camera2D {
         this.setRenderArea();
     }
 
-    public getCanvas(id: string): HTMLCanvasElement {
+    public clearCanvas(id: string): void {
+        const canvas = this.getCanvas(id);
+        const context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    protected getCanvas(id: string): HTMLCanvasElement {
         const canvas = document.getElementById(id) as HTMLCanvasElement;
         canvas.width = this.renderWidth;
         canvas.height = this.renderHeight;
