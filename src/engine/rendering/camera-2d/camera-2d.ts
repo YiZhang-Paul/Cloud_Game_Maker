@@ -1,5 +1,6 @@
-import { Dimension2D } from '../../core/data-model/generic/dimension-2d';
 import { Point } from '../../core/data-model/generic/point';
+import { Dimension2D } from '../../core/data-model/generic/dimension-2d';
+import { SceneLayer } from '../../core/data-model/scene/scene-layer';
 import { GenericUtility } from '../../core/utility/generic-utility/generic.utility';
 
 export class Camera2D {
@@ -64,18 +65,43 @@ export class Camera2D {
         this.setRenderArea();
     }
 
-    public clearCanvas(id: string): void {
-        const canvas = this.getCanvas(id);
-        const context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
     protected getCanvas(id: string): HTMLCanvasElement {
         const canvas = document.getElementById(id) as HTMLCanvasElement;
         canvas.width = this.renderWidth;
         canvas.height = this.renderHeight;
 
         return canvas;
+    }
+
+    public render(id: string, layer: SceneLayer): void {
+        const canvas = this.getCanvas(id);
+        const context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (const key of Object.keys(layer.grids)) {
+            const [row, column] = key.split(',').map(Number);
+            const { content } = layer.grids[key];
+            const left = column - Math.floor(this._position.x / this._scale);
+            const top = row - Math.floor(this._position.y / this._scale);
+
+            if (content) {
+                const image = new Image();
+                image.src = URL.createObjectURL(content);
+
+                image.onload = () => {
+                    const x = left * this._scale;
+                    const y = top * this._scale;
+                    context.drawImage(image, x, y, this._scale, this._scale);
+                    URL.revokeObjectURL(image.src);
+                };
+            }
+        }
+    }
+
+    public clearView(id: string): void {
+        const canvas = this.getCanvas(id);
+        const context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
     protected setRenderArea(): void {
