@@ -124,7 +124,7 @@ export class SpritesEffects {
     }
 
     private compressFile(sprite: SpriteFile): Observable<SpriteFile> {
-        const promise = imageCompression(sprite.content, { maxSizeMB: 0.2 });
+        const promise = imageCompression(sprite.content, { maxSizeMB: 0.12 });
 
         return from(promise).pipe(
             mergeMap(content => of(new Blob([content], { type: content.type }))),
