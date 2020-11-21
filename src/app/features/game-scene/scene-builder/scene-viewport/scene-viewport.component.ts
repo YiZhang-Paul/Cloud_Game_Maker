@@ -83,6 +83,7 @@ export class SceneViewportComponent implements AfterViewInit {
             const { x, y } = this._camera.position;
             this.scene = { ...this.scene, viewportXY: new Point(x, y) };
             this.sceneChange.emit(this.scene);
+            this.renderViewport();
         }
 
         this._isHovering = false;
@@ -102,6 +103,9 @@ export class SceneViewportComponent implements AfterViewInit {
         if (this._canMoveCamera) {
             this._camera.move(this._pointerXY.x - clientX, this._pointerXY.y - clientY);
             this._pointerXY = new Point(clientX, clientY);
+            const { x, y } = this._camera.position;
+            this.scene = { ...this.scene, viewportXY: new Point(x, y) };
+            this.sceneChange.emit(this.scene);
             this.renderViewport();
         }
         else if (this.isHovering(clientX, clientY) && this.draggedSprite) {
@@ -139,7 +143,8 @@ export class SceneViewportComponent implements AfterViewInit {
     }
 
     private renderViewport(): void {
-        this._camera.clearCanvas('highlight-grid-layer');
+        this._camera.clearView('highlight-grid-layer');
+        setTimeout(() => this._camera.render(this.scene.layers[0].name, this.scene.layers[0]));
         this._camera.drawGridLines('grid-line-layer');
     }
 }
