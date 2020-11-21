@@ -72,7 +72,7 @@ export class Camera2D {
 
         for (const key of Object.keys(layer.grids)) {
             const [x, y] = key.split(',').map(_ => Number(_) * this._scale);
-            const [row, column] = this.getTargetGrid(x, y, true);
+            const [column, row] = this.getTargetGrid(x, y, true);
             const { content } = layer.grids[key];
 
             if (content) {
@@ -102,12 +102,12 @@ export class Camera2D {
     }
 
     protected getTargetGrid(x: number, y: number, isRelative = false): [number, number] {
-        const row = Math.floor((this._position.y + y) / this._scale);
         const column = Math.floor((this._position.x + x) / this._scale);
+        const row = Math.floor((this._position.y + y) / this._scale);
 
         return [
-            isRelative ? row - Math.floor(this._position.y / this._scale) : row,
-            isRelative ? column - Math.floor(this._position.x / this._scale) : column
+            isRelative ? column - Math.floor(this._position.x / this._scale) : column,
+            isRelative ? row - Math.floor(this._position.y / this._scale) : row
         ];
     }
 
