@@ -65,33 +65,22 @@ export class Camera2D {
         this.setRenderArea();
     }
 
-    protected getCanvas(id: string): HTMLCanvasElement {
-        const canvas = document.getElementById(id) as HTMLCanvasElement;
-        canvas.width = this.renderWidth;
-        canvas.height = this.renderHeight;
-
-        return canvas;
-    }
-
     public render(id: string, layer: SceneLayer): void {
         const canvas = this.getCanvas(id);
         const context = canvas.getContext('2d');
         context.clearRect(0, 0, canvas.width, canvas.height);
 
         for (const key of Object.keys(layer.grids)) {
-            const [row, column] = key.split(',').map(Number);
+            const [x, y] = key.split(',').map(_ => Number(_) * this._scale);
+            const [row, column] = this.getTargetGrid(x, y, true);
             const { content } = layer.grids[key];
-            const left = column - Math.floor(this._position.x / this._scale);
-            const top = row - Math.floor(this._position.y / this._scale);
 
             if (content) {
                 const image = new Image();
                 image.src = URL.createObjectURL(content);
 
                 image.onload = () => {
-                    const x = left * this._scale;
-                    const y = top * this._scale;
-                    context.drawImage(image, x, y, this._scale, this._scale);
+                    context.drawImage(image, column * this._scale, row * this._scale, this._scale, this._scale);
                     URL.revokeObjectURL(image.src);
                 };
             }
@@ -102,6 +91,24 @@ export class Camera2D {
         const canvas = this.getCanvas(id);
         const context = canvas.getContext('2d');
         context.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    protected getCanvas(id: string): HTMLCanvasElement {
+        const canvas = document.getElementById(id) as HTMLCanvasElement;
+        canvas.width = this.renderWidth;
+        canvas.height = this.renderHeight;
+
+        return canvas;
+    }
+
+    protected getTargetGrid(x: number, y: number, isRelative = false): [number, number] {
+        const row = Math.floor((this._position.y + y) / this._scale);
+        const column = Math.floor((this._position.x + x) / this._scale);
+
+        return [
+            isRelative ? row - Math.floor(this._position.y / this._scale) : row,
+            isRelative ? column - Math.floor(this._position.x / this._scale) : column
+        ];
     }
 
     protected setRenderArea(): void {

@@ -69,9 +69,7 @@ export class SceneViewportComponent implements AfterViewInit {
 
     public onScaleChange({ deltaY }: WheelEvent): void {
         this._camera.changeScale(deltaY > 0 ? 10 : -10);
-        this.scene = { ...this.scene, scale: this._camera.scale };
-        this.sceneChange.emit(this.scene);
-        this.renderViewport();
+        this.onViewportChange({ ...this.scene, scale: this._camera.scale });
     }
 
     public onMouseEnter(): void {
@@ -81,9 +79,7 @@ export class SceneViewportComponent implements AfterViewInit {
     public onMouseLeave(): void {
         if (this._canMoveCamera) {
             const { x, y } = this._camera.position;
-            this.scene = { ...this.scene, viewportXY: new Point(x, y) };
-            this.sceneChange.emit(this.scene);
-            this.renderViewport();
+            this.onViewportChange({ ...this.scene, viewportXY: new Point(x, y) });
         }
 
         this._isHovering = false;
@@ -104,9 +100,7 @@ export class SceneViewportComponent implements AfterViewInit {
             this._camera.move(this._pointerXY.x - clientX, this._pointerXY.y - clientY);
             this._pointerXY = new Point(clientX, clientY);
             const { x, y } = this._camera.position;
-            this.scene = { ...this.scene, viewportXY: new Point(x, y) };
-            this.sceneChange.emit(this.scene);
-            this.renderViewport();
+            this.onViewportChange({ ...this.scene, viewportXY: new Point(x, y) });
         }
         else if (this.isHovering(clientX, clientY) && this.draggedSprite) {
             const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
@@ -120,16 +114,13 @@ export class SceneViewportComponent implements AfterViewInit {
     public onDocumentMouseUp({ clientX, clientY }: MouseEvent): void {
         if (this._canMoveCamera) {
             const { x, y } = this._camera.position;
-            this.scene = { ...this.scene, viewportXY: new Point(x, y) };
-            this.sceneChange.emit(this.scene);
+            this.onViewportChange({ ...this.scene, viewportXY: new Point(x, y) }, false);
         }
         else if (this.isHovering(clientX, clientY) && this._lastDraggedSprite) {
             const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
             const [x, y] = [Math.ceil(clientX - left), Math.ceil(clientY - top)];
             const layer = this._camera.dropSprite(x, y, this.scene.layers[0], this._lastDraggedSprite);
-            this.scene = { ...this.scene, layers: [layer, ...this.scene.layers.slice(1)] };
-            this.sceneChange.emit(this.scene);
-            this.renderViewport();
+            this.onViewportChange({ ...this.scene, layers: [layer, ...this.scene.layers.slice(1)] });
         }
 
         this._canMoveCamera = false;
@@ -140,6 +131,15 @@ export class SceneViewportComponent implements AfterViewInit {
         const { left, top, right, bottom } = this._viewport.nativeElement.getBoundingClientRect();
 
         return x >= left && x <= right && y >= top && y <= bottom;
+    }
+
+    private onViewportChange(scene: Scene, render = true): void {
+        this.scene = scene;
+        this.sceneChange.emit(this.scene);
+
+        if (render) {
+            this.renderViewport();
+        }
     }
 
     private renderViewport(): void {
