@@ -8,9 +8,9 @@ import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { store } from '../store';
 import { store as globalStore } from '../../../store';
 import { Point } from '../../../../engine/core/data-model/generic/point';
-import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
-import { ConfirmActionOption } from '../../../core/data-model/generic/options/confirm-action-option';
-import { ConfirmPopupOption } from '../../../core/data-model/generic/options/confirm-popup-option';
+import { SpriteFile } from '../../../../engine/core/data-model/sprite/sprite-file';
+import { ConfirmActionOption } from '../../../core/data-model/options/confirm-action-option';
+import { ConfirmPopupOption } from '../../../core/data-model/options/confirm-popup-option';
 import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm-popup/confirm-popup.component';
 
 @Component({

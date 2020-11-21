@@ -1,4 +1,4 @@
-import { Scene } from '../../../core/data-model/scene/scene';
+import { Scene } from '../../../../engine/core/data-model/scene/scene';
 
 export const key = 'gameScene';
 

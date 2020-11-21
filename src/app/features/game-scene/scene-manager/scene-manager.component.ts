@@ -5,11 +5,11 @@ import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
 import { store } from '../store';
-import { Scene } from '../../../core/data-model/scene/scene';
-import { SceneLayer } from '../../../core/data-model/scene/scene-layer';
-import { ToolbarActionOption } from '../../../core/data-model/generic/options/toolbar-action-option';
+import { Scene } from '../../../../engine/core/data-model/scene/scene';
+import { SceneLayer } from '../../../../engine/core/data-model/scene/scene-layer';
 import { MiniToolbarOption } from '../../../core/enum/mini-toolbar-option.enum';
-import { ConfirmPopupOption } from '../../../core/data-model/generic/options/confirm-popup-option';
+import { ToolbarActionOption } from '../../../core/data-model/options/toolbar-action-option';
+import { ConfirmPopupOption } from '../../../core/data-model/options/confirm-popup-option';
 import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm-popup/confirm-popup.component';
 
 @Component({

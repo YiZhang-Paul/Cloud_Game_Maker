@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 import { MatDialog } from '@angular/material/dialog';
 import { Dimensions, ImageCropperComponent, ImageTransform } from 'ngx-image-cropper';
 
-import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
-import { ConfirmPopupOption } from '../../../core/data-model/generic/options/confirm-popup-option';
-import { ConfirmActionOption } from '../../../core/data-model/generic/options/confirm-action-option';
+import { SpriteFile } from '../../../../engine/core/data-model/sprite/sprite-file';
+import { ConfirmPopupOption } from '../../../core/data-model/options/confirm-popup-option';
+import { ConfirmActionOption } from '../../../core/data-model/options/confirm-action-option';
 import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm-popup/confirm-popup.component';
 import { FileUtility } from '../../../core/utility/file-utility/file.utility';
 

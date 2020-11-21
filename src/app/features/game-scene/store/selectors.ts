@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import { Scene } from '../../../core/data-model/scene/scene';
+import { Scene } from '../../../../engine/core/data-model/scene/scene';
 
 import { IGameSceneModuleState, key } from './state';
 

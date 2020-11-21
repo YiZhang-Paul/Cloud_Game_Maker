@@ -2,7 +2,7 @@ import { Action, createReducer, on } from '@ngrx/store';
 
 import { IScenesState, initialScenesState } from '../state';
 import { actions } from '../actions';
-import { Scene } from '../../../../core/data-model/scene/scene';
+import { Scene } from '../../../../../engine/core/data-model/scene/scene';
 
 function addScene(state: IScenesState, scene: Scene): IScenesState {
     return { ...state, scenes: [...state.scenes, scene] };

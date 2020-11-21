@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 import { Point } from '../../../../../engine/core/data-model/generic/point';
-import { SpriteFile } from '../../../../core/data-model/sprite/sprite-file';
+import { SpriteFile } from '../../../../../engine/core/data-model/sprite/sprite-file';
 
 @Component({
     selector: 'app-sprite-thumbnail-item',

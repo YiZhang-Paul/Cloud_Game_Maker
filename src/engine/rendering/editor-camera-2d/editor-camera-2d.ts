@@ -1,6 +1,6 @@
 import { Camera2D } from '../camera-2d/camera-2d';
-import { SceneLayer } from '../../../app/core/data-model/scene/scene-layer';
-import { SpriteFile } from '../../../app/core/data-model/sprite/sprite-file';
+import { SceneLayer } from '../../core/data-model/scene/scene-layer';
+import { SpriteFile } from '../../core/data-model/sprite/sprite-file';
 
 export class EditorCamera2D extends Camera2D {
 

@@ -1,8 +1,8 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 
-import { Scene } from '../../../../core/data-model/scene/scene';
-import { SpriteFile } from '../../../../core/data-model/sprite/sprite-file';
 import { Point } from '../../../../../engine/core/data-model/generic/point';
+import { Scene } from '../../../../../engine/core/data-model/scene/scene';
+import { SpriteFile } from '../../../../../engine/core/data-model/sprite/sprite-file';
 import { EditorCamera2D } from '../../../../../engine/rendering/editor-camera-2d/editor-camera-2d';
 
 @Component({

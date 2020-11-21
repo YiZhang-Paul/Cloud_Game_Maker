@@ -4,8 +4,8 @@ import { Store } from '@ngrx/store';
 
 import { store } from '../store';
 import { store as globalStore } from '../../../store';
-import { Scene } from '../../../core/data-model/scene/scene';
-import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
+import { Scene } from '../../../../engine/core/data-model/scene/scene';
+import { SpriteFile } from '../../../../engine/core/data-model/sprite/sprite-file';
 
 @Component({
     selector: 'app-scene-builder',

@@ -2,7 +2,7 @@ import { Action, createReducer, on } from '@ngrx/store';
 
 import { ISpritesState, initialSpritesState } from '../state';
 import { actions } from '../actions';
-import { SpriteFile } from '../../../../core/data-model/sprite/sprite-file';
+import { SpriteFile } from '../../../../../engine/core/data-model/sprite/sprite-file';
 
 function addSprite(state: ISpritesState, sprite: SpriteFile): ISpritesState {
     return { ...state, sprites: [sprite, ...state.sprites] };

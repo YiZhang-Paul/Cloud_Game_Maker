@@ -1,4 +1,4 @@
-import { Point } from '../../../../engine/core/data-model/generic/point';
+import { Point } from '../../data-model/generic/point';
 
 import { SceneLayer } from './scene-layer';
 

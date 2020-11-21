@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 
-import { SpriteFile } from '../../../../core/data-model/sprite/sprite-file';
+import { SpriteFile } from '../../../../../engine/core/data-model/sprite/sprite-file';
 
 const source = '[Sprite Manager]';
 

@@ -1,4 +1,4 @@
-import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
+import { SpriteFile } from '../../../../engine/core/data-model/sprite/sprite-file';
 
 export const key = 'imageSprite';
 

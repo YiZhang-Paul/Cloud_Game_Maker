@@ -4,8 +4,8 @@ import { catchError, mergeMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
 import { environment } from '../../../../../environments/environment';
-import { SpriteFile } from '../../../data-model/sprite/sprite-file';
-import { Scene } from '../../../data-model/scene/scene';
+import { SpriteFile } from '../../../../../engine/core/data-model/sprite/sprite-file';
+import { Scene } from '../../../../../engine/core/data-model/scene/scene';
 
 @Injectable({
     providedIn: 'root'
