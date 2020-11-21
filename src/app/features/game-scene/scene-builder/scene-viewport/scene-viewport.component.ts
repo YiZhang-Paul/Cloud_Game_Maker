@@ -45,9 +45,8 @@ export class SceneViewportComponent implements AfterViewInit {
         setTimeout(() => {
             const { clientWidth: width, clientHeight: height } = this._viewport.nativeElement;
             const { scale, layers, viewportXY } = this.scene;
+            const { rows, columns } = layers[0];
             const position = new Point(viewportXY.x, viewportXY.y);
-            const rows = layers[0].grids.length;
-            const columns = layers[0].grids[0].length;
             this._camera = new EditorCamera2D(width, height, position, rows, columns, scale);
             this.renderViewport();
         });

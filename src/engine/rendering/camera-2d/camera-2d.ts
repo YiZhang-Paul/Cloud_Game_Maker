@@ -5,24 +5,24 @@ import { GenericUtility } from '../../core/utility/generic-utility/generic.utili
 export class Camera2D {
     protected _dimension = new Dimension2D();
     protected _position = new Point();
-    protected _totalRows = 0;
-    protected _totalColumns = 0;
-    protected _renderRows = 0;
-    protected _renderColumns = 0;
+    protected _rows = 0;
+    protected _columns = 0;
+    protected _visibleRows = 0;
+    protected _visibleColumns = 0;
     protected _scale = 100;
 
     constructor(
         width: number,
         height: number,
         position: Point,
-        totalRows: number,
-        totalColumns: number,
+        rows: number,
+        columns: number,
         scale: number
     ) {
         this._dimension = new Dimension2D(width, height);
         this._position = position;
-        this._totalRows = totalRows;
-        this._totalColumns = totalColumns;
+        this._rows = rows;
+        this._columns = columns;
         this._scale = scale;
         this.setRenderArea();
     }
@@ -36,11 +36,11 @@ export class Camera2D {
     }
 
     get renderWidth(): number {
-        return this._renderColumns * this._scale;
+        return this._visibleColumns * this._scale;
     }
 
     get renderHeight(): number {
-        return this._renderRows * this._scale;
+        return this._visibleRows * this._scale;
     }
 
     get offsetX(): number {
@@ -52,8 +52,8 @@ export class Camera2D {
     }
 
     public move(deltaX: number, deltaY: number): void {
-        const maxX = this._totalColumns * this._scale - this._dimension.width;
-        const maxY = this._totalRows * this._scale - this._dimension.height;
+        const maxX = this._columns * this._scale - this._dimension.width;
+        const maxY = this._rows * this._scale - this._dimension.height;
         this._position.x = GenericUtility.limitValue(this.position.x + deltaX, 0, maxX);
         this._position.y = GenericUtility.limitValue(this.position.y + deltaY, 0, maxY);
         this.setRenderArea();
@@ -82,17 +82,17 @@ export class Camera2D {
         const { width, height } = this._dimension;
 
         if (this.offsetY) {
-            this._renderRows = Math.ceil((height - this._scale + this.offsetY) / this._scale) + 1;
+            this._visibleRows = Math.ceil((height - this._scale + this.offsetY) / this._scale) + 1;
         }
         else {
-            this._renderRows = Math.ceil(height / this._scale);
+            this._visibleRows = Math.ceil(height / this._scale);
         }
 
         if (this.offsetX) {
-            this._renderColumns = Math.ceil((width - this._scale + this.offsetX) / this._scale) + 1;
+            this._visibleColumns = Math.ceil((width - this._scale + this.offsetX) / this._scale) + 1;
         }
         else {
-            this._renderColumns = Math.ceil(width / this._scale);
+            this._visibleColumns = Math.ceil(width / this._scale);
         }
     }
 }
