@@ -8,7 +8,13 @@ function addSprite(state: ISpritesState, sprite: SpriteFile): ISpritesState {
     return { ...state, sprites: [sprite, ...state.sprites] };
 }
 
-function updateSprite(state: ISpritesState, props: { payload: SpriteFile, index: number }): ISpritesState {
+function updateSprite(state: ISpritesState, sprite: SpriteFile): ISpritesState {
+    const index = state.sprites.findIndex(_ => _.id === sprite.id);
+
+    return index === -1 ? state : updateSpriteByIndex(state, { payload: sprite, index });
+}
+
+function updateSpriteByIndex(state: ISpritesState, props: { payload: SpriteFile, index: number }): ISpritesState {
     const { payload, index } = props;
     const sprites = [...state.sprites.slice(0, index), payload, ...state.sprites.slice(index + 1)];
 
@@ -31,6 +37,7 @@ const _spritesReducer = createReducer(
     initialSpritesState,
     on(actions.addSprite, addSprite),
     on(actions.updateSprite, updateSprite),
+    on(actions.updateSpriteByIndex, updateSpriteByIndex),
     on(actions.deleteSprite, deleteSprite),
     on(actions.setSprites, setSprites),
     on(actions.getSpritesRemote, _ => setHasFetchedSprites(_, { payload: false })),

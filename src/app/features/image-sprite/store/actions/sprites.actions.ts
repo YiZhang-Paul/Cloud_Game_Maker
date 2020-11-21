@@ -5,7 +5,8 @@ import { SpriteFile } from '../../../../../engine/core/data-model/sprite/sprite-
 const source = '[Sprite Manager]';
 
 export const addSprite = createAction(`${source} Add Sprite`, props<SpriteFile>());
-export const updateSprite = createAction(`${source} Update Sprite`, props<{ payload: SpriteFile, index: number }>());
+export const updateSprite = createAction(`${source} Update Sprite`, props<SpriteFile>());
+export const updateSpriteByIndex = createAction(`${source} Update Sprite By Index`, props<{ payload: SpriteFile, index: number }>());
 export const deleteSprite = createAction(`${source} Delete Sprite`, props<SpriteFile>());
 export const setSprites = createAction(`${source} Set Sprites`, props<{ payload: SpriteFile[] }>());
 export const getSpritesRemote = createAction(`${source} Get Sprites Remote`);

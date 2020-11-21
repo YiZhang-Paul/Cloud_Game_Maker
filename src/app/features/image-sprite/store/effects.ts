@@ -19,7 +19,10 @@ export class SpritesEffects {
     public setActiveSpriteLazyLoad$ = createEffect(() => this._actions$.pipe(
         ofType(actions.setActiveSpriteLazyLoad),
         mergeMap(sprite => this._cloudStorageHttp.getSpriteContent(sprite).pipe(
-            map(content => actions.setActiveSprite({ ...sprite, content }))
+            switchMap(content => [
+                actions.updateSprite({ ...sprite, content }),
+                actions.setActiveSprite({ ...sprite, content })
+            ])
         ))
     ));
 
@@ -77,7 +80,7 @@ export class SpritesEffects {
             }
 
             return [
-                actions.updateSprite({ payload: sprite, index }),
+                actions.updateSpriteByIndex({ payload: sprite, index }),
                 actions.resetActiveSprite()
             ];
         })
