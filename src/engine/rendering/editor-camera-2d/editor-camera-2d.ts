@@ -5,13 +5,15 @@ import { SpriteFile } from '../../core/data-model/sprite/sprite-file';
 
 export class EditorCamera2D extends Camera2D {
 
-    public dropSprite(x: number, y: number, layer: SceneLayer, sprite: SpriteFile): void {
+    public dropSprite(x: number, y: number, layer: SceneLayer, sprite: SpriteFile): SceneLayer {
         const [row, column] = this.getTargetGrid(x, y);
+        const key = `${row},${column}`;
         const grid = new SceneGrid();
         grid.spriteId = sprite.id;
         grid.thumbnail = sprite.thumbnailUrl;
         grid.content = sprite.content;
-        layer.grids[`${row},${column}`] = grid;
+
+        return { ...layer, grids: { ...layer.grids, [key]: grid } };
     }
 
     public highlightGrid(x: number, y: number, id: string): void {

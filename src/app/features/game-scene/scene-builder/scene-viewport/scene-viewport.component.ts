@@ -122,7 +122,9 @@ export class SceneViewportComponent implements AfterViewInit {
         else if (this.isHovering(clientX, clientY) && this._lastDraggedSprite) {
             const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
             const [x, y] = [Math.ceil(clientX - left), Math.ceil(clientY - top)];
-            this._camera.dropSprite(x, y, this.scene.layers[0], this._lastDraggedSprite);
+            const layer = this._camera.dropSprite(x, y, this.scene.layers[0], this._lastDraggedSprite);
+            this.scene = { ...this.scene, layers: [layer, ...this.scene.layers.slice(1)] };
+            this.sceneChange.emit(this.scene);
             this.renderViewport();
         }
 
