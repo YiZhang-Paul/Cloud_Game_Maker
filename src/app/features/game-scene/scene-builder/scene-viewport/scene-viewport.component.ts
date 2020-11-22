@@ -122,8 +122,14 @@ export class SceneViewportComponent implements AfterViewInit {
     public onRightClick(event: MouseEvent): void {
         event.preventDefault();
         const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
-        this.contextMenuStyle.top = `${event.clientY - top}px`;
-        this.contextMenuStyle.left = `${event.clientX - left}px`;
+        const [x, y] = [event.clientX - left, event.clientY - top];
+
+        if (!this._camera.hasGridContent(x, y, 0)) {
+            return;
+        }
+
+        this.contextMenuStyle.top = `${y}px`;
+        this.contextMenuStyle.left = `${x}px`;
         this._isContextMenuOn = true;
     }
 
