@@ -144,7 +144,7 @@ export class SceneViewportComponent implements AfterViewInit {
 
     private renderViewport(): void {
         this._camera.clearView('highlight-grid-layer');
-        setTimeout(() => this._camera.render(this.scene.layers[0].name, this.scene.layers[0]));
+        setTimeout(() => this._camera.renderLayer(this.scene.layers[0].name, this.scene.layers[0]));
         this._camera.drawGridLines('grid-line-layer');
     }
 }

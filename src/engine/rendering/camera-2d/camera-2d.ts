@@ -66,15 +66,21 @@ export class Camera2D {
         this.setRenderArea();
     }
 
-    public render(id: string, layer: SceneLayer): void {
+    public renderLayer(id: string, layer: SceneLayer): void {
         const canvas = this.getCanvas(id);
         const context = canvas.getContext('2d');
+        const startColumn = Math.floor(this._position.x / this._scale);
+        const startRow = Math.floor(this._position.y / this._scale);
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        for (const key of Object.keys(layer.grids)) {
-            const [x, y] = key.split(',').map(_ => Number(_) * this._scale);
-            const [column, row] = this.getTargetGrid(x, y, true);
-            this.drawGrid(layer.grids[key], column, row, context);
+        for (let i = 0; i < this._visibleColumns; ++i) {
+            for (let j = 0; j < this._visibleRows; ++j) {
+                const key = `${i + startColumn},${j + startRow}`;
+
+                if (layer.grids.hasOwnProperty(key) && layer.grids[key]) {
+                    this.drawGrid(layer.grids[key], i, j, context);
+                }
+            }
         }
     }
 
