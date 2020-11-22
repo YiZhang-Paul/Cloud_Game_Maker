@@ -61,6 +61,20 @@ export class ScenesEffects {
         })
     ));
 
+    public updateSceneRemote$ = createEffect(() => this._actions$.pipe(
+        ofType(actions.updateSceneRemote),
+        mergeMap(scene => this._cloudStorageHttp.updateScene(scene).pipe(
+            map(id => id ? ({ ...scene, id }) : null)
+        )),
+        map(scene => {
+            if (!scene) {
+                this._snackBar.open('Failed to update the scene.', 'Got it');
+            }
+
+            return scene ? actions.updateScene(scene) : { type: 'no-op' };
+        })
+    ));
+
     public deleteSceneRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.deleteSceneRemote),
         mergeMap(scene => this._cloudStorageHttp.deleteScene(scene).pipe(

@@ -32,6 +32,13 @@ export class CloudStorageHttpService {
         return this._http.post(endpoint, scene, { responseType }).pipe(catchError(() => of(null)));
     }
 
+    public updateScene(scene: Scene): Observable<string> {
+        const endpoint = `${this._api}/scenes`;
+        const responseType = 'text';
+
+        return this._http.put(endpoint, scene, { responseType }).pipe(catchError(() => of(null)));
+    }
+
     public deleteScene(scene: Scene): Observable<boolean> {
         const endpoint = `${this._api}/scenes/${encodeURIComponent(scene.id)}`;
 

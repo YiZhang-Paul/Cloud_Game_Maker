@@ -11,6 +11,7 @@ export const deleteScene = createAction(`${source} Delete Scene`, props<Scene>()
 export const setScenes = createAction(`${source} Set Scenes`, props<{ payload: Scene[] }>());
 export const getScenesRemote = createAction(`${source} Get Scenes Remote`);
 export const addSceneRemote = createAction(`${source} Add Scene Remote`, props<Scene>());
+export const updateSceneRemote = createAction(`${source} Update Scene Remote`, props<Scene>());
 export const deleteSceneRemote = createAction(`${source} Delete Scene Remote`, props<Scene>());
 export const setHasFetchedScenes = createAction(`${source} Set Has Fetched Scenes`, props<{ payload: boolean }>());
 export const setCanAddScene = createAction(`${source} Set Can Add Scene`, props<{ payload: boolean }>());
