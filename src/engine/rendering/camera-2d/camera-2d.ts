@@ -96,14 +96,14 @@ export class Camera2D {
     }
 
     protected drawGrid(grid: SceneGrid, column: number, row: number, context: CanvasRenderingContext2D): void {
-        const { content, thumbnail } = grid;
+        const { content, thumbnailUrl } = grid;
 
-        if (!content && !thumbnail) {
+        if (!content && !thumbnailUrl) {
             return;
         }
 
         const image = new Image();
-        image.src = content ? URL.createObjectURL(content) : thumbnail;
+        image.src = content ? URL.createObjectURL(content) : thumbnailUrl;
 
         image.onload = () => {
             const { scale } = this._scene;

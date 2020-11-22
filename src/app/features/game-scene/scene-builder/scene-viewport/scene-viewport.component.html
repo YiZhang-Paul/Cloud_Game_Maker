@@ -12,7 +12,7 @@
     <canvas id="highlight-grid-layer" [ngStyle]="layerStyle"></canvas>
 
     <div *ngIf="isContextMenuOn" [ngStyle]="contextMenuStyle" class="context-menu" fxLayout="column">
-        <div fxLayoutAlign="start center">
+        <div (mouseup)="removeGridContent()" fxLayoutAlign="start center">
             <span>remove sprite</span>
         </div>
     </div>

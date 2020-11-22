@@ -87,8 +87,6 @@ export class SceneViewportComponent implements AfterViewInit {
             this._canMoveCamera = true;
             this._pointerXY = new Point(clientX, clientY);
         }
-
-        this._isContextMenuOn = false;
     }
 
     @HostListener('document:mousemove', ['$event'])
@@ -115,6 +113,7 @@ export class SceneViewportComponent implements AfterViewInit {
             this.onViewportChange(this._camera.scene);
         }
 
+        this._isContextMenuOn = false;
         this._canMoveCamera = false;
         this._lastDraggedSprite = null;
     }
@@ -131,6 +130,13 @@ export class SceneViewportComponent implements AfterViewInit {
         this.contextMenuStyle.top = `${y}px`;
         this.contextMenuStyle.left = `${x}px`;
         this._isContextMenuOn = true;
+    }
+
+    public removeGridContent(): void {
+        const { left, top } = this.contextMenuStyle;
+        const [x, y] = [left, top].map(_ => Number(_.replace('px', '')));
+        this._camera.dropSprite(x, y, 0, null);
+        this.onViewportChange(this._camera.scene);
     }
 
     private isHovering(x: number, y: number): boolean {
