@@ -4,9 +4,16 @@
     (wheel)="onScaleChange($event)"
     (mouseenter)="onMouseEnter()"
     (mouseleave)="onMouseLeave()"
-    (mousedown)="onMouseDown($event)">
+    (mousedown)="onMouseDown($event)"
+    (contextmenu)="onRightClick($event)">
 
     <canvas *ngFor="let layer of scene.layers" [id]="layer.name" [ngStyle]="layerStyle"></canvas>
     <canvas id="grid-line-layer" [ngStyle]="layerStyle"></canvas>
     <canvas id="highlight-grid-layer" [ngStyle]="layerStyle"></canvas>
+
+    <div *ngIf="isContextMenuOn" [ngStyle]="contextMenuStyle" class="context-menu" fxLayout="column">
+        <div fxLayoutAlign="start center">
+            <span>remove sprite</span>
+        </div>
+    </div>
 </div>

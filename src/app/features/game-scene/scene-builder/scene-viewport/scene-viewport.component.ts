@@ -16,12 +16,18 @@ export class SceneViewportComponent implements AfterViewInit {
     @Input() public draggedSprite: SpriteFile;
     @Output() public sceneChange = new EventEmitter<Scene>();
     @ViewChild('viewport') private _viewport: ElementRef;
+    public contextMenuStyle = { top: '0', left: '0' };
     private _lastDraggedSprite: SpriteFile;
     private _isHovering = false;
     private _canDragPointer = false;
     private _canMoveCamera = false;
     private _pointerXY = new Point();
+    private _isContextMenuOn = false;
     private _camera: EditorCamera2D;
+
+    get isContextMenuOn(): boolean {
+        return this._isContextMenuOn;
+    }
 
     get viewportClass(): { [key: string]: boolean } {
         return {
@@ -81,6 +87,8 @@ export class SceneViewportComponent implements AfterViewInit {
             this._canMoveCamera = true;
             this._pointerXY = new Point(clientX, clientY);
         }
+
+        this._isContextMenuOn = false;
     }
 
     @HostListener('document:mousemove', ['$event'])
@@ -109,6 +117,14 @@ export class SceneViewportComponent implements AfterViewInit {
 
         this._canMoveCamera = false;
         this._lastDraggedSprite = null;
+    }
+
+    public onRightClick(event: MouseEvent): void {
+        event.preventDefault();
+        const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
+        this.contextMenuStyle.top = `${event.clientY - top}px`;
+        this.contextMenuStyle.left = `${event.clientX - left}px`;
+        this._isContextMenuOn = true;
     }
 
     private isHovering(x: number, y: number): boolean {
