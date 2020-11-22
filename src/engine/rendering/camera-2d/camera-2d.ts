@@ -1,5 +1,6 @@
 import { Point } from '../../core/data-model/generic/point';
 import { Dimension2D } from '../../core/data-model/generic/dimension-2d';
+import { SceneGrid } from '../../core/data-model/scene/scene-grid';
 import { SceneLayer } from '../../core/data-model/scene/scene-layer';
 import { GenericUtility } from '../../core/utility/generic-utility/generic.utility';
 
@@ -73,17 +74,7 @@ export class Camera2D {
         for (const key of Object.keys(layer.grids)) {
             const [x, y] = key.split(',').map(_ => Number(_) * this._scale);
             const [column, row] = this.getTargetGrid(x, y, true);
-            const { content } = layer.grids[key];
-
-            if (content) {
-                const image = new Image();
-                image.src = URL.createObjectURL(content);
-
-                image.onload = () => {
-                    context.drawImage(image, column * this._scale, row * this._scale, this._scale, this._scale);
-                    URL.revokeObjectURL(image.src);
-                };
-            }
+            this.drawGrid(layer.grids[key], column, row, context);
         }
     }
 
@@ -91,6 +82,26 @@ export class Camera2D {
         const canvas = this.getCanvas(id);
         const context = canvas.getContext('2d');
         context.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    protected drawGrid(grid: SceneGrid, column: number, row: number, context: CanvasRenderingContext2D): void {
+        const { content, thumbnail } = grid;
+
+        if (!content && !thumbnail) {
+            return;
+        }
+
+        const image = new Image();
+        image.src = content ? URL.createObjectURL(content) : thumbnail;
+
+        image.onload = () => {
+            const [x, y] = [column * this._scale, row * this._scale];
+            context.drawImage(image, x, y, this._scale, this._scale);
+
+            if (content) {
+                URL.revokeObjectURL(image.src);
+            }
+        };
     }
 
     protected getCanvas(id: string): HTMLCanvasElement {
