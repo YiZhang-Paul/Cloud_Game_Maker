@@ -1,76 +1,74 @@
 import { Point } from '../../core/data-model/generic/point';
 import { Dimension2D } from '../../core/data-model/generic/dimension-2d';
+import { Scene } from '../../core/data-model/scene/scene';
 import { SceneGrid } from '../../core/data-model/scene/scene-grid';
-import { SceneLayer } from '../../core/data-model/scene/scene-layer';
 import { GenericUtility } from '../../core/utility/generic-utility/generic.utility';
 
 export class Camera2D {
     protected _dimension = new Dimension2D();
-    protected _position = new Point();
-    protected _rows = 0;
-    protected _columns = 0;
+    protected _scene: Scene;
     protected _visibleRows = 0;
     protected _visibleColumns = 0;
-    protected _scale = 100;
 
-    constructor(
-        width: number,
-        height: number,
-        position: Point,
-        rows: number,
-        columns: number,
-        scale: number
-    ) {
+    constructor(width: number, height: number, scene: Scene) {
         this._dimension = new Dimension2D(width, height);
-        this._position = position;
-        this._rows = rows;
-        this._columns = columns;
-        this._scale = scale;
+        this._scene = scene;
         this.setRenderArea();
     }
 
-    get position(): Point {
-        return this._position;
+    get scene(): Scene {
+        return this._scene;
     }
 
-    get scale(): number {
-        return this._scale;
+    get viewportStyle(): { [key: string]: string } {
+        return {
+            top: `${-this.offsetY}px`,
+            left: `${-this.offsetX}px`,
+            width: `${this.renderWidth}px`,
+            height: `${this.renderHeight}px`
+        };
     }
 
     get renderWidth(): number {
-        return this._visibleColumns * this._scale;
+        return this._visibleColumns * this._scene.scale;
     }
 
     get renderHeight(): number {
-        return this._visibleRows * this._scale;
+        return this._visibleRows * this._scene.scale;
     }
 
     get offsetX(): number {
-        return this._position.x % this._scale;
+        return this._scene.viewportXY.x % this._scene.scale;
     }
 
     get offsetY(): number {
-        return this._position.y % this._scale;
+        return this._scene.viewportXY.y % this._scene.scale;
+    }
+
+    public scale(delta: number): void {
+        const scale = GenericUtility.limitValue(this._scene.scale + delta, 30, 200);
+        this._scene = { ...this._scene, scale };
+        this.setRenderArea();
     }
 
     public move(deltaX: number, deltaY: number): void {
-        const maxX = this._columns * this._scale - this._dimension.width;
-        const maxY = this._rows * this._scale - this._dimension.height;
-        this._position.x = GenericUtility.limitValue(this.position.x + deltaX, 0, maxX);
-        this._position.y = GenericUtility.limitValue(this.position.y + deltaY, 0, maxY);
+        const { scale, viewportXY, layers } = this._scene;
+        const { rows, columns } = layers[0];
+        const maxX = columns * scale - this._dimension.width;
+        const maxY = rows * scale - this._dimension.height;
+        const x = GenericUtility.limitValue(viewportXY.x + deltaX, 0, maxX);
+        const y = GenericUtility.limitValue(viewportXY.y + deltaY, 0, maxY);
+        this._scene = { ...this._scene, viewportXY: new Point(x, y) };
         this.setRenderArea();
     }
 
-    public changeScale(delta: number): void {
-        this._scale = GenericUtility.limitValue(this._scale + delta, 30, 200);
-        this.setRenderArea();
-    }
-
-    public renderLayer(id: string, layer: SceneLayer): void {
-        const canvas = this.getCanvas(id);
+    public renderLayer(index: number): void {
+        const layer = this._scene.layers[index];
+        const canvas = this.getCanvas(layer.name);
         const context = canvas.getContext('2d');
-        const startColumn = Math.floor(this._position.x / this._scale);
-        const startRow = Math.floor(this._position.y / this._scale);
+        const { scale, viewportXY } = this._scene;
+        const startColumn = Math.floor(viewportXY.x / scale);
+        const startRow = Math.floor(viewportXY.y / scale);
         context.clearRect(0, 0, canvas.width, canvas.height);
 
         for (let i = 0; i < this._visibleColumns; ++i) {
@@ -101,8 +99,9 @@ export class Camera2D {
         image.src = content ? URL.createObjectURL(content) : thumbnail;
 
         image.onload = () => {
-            const [x, y] = [column * this._scale, row * this._scale];
-            context.drawImage(image, x, y, this._scale, this._scale);
+            const { scale } = this._scene;
+            const [x, y] = [column * scale, row * scale];
+            context.drawImage(image, x, y, scale, scale);
 
             if (content) {
                 URL.revokeObjectURL(image.src);
@@ -119,30 +118,32 @@ export class Camera2D {
     }
 
     protected getTargetGrid(x: number, y: number, isRelative = false): [number, number] {
-        const column = Math.floor((this._position.x + x) / this._scale);
-        const row = Math.floor((this._position.y + y) / this._scale);
+        const { scale, viewportXY } = this._scene;
+        const column = Math.floor((viewportXY.x + x) / scale);
+        const row = Math.floor((viewportXY.y + y) / scale);
 
         return [
-            isRelative ? column - Math.floor(this._position.x / this._scale) : column,
-            isRelative ? row - Math.floor(this._position.y / this._scale) : row
+            isRelative ? column - Math.floor(viewportXY.x / scale) : column,
+            isRelative ? row - Math.floor(viewportXY.y / scale) : row
         ];
     }
 
     protected setRenderArea(): void {
+        const { scale } = this._scene;
         const { width, height } = this._dimension;
 
         if (this.offsetY) {
-            this._visibleRows = Math.ceil((height - this._scale + this.offsetY) / this._scale) + 1;
+            this._visibleRows = Math.ceil((height - scale + this.offsetY) / scale) + 1;
         }
         else {
-            this._visibleRows = Math.ceil(height / this._scale);
+            this._visibleRows = Math.ceil(height / scale);
         }
 
         if (this.offsetX) {
-            this._visibleColumns = Math.ceil((width - this._scale + this.offsetX) / this._scale) + 1;
+            this._visibleColumns = Math.ceil((width - scale + this.offsetX) / scale) + 1;
         }
         else {
-            this._visibleColumns = Math.ceil(width / this._scale);
+            this._visibleColumns = Math.ceil(width / scale);
         }
     }
 }

@@ -31,23 +31,13 @@ export class SceneViewportComponent implements AfterViewInit {
     }
 
     get layerStyle(): { [key: string]: string } {
-        if (this._camera) {
-            return {
-                top: `${-this._camera.offsetY}px`,
-                left: `${-this._camera.offsetX}px`,
-                width: `${this._camera.renderWidth}px`,
-                height: `${this._camera.renderHeight}px`
-            };
-        }
+        return this._camera?.viewportStyle ?? null;
     }
 
     public ngAfterViewInit(): void {
         setTimeout(() => {
-            const { clientWidth: width, clientHeight: height } = this._viewport.nativeElement;
-            const { scale, layers, viewportXY } = this.scene;
-            const { rows, columns } = layers[0];
-            const position = new Point(viewportXY.x, viewportXY.y);
-            this._camera = new EditorCamera2D(width, height, position, rows, columns, scale);
+            const { clientWidth, clientHeight } = this._viewport.nativeElement;
+            this._camera = new EditorCamera2D(clientWidth, clientHeight, this.scene);
             this.renderViewport();
         });
     }
@@ -68,8 +58,8 @@ export class SceneViewportComponent implements AfterViewInit {
     }
 
     public onScaleChange({ deltaY }: WheelEvent): void {
-        this._camera.changeScale(deltaY > 0 ? 10 : -10);
-        this.onViewportChange({ ...this.scene, scale: this._camera.scale });
+        this._camera.scale(deltaY > 0 ? 10 : -10);
+        this.onViewportChange(this._camera.scene);
     }
 
     public onMouseEnter(): void {
@@ -78,8 +68,7 @@ export class SceneViewportComponent implements AfterViewInit {
 
     public onMouseLeave(): void {
         if (this._canMoveCamera) {
-            const { x, y } = this._camera.position;
-            this.onViewportChange({ ...this.scene, viewportXY: new Point(x, y) });
+            this.onViewportChange(this._camera.scene);
         }
 
         this._isHovering = false;
@@ -99,8 +88,7 @@ export class SceneViewportComponent implements AfterViewInit {
         if (this._canMoveCamera) {
             this._camera.move(this._pointerXY.x - clientX, this._pointerXY.y - clientY);
             this._pointerXY = new Point(clientX, clientY);
-            const { x, y } = this._camera.position;
-            this.onViewportChange({ ...this.scene, viewportXY: new Point(x, y) });
+            this.onViewportChange(this._camera.scene);
         }
         else if (this.isHovering(clientX, clientY) && this.draggedSprite) {
             const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
@@ -112,15 +100,11 @@ export class SceneViewportComponent implements AfterViewInit {
 
     @HostListener('document:mouseup', ['$event'])
     public onDocumentMouseUp({ clientX, clientY }: MouseEvent): void {
-        if (this._canMoveCamera) {
-            const { x, y } = this._camera.position;
-            this.onViewportChange({ ...this.scene, viewportXY: new Point(x, y) }, false);
-        }
-        else if (this.isHovering(clientX, clientY) && this._lastDraggedSprite) {
+        if (this.isHovering(clientX, clientY) && this._lastDraggedSprite) {
             const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
             const [x, y] = [Math.ceil(clientX - left), Math.ceil(clientY - top)];
-            const layer = this._camera.dropSprite(x, y, this.scene.layers[0], this._lastDraggedSprite);
-            this.onViewportChange({ ...this.scene, layers: [layer, ...this.scene.layers.slice(1)] });
+            this._camera.dropSprite(x, y, 0, this._lastDraggedSprite);
+            this.onViewportChange(this._camera.scene);
         }
 
         this._canMoveCamera = false;
@@ -144,7 +128,7 @@ export class SceneViewportComponent implements AfterViewInit {
 
     private renderViewport(): void {
         this._camera.clearView('highlight-grid-layer');
-        setTimeout(() => this._camera.renderLayer(this.scene.layers[0].name, this.scene.layers[0]));
+        setTimeout(() => this._camera.renderLayer(0));
         this._camera.drawGridLines('grid-line-layer');
     }
 }
