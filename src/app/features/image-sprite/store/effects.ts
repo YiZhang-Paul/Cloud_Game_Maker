@@ -40,11 +40,9 @@ export class SpritesEffects {
         mergeMap(sprite => this.compressFile(sprite)),
         withLatestFrom(this._store.select(selectors.getAllSprites)),
         map(([sprite, sprites]) => this.setUniqueName(sprite, sprites)),
-        mergeMap(sprite => this._cloudStorageHttp.addSprite(sprite).pipe(
-            map(id => ({ ...sprite, id }))
-        )),
+        mergeMap(sprite => this._cloudStorageHttp.addSprite(sprite)),
         switchMap(sprite => {
-            const isAdded = Boolean(sprite.id);
+            const isAdded = Boolean(sprite);
             const message = isAdded ? 'Successfully added the sprite.' : 'Failed to add the sprite.';
             this._snackBar.open(message, isAdded ? 'Ok' : 'Got it');
 
@@ -68,10 +66,10 @@ export class SpritesEffects {
         filter(result => result.index !== -1),
         map(({ sprite, sprites, index }) => ({ sprite: this.ensureUniqueName(sprite, sprites, index), index })),
         mergeMap(result => this._cloudStorageHttp.updateSprite(result.sprite).pipe(
-            map(id => ({ ...result, sprite: { ...result.sprite, id } }))
+            map(sprite => ({ ...result, sprite }))
         )),
         switchMap(({ sprite, index }) => {
-            const isUpdated = Boolean(sprite.id);
+            const isUpdated = Boolean(sprite);
             const message = isUpdated ? 'Successfully updated the sprite.' : 'Failed to update the sprite.';
             this._snackBar.open(message, isUpdated ? 'Ok' : 'Got it');
 

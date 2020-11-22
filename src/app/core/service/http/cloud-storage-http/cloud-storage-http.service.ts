@@ -63,22 +63,22 @@ export class CloudStorageHttpService {
         );
     }
 
-    public addSprite(sprite: SpriteFile): Observable<string> {
+    public addSprite(sprite: SpriteFile): Observable<SpriteFile> {
         const endpoint = `${this._api}/sprites`;
         const data = new FormData();
         data.append('file', sprite.content);
         data.append('spriteJson', JSON.stringify(sprite));
 
-        return this._http.post(endpoint, data, { responseType: 'text' }).pipe(catchError(() => of(null)));
+        return this._http.post<SpriteFile>(endpoint, data).pipe(catchError(() => of(null)));
     }
 
-    public updateSprite(sprite: SpriteFile): Observable<string> {
+    public updateSprite(sprite: SpriteFile): Observable<SpriteFile> {
         const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.originated ?? sprite.id)}`;
         const data = new FormData();
         data.append('file', sprite.content);
         data.append('spriteJson', JSON.stringify(sprite));
 
-        return this._http.put(endpoint, data, { responseType: 'text' }).pipe(catchError(() => of(null)));
+        return this._http.put<SpriteFile>(endpoint, data).pipe(catchError(() => of(null)));
     }
 
     public deleteSprite(sprite: SpriteFile): Observable<boolean> {
