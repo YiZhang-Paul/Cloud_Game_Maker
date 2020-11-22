@@ -1,3 +1,5 @@
+import { v4 as uuid } from 'uuid';
+
 import { Point } from '../../core/data-model/generic/point';
 import { Dimension2D } from '../../core/data-model/generic/dimension-2d';
 import { Scene } from '../../core/data-model/scene/scene';
@@ -9,6 +11,7 @@ export class Camera2D {
     protected _scene: Scene;
     protected _visibleRows = 0;
     protected _visibleColumns = 0;
+    protected _renderId: string;
 
     constructor(width: number, height: number, scene: Scene) {
         this._dimension = new Dimension2D(width, height);
@@ -63,6 +66,8 @@ export class Camera2D {
     }
 
     public renderLayer(index: number): void {
+        this._renderId = uuid();
+        const renderId = this._renderId;
         const layer = this._scene.layers[index];
         const canvas = this.getCanvas(layer.name);
         const context = canvas.getContext('2d');
@@ -75,8 +80,8 @@ export class Camera2D {
             for (let j = 0; j < this._visibleRows; ++j) {
                 const key = `${i + startColumn},${j + startRow}`;
 
-                if (layer.grids.hasOwnProperty(key) && layer.grids[key]) {
-                    this.drawGrid(layer.grids[key], i, j, context);
+                if (renderId === this._renderId && layer.grids.hasOwnProperty(key) && layer.grids[key]) {
+                    this.drawGrid(layer.grids[key], i, j, context, renderId);
                 }
             }
         }
@@ -95,7 +100,7 @@ export class Camera2D {
         return grids.hasOwnProperty(key) && Boolean(grids[key]);
     }
 
-    protected drawGrid(grid: SceneGrid, column: number, row: number, context: CanvasRenderingContext2D): void {
+    protected drawGrid(grid: SceneGrid, column: number, row: number, context: CanvasRenderingContext2D, renderId: string): void {
         const { content, thumbnailUrl } = grid;
 
         if (!content && !thumbnailUrl) {
@@ -106,6 +111,10 @@ export class Camera2D {
         image.src = content ? URL.createObjectURL(content) : thumbnailUrl;
 
         image.onload = () => {
+            if (renderId !== this._renderId) {
+                return;
+            }
+
             const { scale } = this._scene;
             const [x, y] = [column * scale, row * scale];
             context.drawImage(image, x, y, scale, scale);

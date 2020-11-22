@@ -5,7 +5,7 @@ import { FileSystemFileEntry } from 'ngx-file-drop';
 
 export class SpriteFile {
     public originated: string;
-    public id: string = uuid();
+    public id = uuid();
     public name: string;
     public content: Blob;
     public mime: string;
