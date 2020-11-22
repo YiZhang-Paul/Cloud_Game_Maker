@@ -104,26 +104,14 @@ export class Camera2D {
     }
 
     protected drawGrid(sprite: SpriteFile, column: number, row: number, context: CanvasRenderingContext2D, renderId: string): void {
-        const { content, thumbnailUrl } = sprite;
-
-        if (!content && !thumbnailUrl) {
-            return;
-        }
-
         const image = new Image();
-        image.src = content ? URL.createObjectURL(content) : thumbnailUrl;
+        image.src = sprite.thumbnailUrl;
 
         image.onload = () => {
-            if (renderId !== this._renderId) {
-                return;
-            }
-
-            const { scale } = this._scene;
-            const [x, y] = [column * scale, row * scale];
-            context.drawImage(image, x, y, scale, scale);
-
-            if (content) {
-                URL.revokeObjectURL(image.src);
+            if (renderId === this._renderId) {
+                const { scale } = this._scene;
+                const [x, y] = [column * scale, row * scale];
+                context.drawImage(image, x, y, scale, scale);
             }
         };
     }

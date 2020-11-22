@@ -11,8 +11,7 @@
         <button (mousedown)="ignoreDrag($event)" (click)="delete.emit()">Delete</button>
     </div>
 
-    <app-image-blob-display *ngIf="file.content" [blob]="file.content"></app-image-blob-display>
-    <img *ngIf="!file.content" [src]="file.thumbnailUrl" draggable="false" />
+    <img [src]="file.thumbnailUrl" draggable="false" />
 
     <span *ngIf="!isDragMode && !isEditingName"
         (mousedown)="ignoreDrag($event)"
