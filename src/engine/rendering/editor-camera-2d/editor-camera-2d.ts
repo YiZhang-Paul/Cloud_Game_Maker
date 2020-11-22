@@ -1,27 +1,27 @@
 import { Camera2D } from '../camera-2d/camera-2d';
 import { SceneGrid } from '../../core/data-model/scene/scene-grid';
+import { SceneLayer } from '../../core/data-model/scene/scene-layer';
 import { SpriteFile } from '../../core/data-model/sprite/sprite-file';
 
 export class EditorCamera2D extends Camera2D {
 
     public dropSprite(x: number, y: number, index: number, sprite: SpriteFile | null): void {
-        let grids: { [key: string]: SceneGrid } = {};
+        let layer: SceneLayer;
+        const { layers } = this._scene;
         const key = this.getTargetGrid(x, y).join();
 
         if (sprite) {
-            const { id, thumbnailUrl, content } = sprite;
-            const grid = { ...new SceneGrid(), spriteId: id, thumbnailUrl, content };
-            grids = { ...this._scene.layers[index].grids, [key]: grid };
+            const grids = { ...layers[index].grids, [key]: new SceneGrid(sprite.id) };
+            const sprites = { ...layers[index].sprites, [sprite.id]: sprite };
+            layer = { ...layers[index], grids, sprites };
         }
         else {
-            const { [key]: deleted, ...otherGrids } = this._scene.layers[index].grids;
-            grids = otherGrids;
+            const { [key]: deleted, ...grids } = layers[index].grids;
+            layer = { ...layers[index], grids };
         }
 
-        const { layers } = this._scene;
-        const layer = { ...layers[index], grids };
-        const newLayers = [...layers.slice(0, index), layer, ...layers.slice(index + 1)];
-        this._scene = { ...this._scene, layers: newLayers };
+        const updated = [...layers.slice(0, index), layer, ...layers.slice(index + 1)];
+        this._scene = { ...this._scene, layers: updated };
     }
 
     public highlightGrid(x: number, y: number, id: string): void {

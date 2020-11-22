@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { Point } from '../../core/data-model/generic/point';
 import { Dimension2D } from '../../core/data-model/generic/dimension-2d';
 import { Scene } from '../../core/data-model/scene/scene';
-import { SceneGrid } from '../../core/data-model/scene/scene-grid';
+import { SpriteFile } from '../../core/data-model/sprite/sprite-file';
 import { GenericUtility } from '../../core/utility/generic-utility/generic.utility';
 
 export class Camera2D {
@@ -79,9 +79,12 @@ export class Camera2D {
         for (let i = 0; i < this._visibleColumns; ++i) {
             for (let j = 0; j < this._visibleRows; ++j) {
                 const key = `${i + startColumn},${j + startRow}`;
+                const hasGrid = layer.grids.hasOwnProperty(key) && layer.grids[key];
 
-                if (renderId === this._renderId && layer.grids.hasOwnProperty(key) && layer.grids[key]) {
-                    this.drawGrid(layer.grids[key], i, j, context, renderId);
+                if (hasGrid && renderId === this._renderId) {
+                    const { spriteId } = layer.grids[key];
+                    const sprite = layer.sprites[spriteId];
+                    this.drawGrid(sprite, i, j, context, renderId);
                 }
             }
         }
@@ -100,8 +103,8 @@ export class Camera2D {
         return grids.hasOwnProperty(key) && Boolean(grids[key]);
     }
 
-    protected drawGrid(grid: SceneGrid, column: number, row: number, context: CanvasRenderingContext2D, renderId: string): void {
-        const { content, thumbnailUrl } = grid;
+    protected drawGrid(sprite: SpriteFile, column: number, row: number, context: CanvasRenderingContext2D, renderId: string): void {
+        const { content, thumbnailUrl } = sprite;
 
         if (!content && !thumbnailUrl) {
             return;
