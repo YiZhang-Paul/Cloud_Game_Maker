@@ -48,8 +48,8 @@ export class SpriteManagerComponent implements OnInit {
     private setDraggedSpriteStyle(point: Point): void {
         if (point) {
             this.draggedSpriteStyle = {
-                top: `calc(${point.y}px - 7.5vh * 0.6)`,
-                left: `calc(${point.x}px - 7.5vh * 0.6)`
+                top: `calc(${point.y}px - 7vh * 0.6)`,
+                left: `calc(${point.x}px - 7vh * 0.6)`
             };
         }
         else {

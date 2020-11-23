@@ -1,5 +1,5 @@
 .container {
-    $item-dimension: 15vh;
+    $item-dimension: 14vh;
     width: 100%;
     height: 100%;
 
@@ -19,7 +19,7 @@
     }
 
     .sprite-files {
-        padding: calc(#{$item-dimension} / 10) calc(#{$item-dimension} / 4);
+        padding: calc(#{$item-dimension} / 10) calc(#{$item-dimension} / 5);
         overflow-y: auto;
     }
 
