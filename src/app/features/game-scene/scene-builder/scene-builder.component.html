@@ -4,7 +4,7 @@
     </div>
 
     <ng-container *ngIf="activeScene$ | async">
-        <div fxLayoutAlign="start center" fxFlex="5vh">
+        <div fxLayoutAlign="start center" fxFlex="3.5vh">
             <app-file-tab *ngFor="let scene of openedScenes$ | async"
                 [name]="scene.name"
                 [isActive]="(activeScene$ | async).id === scene.id"
@@ -13,10 +13,16 @@
             </app-file-tab>
         </div>
 
-        <app-scene-viewport [scene]="activeScene$ | async"
-            [draggedSprite]="draggedSprite$ | async"
-            (sceneChange)="onSceneChange($event)"
-            fxFlex>
-        </app-scene-viewport>
+        <div fxFlex>
+            <app-scene-viewport [scene]="activeScene$ | async"
+                [draggedSprite]="draggedSprite$ | async"
+                (sceneChange)="onSceneChange($event)"
+                fxFlex>
+            </app-scene-viewport>
+
+            <div fxLayout="column" fxLayoutAlign="start center" fxFlex="50px">
+                <div><i class="fas fa-layer-group"></i></div>
+            </div>
+        </div>
     </ng-container>
 </div>
