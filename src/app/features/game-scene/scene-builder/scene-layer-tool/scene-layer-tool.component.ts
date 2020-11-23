@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { SceneLayer } from '../../../../../engine/core/data-model/scene/scene-layer';
 
@@ -10,4 +10,12 @@ import { SceneLayer } from '../../../../../engine/core/data-model/scene/scene-la
 })
 export class SceneLayerToolComponent {
     @Input() public layers: SceneLayer[] = [];
+    @Output() public layersChange = new EventEmitter<SceneLayer[]>();
+
+    public onVisibilityChange(value: boolean, layer: SceneLayer): void {
+        const updated = { ...layer, isVisible: value };
+        const index = this.layers.findIndex(_ => _.name === layer.name);
+        this.layers = [...this.layers.slice(0, index), updated, ...this.layers.slice(index + 1)];
+        this.layersChange.emit(this.layers);
+    }
 }
