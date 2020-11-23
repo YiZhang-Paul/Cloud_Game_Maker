@@ -1,11 +1,11 @@
 export class IconButtonOption {
     public icon = '';
-    public tooltip = '';
+    public name = '';
     public isActive = false;
 
-    constructor(icon = '', tooltip = '', isActive = false) {
+    constructor(icon = '', name = '', isActive = false) {
         this.icon = icon;
-        this.tooltip = tooltip;
+        this.name = name;
         this.isActive = isActive;
     }
 }

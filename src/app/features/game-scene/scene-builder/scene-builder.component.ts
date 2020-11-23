@@ -7,6 +7,7 @@ import { store } from '../store';
 import { store as globalStore } from '../../../store';
 import { Scene } from '../../../../engine/core/data-model/scene/scene';
 import { SpriteFile } from '../../../../engine/core/data-model/sprite/sprite-file';
+import { IconButtonOption } from '../../../core/data-model/options/icon-button-option';
 
 @Component({
     selector: 'app-scene-builder',
@@ -15,6 +16,7 @@ import { SpriteFile } from '../../../../engine/core/data-model/sprite/sprite-fil
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SceneBuilderComponent implements OnInit {
+    public toolOptions = [new IconButtonOption('fas fa-layer-group', 'layers', true)];
     public activeScene$: Observable<Scene>;
     public openedScenes$: Observable<Scene[]>;
     public draggedSprite$: Observable<SpriteFile>;
@@ -43,5 +45,10 @@ export class SceneBuilderComponent implements OnInit {
     public onSceneChange(scene: Scene): void {
         this._store.dispatch(store.actions.updateScene(scene));
         this._sceneChanges$.next(scene);
+    }
+
+    public onToolToggle(tool: IconButtonOption): void {
+        const index = this.toolOptions.findIndex(_ => _.icon === tool.icon);
+        this.toolOptions = [...this.toolOptions.slice(0, index), tool, ...this.toolOptions.slice(index + 1)];
     }
 }
