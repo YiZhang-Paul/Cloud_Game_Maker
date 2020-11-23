@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import { store } from '../store';
 import { store as globalStore } from '../../../store';
 import { Scene } from '../../../../engine/core/data-model/scene/scene';
+import { SceneLayer } from '../../../../engine/core/data-model/scene/scene-layer';
 import { SpriteFile } from '../../../../engine/core/data-model/sprite/sprite-file';
 import { IconButtonOption } from '../../../core/data-model/options/icon-button-option';
 
@@ -50,5 +51,9 @@ export class SceneBuilderComponent implements OnInit {
     public onToolToggle(tool: IconButtonOption): void {
         const index = this.toolOptions.findIndex(_ => _.icon === tool.icon);
         this.toolOptions = [...this.toolOptions.slice(0, index), tool, ...this.toolOptions.slice(index + 1)];
+    }
+
+    public onLayersChange(scene: Scene, layers: SceneLayer[]): void {
+        this.onSceneChange({ ...scene, layers });
     }
 }
