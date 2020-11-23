@@ -1,4 +1,5 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, OnChanges, SimpleChanges } from '@angular/core';
 
 import { Point } from '../../../../../engine/core/data-model/generic/point';
 import { Scene } from '../../../../../engine/core/data-model/scene/scene';
@@ -11,7 +12,7 @@ import { EditorCamera2D } from '../../../../../engine/rendering/editor-camera-2d
     styleUrls: ['./scene-viewport.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SceneViewportComponent implements AfterViewInit {
+export class SceneViewportComponent implements AfterViewInit, OnChanges {
     @Input() public scene: Scene;
     @Input() public draggedSprite: SpriteFile;
     @Output() public sceneChange = new EventEmitter<Scene>();
@@ -46,6 +47,12 @@ export class SceneViewportComponent implements AfterViewInit {
             this._camera = new EditorCamera2D(clientWidth, clientHeight, this.scene);
             this.renderViewport();
         });
+    }
+
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.hasOwnProperty('scene') && this._camera) {
+            this.ngAfterViewInit();
+        }
     }
 
     @HostListener('document:keydown', ['$event'])
