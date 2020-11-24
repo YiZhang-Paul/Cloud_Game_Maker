@@ -1,6 +1,29 @@
 .container {
+    $splitter-color: grey;
     width: 100%;
     height: 100%;
     background-color: white;
     border-radius: 4px;
+
+    & > div {
+        padding: 3px 15px;
+    }
+
+    & > div:first-of-type {
+        position: relative;
+
+        button {
+            position: absolute;
+            right: 3px;
+        }
+    }
+
+    & > div:not(:first-of-type) {
+        border-bottom: 1px solid $splitter-color;
+    }
+
+    & > div:nth-of-type(2) {
+        margin-top: 5px;
+        border-top: 1px solid $splitter-color;
+    }
 }

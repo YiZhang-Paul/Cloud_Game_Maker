@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { SceneLayer } from '../../../../../engine/core/data-model/scene/scene-layer';
+import { FileUtility } from '../../../../core/utility/file-utility/file.utility';
 import { GenericUtility } from '../../../../core/utility/generic-utility/generic.utility';
 
 @Component({
@@ -12,6 +13,16 @@ import { GenericUtility } from '../../../../core/utility/generic-utility/generic
 export class SceneLayerToolComponent {
     @Input() public layers: SceneLayer[] = [];
     @Output() public layersChange = new EventEmitter<SceneLayer[]>();
+
+    public onLayerAdd(): void {
+        const layer = new SceneLayer();
+        const names = this.layers.map(_ => _.name);
+        layer.name = FileUtility.handleDuplicateName(names, layer.name, '_', '');
+        layer.rows = this.layers[0].rows;
+        layer.columns = this.layers[0].columns;
+        this.layers = [...this.layers, layer];
+        this.layersChange.emit(this.layers);
+    }
 
     public onVisibilityChange(value: boolean, layer: SceneLayer): void {
         const updated = { ...layer, isVisible: value };

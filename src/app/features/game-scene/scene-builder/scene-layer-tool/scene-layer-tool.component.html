@@ -1,12 +1,20 @@
 <div class="container" fxLayout="column" fxLayoutAlign="start center">
-    <span>Layers</span>
+    <div fxLayoutAlign="center center" fxFlexAlign="stretch">
+        <span>Layers</span>
+        <button (click)="onLayerAdd()">+</button>
+    </div>
 
-    <div *ngFor="let layer of layers; let i = index" fxLayoutAlign="start center" fxLayoutGap="5px">
-        <span>{{ i }}</span>
-        <span>{{ layer.name }}</span>
+    <div *ngFor="let layer of layers; let i = index"
+        fxLayoutAlign="start center"
+        fxLayoutGap="10px"
+        fxFlexAlign="stretch">
+
+        <span fxFlex="5">{{ i }}</span>
+        <span fxFlex>{{ layer.name }}</span>
 
         <input type="checkbox"
             [ngModel]="layer.isVisible"
-            (ngModelChange)="onVisibilityChange($event, layer)" />
+            (ngModelChange)="onVisibilityChange($event, layer)"
+            fxFlex="5" />
     </div>
 </div>
