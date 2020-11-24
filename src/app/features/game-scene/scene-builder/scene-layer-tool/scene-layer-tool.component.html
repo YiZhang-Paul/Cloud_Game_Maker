@@ -9,14 +9,20 @@
         fxLayoutGap="10px"
         fxFlexAlign="stretch">
 
+        <input type="radio"
+            name="layer"
+            [value]="layer.name"
+            [checked]="isActiveLayer(layer)"
+            (change)="onLayerSelect(layer)" />
+
         <span fxFlex="5">{{ i }}</span>
         <span fxFlex>{{ layer.name }}</span>
 
-        <div [matTooltip]="isLastVisible(layer) ? 'cannot hide all layers' : null" fxFlex="5">
+        <div [matTooltip]="canToggleVisibility(layer) ? null : 'cannot hide all layers'" fxFlex="5">
             <input type="checkbox"
                 [ngModel]="layer.isVisible"
                 (ngModelChange)="onVisibilityChange($event, layer)"
-                [disabled]="isLastVisible(layer)" />
+                [disabled]="!canToggleVisibility(layer)" />
         </div>
 
         <button *ngIf="layers.length > 1" (click)="onLayerDelete(layer)">X</button>

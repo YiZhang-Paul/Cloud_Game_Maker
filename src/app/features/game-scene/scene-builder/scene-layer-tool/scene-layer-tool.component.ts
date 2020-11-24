@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { SceneLayer } from '../../../../../engine/core/data-model/scene/scene-layer';
@@ -14,11 +14,22 @@ import { GenericUtility } from '../../../../core/utility/generic-utility/generic
     styleUrls: ['./scene-layer-tool.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SceneLayerToolComponent {
+export class SceneLayerToolComponent implements OnInit {
     @Input() public layers: SceneLayer[] = [];
     @Output() public layersChange = new EventEmitter<SceneLayer[]>();
+    @Output() public layerSelect = new EventEmitter<SceneLayer>();
+    private _activeLayer: SceneLayer;
 
     constructor(private _dialog: MatDialog) { }
+
+    public ngOnInit(): void {
+        this.onLayerSelect(this.layers[0]);
+    }
+
+    public onLayerSelect(layer: SceneLayer): void {
+        this._activeLayer = layer;
+        this.layerSelect.emit(layer);
+    }
 
     public onLayerAdd(): void {
         const layer = new SceneLayer();
@@ -27,6 +38,7 @@ export class SceneLayerToolComponent {
         layer.rows = this.layers[0].rows;
         layer.columns = this.layers[0].columns;
         this.onLayersChange([...this.layers, layer]);
+        this.onLayerSelect(layer);
     }
 
     public onLayerDelete(layer: SceneLayer): void {
@@ -42,8 +54,14 @@ export class SceneLayerToolComponent {
         });
 
         dialog.afterClosed().subscribe(result => {
-            if (result === actions[0].value) {
-                this.onLayersChange(this.layers.filter(_ => _.name !== layer.name));
+            if (result !== actions[0].value) {
+                return;
+            }
+
+            this.onLayersChange(this.layers.filter(_ => _.name !== layer.name));
+
+            if (this.isActiveLayer(layer)) {
+                this.onLayerSelect(this.layers[0]);
             }
         });
     }
@@ -54,8 +72,12 @@ export class SceneLayerToolComponent {
         this.onLayersChange(GenericUtility.replaceAt(this.layers, updated, index));
     }
 
-    public isLastVisible(layer: SceneLayer): boolean {
-        return layer.isVisible && this.layers.filter(_ => _.isVisible).length === 1;
+    public canToggleVisibility(layer: SceneLayer): boolean {
+        return !layer.isVisible || this.layers.filter(_ => _.isVisible).length > 1;
+    }
+
+    public isActiveLayer(layer: SceneLayer): boolean {
+        return this._activeLayer.name === layer.name;
     }
 
     private onLayersChange(layers: SceneLayer[]): void {
