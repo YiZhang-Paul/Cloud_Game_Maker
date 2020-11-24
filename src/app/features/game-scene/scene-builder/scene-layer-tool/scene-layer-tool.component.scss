@@ -7,6 +7,10 @@
 
     & > div {
         padding: 3px 15px;
+
+        button {
+            cursor: pointer;
+        }
     }
 
     & > div:first-of-type {
