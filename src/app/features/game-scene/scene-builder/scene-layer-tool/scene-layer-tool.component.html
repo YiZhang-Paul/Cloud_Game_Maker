@@ -12,9 +12,12 @@
         <span fxFlex="5">{{ i }}</span>
         <span fxFlex>{{ layer.name }}</span>
 
-        <input type="checkbox"
-            [ngModel]="layer.isVisible"
-            (ngModelChange)="onVisibilityChange($event, layer)"
-            fxFlex="5" />
+        <div [matTooltip]="isLastVisible(layer) ? 'cannot hide all layers' : null">
+            <input type="checkbox"
+                [ngModel]="layer.isVisible"
+                (ngModelChange)="onVisibilityChange($event, layer)"
+                [disabled]="isLastVisible(layer)"
+                fxFlex="5" />
+        </div>
     </div>
 </div>

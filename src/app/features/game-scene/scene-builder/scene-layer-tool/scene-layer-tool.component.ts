@@ -30,4 +30,8 @@ export class SceneLayerToolComponent {
         this.layers = GenericUtility.replaceAt(this.layers, updated, index);
         this.layersChange.emit(this.layers);
     }
+
+    public isLastVisible(layer: SceneLayer): boolean {
+        return layer.isVisible && this.layers.filter(_ => _.isVisible).length === 1;
+    }
 }
