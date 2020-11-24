@@ -26,8 +26,7 @@ export class SceneLayerToolComponent {
         layer.name = FileUtility.handleDuplicateName(names, layer.name, '_', '');
         layer.rows = this.layers[0].rows;
         layer.columns = this.layers[0].columns;
-        this.layers = [...this.layers, layer];
-        this.layersChange.emit(this.layers);
+        this.onLayersChange([...this.layers, layer]);
     }
 
     public onLayerDelete(layer: SceneLayer): void {
@@ -44,8 +43,7 @@ export class SceneLayerToolComponent {
 
         dialog.afterClosed().subscribe(result => {
             if (result === actions[0].value) {
-                this.layers = this.layers.filter(_ => _.name !== layer.name);
-                this.layersChange.emit(this.layers);
+                this.onLayersChange(this.layers.filter(_ => _.name !== layer.name));
             }
         });
     }
@@ -53,11 +51,15 @@ export class SceneLayerToolComponent {
     public onVisibilityChange(value: boolean, layer: SceneLayer): void {
         const updated = { ...layer, isVisible: value };
         const index = this.layers.findIndex(_ => _.name === layer.name);
-        this.layers = GenericUtility.replaceAt(this.layers, updated, index);
-        this.layersChange.emit(this.layers);
+        this.onLayersChange(GenericUtility.replaceAt(this.layers, updated, index));
     }
 
     public isLastVisible(layer: SceneLayer): boolean {
         return layer.isVisible && this.layers.filter(_ => _.isVisible).length === 1;
+    }
+
+    private onLayersChange(layers: SceneLayer[]): void {
+        this.layers = layers;
+        this.layersChange.emit(this.layers);
     }
 }
