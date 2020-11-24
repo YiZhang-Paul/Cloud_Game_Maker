@@ -19,6 +19,6 @@
                 [disabled]="isLastVisible(layer)" />
         </div>
 
-        <button (click)="onLayerDelete(layer)">X</button>
+        <button *ngIf="layers.length > 1" (click)="onLayerDelete(layer)">X</button>
     </div>
 </div>
