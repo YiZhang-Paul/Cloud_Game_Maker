@@ -3,6 +3,7 @@ import { Action, createReducer, on } from '@ngrx/store';
 import { IScenesState, initialScenesState } from '../state';
 import { actions } from '../actions';
 import { Scene } from '../../../../../engine/core/data-model/scene/scene';
+import { GenericUtility } from '../../../../core/utility/generic-utility/generic.utility';
 
 function addScene(state: IScenesState, scene: Scene): IScenesState {
     return { ...state, scenes: [...state.scenes, scene] };
@@ -15,9 +16,7 @@ function updateScene(state: IScenesState, scene: Scene): IScenesState {
         return state;
     }
 
-    const scenes = [...state.scenes.slice(0, index), scene, ...state.scenes.slice(index + 1)];
-
-    return { ...state, scenes };
+    return { ...state, scenes: GenericUtility.replaceAt(state.scenes, scene, index) };
 }
 
 function deleteScene(state: IScenesState, scene: Scene): IScenesState {

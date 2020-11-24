@@ -9,6 +9,7 @@ import { Scene } from '../../../../engine/core/data-model/scene/scene';
 import { SceneLayer } from '../../../../engine/core/data-model/scene/scene-layer';
 import { SpriteFile } from '../../../../engine/core/data-model/sprite/sprite-file';
 import { IconButtonOption } from '../../../core/data-model/options/icon-button-option';
+import { GenericUtility } from '../../../core/utility/generic-utility/generic.utility';
 
 @Component({
     selector: 'app-scene-builder',
@@ -50,7 +51,7 @@ export class SceneBuilderComponent implements OnInit {
 
     public onToolToggle(tool: IconButtonOption): void {
         const index = this.toolOptions.findIndex(_ => _.icon === tool.icon);
-        this.toolOptions = [...this.toolOptions.slice(0, index), tool, ...this.toolOptions.slice(index + 1)];
+        this.toolOptions = GenericUtility.replaceAt(this.toolOptions, tool, index);
     }
 
     public onLayersChange(scene: Scene, layers: SceneLayer[]): void {

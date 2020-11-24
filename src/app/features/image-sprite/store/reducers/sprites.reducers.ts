@@ -3,6 +3,7 @@ import { Action, createReducer, on } from '@ngrx/store';
 import { ISpritesState, initialSpritesState } from '../state';
 import { actions } from '../actions';
 import { SpriteFile } from '../../../../../engine/core/data-model/sprite/sprite-file';
+import { GenericUtility } from '../../../../core/utility/generic-utility/generic.utility';
 
 function addSprite(state: ISpritesState, sprite: SpriteFile): ISpritesState {
     return { ...state, sprites: [sprite, ...state.sprites] };
@@ -16,9 +17,8 @@ function updateSprite(state: ISpritesState, sprite: SpriteFile): ISpritesState {
 
 function updateSpriteByIndex(state: ISpritesState, props: { payload: SpriteFile, index: number }): ISpritesState {
     const { payload, index } = props;
-    const sprites = [...state.sprites.slice(0, index), payload, ...state.sprites.slice(index + 1)];
 
-    return { ...state, sprites };
+    return { ...state, sprites: GenericUtility.replaceAt(state.sprites, payload, index) };
 }
 
 function deleteSprite(state: ISpritesState, sprite: SpriteFile): ISpritesState {
