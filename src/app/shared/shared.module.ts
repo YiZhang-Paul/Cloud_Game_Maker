@@ -14,6 +14,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { FilePickerComponent } from './components/buttons/file-picker/file-picker.component';
 import { FileTabComponent } from './components/buttons/file-tab/file-tab.component';
 import { EditableTextBoxComponent } from './components/inputs/editable-text-box/editable-text-box.component';
+import { EditableTextBoxEmbeddedComponent } from './components/inputs/editable-text-box-embedded/editable-text-box-embedded.component';
 import { ConfirmPopupComponent } from './components/popups/confirm-popup/confirm-popup.component';
 import { ImageBlobDisplayComponent } from './components/inputs/image-blob-display/image-blob-display.component';
 import { MiniToolbarComponent } from './components/toolbars/mini-toolbar/mini-toolbar.component';
@@ -23,6 +24,7 @@ import { MiniToolbarComponent } from './components/toolbars/mini-toolbar/mini-to
         FilePickerComponent,
         FileTabComponent,
         EditableTextBoxComponent,
+        EditableTextBoxEmbeddedComponent,
         ConfirmPopupComponent,
         ImageBlobDisplayComponent,
         MiniToolbarComponent
@@ -68,6 +70,7 @@ import { MiniToolbarComponent } from './components/toolbars/mini-toolbar/mini-to
         FilePickerComponent,
         FileTabComponent,
         EditableTextBoxComponent,
+        EditableTextBoxEmbeddedComponent,
         ImageBlobDisplayComponent,
         MiniToolbarComponent
     ]
