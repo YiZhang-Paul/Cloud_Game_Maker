@@ -36,29 +36,11 @@
         max-height: $panel-height;
     }
 
-    & > input,
-    & > span {
+    app-editable-text-box-embedded {
+        margin-bottom: $inner-gap;
+        max-width: 95%;
+        width: 95%;
         height: 10%;
-    }
-
-    & > input {
-        max-width: 85%;
-        width: 85%;
-    }
-
-    & > span {
-        padding-bottom: $inner-gap;
-        max-width: 90%;
-        width: 90%;
-        text-align: center;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    & > span:hover {
-        color: white;
-        background-color: rgb(27, 111, 236);
     }
 }
 

@@ -4,7 +4,7 @@
     (mouseup)="onHoldCancel()"
     (mouseleave)="onHoldCancel()"
     fxLayout="column"
-    fxLayoutAlign="space-between">
+    fxLayoutAlign="space-between center">
 
     <div *ngIf="!isDragMode" fxLayoutAlign="center center" fxLayoutGap="5px">
         <button (mousedown)="ignoreDrag($event)" (click)="editStart.emit()">Edit</button>
@@ -13,20 +13,9 @@
 
     <img [src]="file.thumbnailUrl" draggable="false" />
 
-    <span *ngIf="!isDragMode && !isEditingName"
-        (mousedown)="ignoreDrag($event)"
-        (click)="toggleNameEdit()"
-        fxFlexAlign="center">
-
-        {{ file.name }}
-    </span>
-
-    <input *ngIf="isEditingName"
-        #nameInput
-        type="text"
-        [ngModel]="file.name"
-        (blur)="toggleNameEdit('blur')"
-        (keyup.enter)="toggleNameEdit('keyup')"
-        fxFlexAlign="center"
-        maxLength="40" />
+    <app-editable-text-box-embedded *ngIf="!isDragMode"
+        [content]="file.name"
+        (contentChange)="nameChange.emit($event)"
+        (mousedown)="ignoreDrag($event)">
+    </app-editable-text-box-embedded>
 </div>
