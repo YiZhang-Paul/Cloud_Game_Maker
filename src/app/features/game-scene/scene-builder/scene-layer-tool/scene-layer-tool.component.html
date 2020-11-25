@@ -16,7 +16,11 @@
             (change)="onLayerSelect(layer)" />
 
         <span fxFlex="5">{{ i }}</span>
-        <span fxFlex>{{ layer.name }}</span>
+
+        <app-editable-text-box-embedded [content]="layer.name"
+            (contentChange)="onNameChange($event, layer)"
+            fxFlex>
+        </app-editable-text-box-embedded>
 
         <div [matTooltip]="canToggleVisibility(layer) ? null : 'cannot hide all layers'" fxFlex="5">
             <input type="checkbox"

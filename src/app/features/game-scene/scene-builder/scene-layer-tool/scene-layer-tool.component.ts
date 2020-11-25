@@ -66,8 +66,14 @@ export class SceneLayerToolComponent implements OnInit {
         });
     }
 
+    public onNameChange(name: string, layer: SceneLayer): void {
+        const updated: SceneLayer = { ...layer, name };
+        const index = this.layers.findIndex(_ => _.name === layer.name);
+        this.onLayersChange(GenericUtility.replaceAt(this.layers, updated, index));
+    }
+
     public onVisibilityChange(value: boolean, layer: SceneLayer): void {
-        const updated = { ...layer, isVisible: value };
+        const updated: SceneLayer = { ...layer, isVisible: value };
         const index = this.layers.findIndex(_ => _.name === layer.name);
         this.onLayersChange(GenericUtility.replaceAt(this.layers, updated, index));
     }
