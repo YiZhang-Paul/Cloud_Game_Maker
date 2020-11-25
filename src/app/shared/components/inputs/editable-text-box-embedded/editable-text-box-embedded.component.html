@@ -1,5 +1,6 @@
 <div class="container" fxLayoutAlign="center center">
     <span *ngIf="!isEditMode"
+        [ngStyle]="{ 'text-align': textAlign }"
         (click)="toggleEdit()"
         fxFlexAlign="center">
 

@@ -8,6 +8,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Ou
 })
 export class EditableTextBoxEmbeddedComponent {
     @Input() public content = '';
+    @Input() public textAlign = 'left';
     @Output() public contentChange = new EventEmitter<string>();
     @ViewChild('contentInput') private _contentInput: ElementRef;
     private _isEditMode = false;

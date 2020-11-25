@@ -15,6 +15,7 @@
 
     <app-editable-text-box-embedded *ngIf="!isDragMode"
         [content]="file.name"
+        [textAlign]="'center'"
         (contentChange)="nameChange.emit($event)"
         (mousedown)="ignoreDrag($event)">
     </app-editable-text-box-embedded>
