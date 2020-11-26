@@ -1,9 +1,17 @@
+.cdk-drag-preview {
+    padding: 3px 10px;
+}
+
 .container {
     $splitter-color: grey;
     width: 100%;
     height: 100%;
     background-color: white;
     border-radius: 4px;
+
+    .cdk-drag-placeholder {
+        opacity: 0;
+    }
 
     .header,
     .layers > div {
