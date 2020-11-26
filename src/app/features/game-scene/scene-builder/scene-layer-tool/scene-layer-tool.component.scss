@@ -1,9 +1,13 @@
+$splitter-color: grey;
+
 .cdk-drag-preview {
     padding: 3px 10px;
+    background-color: white;
+    border-top: 1px solid $splitter-color;
+    border-bottom: 1px solid $splitter-color;
 }
 
 .container {
-    $splitter-color: grey;
     width: 100%;
     height: 100%;
     background-color: white;
@@ -16,10 +20,13 @@
     .header,
     .layers > div {
         padding: 3px 10px;
+        background-color: white;
     }
 
     .header {
         position: relative;
+        padding-bottom: 5px;
+        border-bottom: 1px solid $splitter-color;
 
         button {
             position: absolute;
@@ -29,14 +36,13 @@
 
     .layers {
 
-        & > div:first-of-type {
-            margin-top: 5px;
-            border-top: 1px solid $splitter-color;
-        }
-
         & > div {
             width: 100%;
             border-bottom: 1px solid $splitter-color;
+        }
+
+        & > div > div:first-of-type {
+            cursor: grab;
         }
 
         button {
