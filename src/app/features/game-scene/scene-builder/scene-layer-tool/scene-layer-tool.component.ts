@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
 
 import { SceneLayer } from '../../../../../engine/core/data-model/scene/scene-layer';
@@ -64,6 +65,15 @@ export class SceneLayerToolComponent implements OnInit {
                 this.onLayerSelect(this.layers[0]);
             }
         });
+    }
+
+    public onReorder(event: CdkDragDrop<SceneLayer[]>): void {
+        const { previousIndex, currentIndex } = event;
+        const previous = this.layers[previousIndex];
+        const current = this.layers[currentIndex];
+        this.layers = GenericUtility.replaceAt(this.layers, previous, currentIndex);
+        this.layers = GenericUtility.replaceAt(this.layers, current, previousIndex);
+        this.onLayersChange(this.layers);
     }
 
     public onNameChange(name: string, layer: SceneLayer): void {
