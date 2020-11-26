@@ -69,10 +69,10 @@ export class SceneLayerToolComponent implements OnInit {
 
     public onReorder(event: CdkDragDrop<SceneLayer[]>): void {
         const { previousIndex, currentIndex } = event;
-        const previous = this.layers[previousIndex];
-        const current = this.layers[currentIndex];
-        this.layers = GenericUtility.replaceAt(this.layers, previous, currentIndex);
-        this.layers = GenericUtility.replaceAt(this.layers, current, previousIndex);
+        const layer = this.layers[previousIndex];
+        const index = currentIndex <= previousIndex ? currentIndex : currentIndex - 1;
+        this.layers = this.layers.filter(_ => _.name !== layer.name);
+        this.layers = GenericUtility.insertAt(this.layers, layer, index);
         this.onLayersChange(this.layers);
     }
 
