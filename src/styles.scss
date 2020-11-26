@@ -11,6 +11,7 @@ body .mat-dialog-container {
 }
 
 .cdk-drag {
+    display: flex;
     z-index: 999;
 }
 
