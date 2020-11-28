@@ -1,7 +1,12 @@
 import { createAction, props } from '@ngrx/store';
 
+import { Scene } from '../../../../../engine/core/data-model/scene/scene';
+import { SceneDescriptor } from '../../../../../engine/core/data-model/scene/scene-descriptor';
+
 const source = '[Scene Builder]';
 
-export const setActiveSceneId = createAction(`${source} Set Active Scene Id`, props<{ payload: string | null }>());
-export const addOpenedSceneId = createAction(`${source} Add Opened Scene Id`, props<{ payload: string }>());
-export const deleteOpenedSceneId = createAction(`${source} Delete Opened Scene Id`, props<{ payload: string }>());
+export const setActiveScene = createAction(`${source} Set Active Scene`, props<{ payload: Scene | null }>());
+export const updateActiveScene = createAction(`${source} Update Active Scene`, props<Scene>());
+export const addOpenedScene = createAction(`${source} Add Opened Scene`, props<Scene>());
+export const updateOpenedScene = createAction(`${source} Update Opened Scene`, props<Scene>());
+export const deleteOpenedScene = createAction(`${source} Delete Opened Scene`, props<Scene | SceneDescriptor>());

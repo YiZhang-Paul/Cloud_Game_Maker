@@ -37,15 +37,17 @@ export class SceneBuilderComponent implements OnInit {
     }
 
     public onSceneSelected(scene: Scene): void {
-        this._store.dispatch(store.actions.setActiveSceneId({ payload: scene.id }));
+        this._store.dispatch(store.actions.setActiveScene({ payload: scene }));
     }
 
     public onSceneClose(scene: Scene): void {
-        this._store.dispatch(store.actions.deleteOpenedSceneId({ payload: scene.id }));
+        this._store.dispatch(store.actions.deleteOpenedScene(scene));
     }
 
     public onSceneChange(scene: Scene): void {
-        this._store.dispatch(store.actions.updateScene(scene));
+        this._store.dispatch(store.actions.updateDescriptor(scene));
+        this._store.dispatch(store.actions.updateOpenedScene(scene));
+        this._store.dispatch(store.actions.updateActiveScene(scene));
         this._sceneChanges$.next(scene);
     }
 
