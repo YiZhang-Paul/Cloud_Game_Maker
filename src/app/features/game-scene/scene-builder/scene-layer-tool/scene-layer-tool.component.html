@@ -25,7 +25,7 @@
 
             <app-editable-text-box-embedded [content]="layer.name"
                 (contentChange)="onNameChange($event, layer)"
-                fxFlex>
+                fxFlex="40">
             </app-editable-text-box-embedded>
 
             <div [matTooltip]="canToggleVisibility(layer) ? null : 'cannot hide all layers'" fxFlex="5">
