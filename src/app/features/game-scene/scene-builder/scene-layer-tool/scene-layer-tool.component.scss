@@ -1,0 +1,52 @@
+$splitter-color: grey;
+
+.cdk-drag-preview {
+    padding: 3px 10px;
+    background-color: white;
+    border-top: 1px solid $splitter-color;
+    border-bottom: 1px solid $splitter-color;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    border-radius: 4px;
+
+    .cdk-drag-placeholder {
+        opacity: 0;
+    }
+
+    .header,
+    .layers > div {
+        padding: 3px 10px;
+        background-color: white;
+    }
+
+    .header {
+        position: relative;
+        padding-bottom: 5px;
+        border-bottom: 1px solid $splitter-color;
+
+        button {
+            position: absolute;
+            right: 3px;
+        }
+    }
+
+    .layers {
+
+        & > div {
+            width: 100%;
+            border-bottom: 1px solid $splitter-color;
+        }
+
+        & > div > div:first-of-type {
+            cursor: grab;
+        }
+
+        button {
+            cursor: pointer;
+        }
+    }
+}

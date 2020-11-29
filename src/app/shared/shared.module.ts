@@ -6,6 +6,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule, MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
 import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { ImageCropperModule } from 'ngx-image-cropper';
@@ -13,6 +14,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { FilePickerComponent } from './components/buttons/file-picker/file-picker.component';
 import { FileTabComponent } from './components/buttons/file-tab/file-tab.component';
 import { EditableTextBoxComponent } from './components/inputs/editable-text-box/editable-text-box.component';
+import { EditableTextBoxEmbeddedComponent } from './components/inputs/editable-text-box-embedded/editable-text-box-embedded.component';
 import { ConfirmPopupComponent } from './components/popups/confirm-popup/confirm-popup.component';
 import { ImageBlobDisplayComponent } from './components/inputs/image-blob-display/image-blob-display.component';
 import { MiniToolbarComponent } from './components/toolbars/mini-toolbar/mini-toolbar.component';
@@ -22,6 +24,7 @@ import { MiniToolbarComponent } from './components/toolbars/mini-toolbar/mini-to
         FilePickerComponent,
         FileTabComponent,
         EditableTextBoxComponent,
+        EditableTextBoxEmbeddedComponent,
         ConfirmPopupComponent,
         ImageBlobDisplayComponent,
         MiniToolbarComponent
@@ -33,6 +36,10 @@ import { MiniToolbarComponent } from './components/toolbars/mini-toolbar/mini-to
                 duration: 3500,
                 verticalPosition: 'top'
             }
+        },
+        {
+            provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+            useValue: { position: 'above' }
         }
     ],
     imports: [
@@ -42,6 +49,7 @@ import { MiniToolbarComponent } from './components/toolbars/mini-toolbar/mini-to
         HttpClientModule,
         FormsModule,
         MatDialogModule,
+        MatTooltipModule,
         MatSnackBarModule,
         NgxFileDropModule,
         DragDropModule,
@@ -54,6 +62,7 @@ import { MiniToolbarComponent } from './components/toolbars/mini-toolbar/mini-to
         HttpClientModule,
         FormsModule,
         MatDialogModule,
+        MatTooltipModule,
         MatSnackBarModule,
         NgxFileDropModule,
         DragDropModule,
@@ -61,6 +70,7 @@ import { MiniToolbarComponent } from './components/toolbars/mini-toolbar/mini-to
         FilePickerComponent,
         FileTabComponent,
         EditableTextBoxComponent,
+        EditableTextBoxEmbeddedComponent,
         ImageBlobDisplayComponent,
         MiniToolbarComponent
     ]

@@ -1,0 +1,41 @@
+<div class="container" fxLayout="column" fxLayoutAlign="start center">
+    <div class="header" fxLayoutAlign="center center" fxFlexAlign="stretch">
+        <span>Layers</span>
+        <button (click)="onLayerAdd()">+</button>
+    </div>
+
+    <div class="layers" cdkDropList (cdkDropListDropped)="onReorder($event)" fxLayout="column" fxFlexAlign="stretch">
+        <div *ngFor="let layer of layers; let i = index"
+            fxLayoutAlign="start center"
+            fxLayoutGap="10px"
+            cdkDragBoundary=".layers"
+            cdkDrag>
+
+            <div fxLayoutAlign="center center" fxFlex="5" cdkDragHandle>
+                <i class="fas fa-bars"></i>
+            </div>
+
+            <input type="radio"
+                name="layer"
+                [value]="layer.name"
+                [checked]="isActiveLayer(layer)"
+                (change)="onLayerSelect(layer)" />
+
+            <span fxFlex="5">{{ i }}</span>
+
+            <app-editable-text-box-embedded [content]="layer.name"
+                (contentChange)="onNameChange($event, layer)"
+                fxFlex="40">
+            </app-editable-text-box-embedded>
+
+            <div [matTooltip]="canToggleVisibility(layer) ? null : 'cannot hide all layers'" fxFlex="5">
+                <input type="checkbox"
+                    [ngModel]="layer.isVisible"
+                    (ngModelChange)="onVisibilityChange($event, layer)"
+                    [disabled]="!canToggleVisibility(layer)" />
+            </div>
+
+            <button *ngIf="layers.length > 1" (click)="onLayerDelete(layer)">X</button>
+        </div>
+    </div>
+</div>

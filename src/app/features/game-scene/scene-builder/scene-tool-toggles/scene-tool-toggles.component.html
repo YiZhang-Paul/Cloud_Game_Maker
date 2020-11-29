@@ -1,0 +1,9 @@
+<div class="container" fxLayout="column" fxLayoutAlign="start center">
+    <button *ngFor="let tool of toolOptions"
+        [ngClass]="{ 'active-button': tool.isActive }"
+        [matTooltip]="tool.name"
+        (click)="toggle(tool)">
+
+        <i [class]="tool.icon"></i>
+    </button>
+</div>

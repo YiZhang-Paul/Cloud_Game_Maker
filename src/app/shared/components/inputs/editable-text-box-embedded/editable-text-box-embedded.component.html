@@ -1,0 +1,18 @@
+<div class="container" fxLayoutAlign="center center">
+    <span *ngIf="!isEditMode"
+        [ngStyle]="{ 'text-align': textAlign }"
+        (click)="toggleEdit()"
+        fxFlexAlign="center">
+
+        {{ content }}
+    </span>
+
+    <input *ngIf="isEditMode"
+        #contentInput
+        type="text"
+        [ngModel]="content"
+        (blur)="toggleEdit('blur')"
+        (keyup.enter)="toggleEdit()"
+        fxFlexAlign="center"
+        maxLength="40" />
+</div>

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { ConfirmPopupOption } from '../../../../core/data-model/generic/options/confirm-popup-option';
+import { ConfirmPopupOption } from '../../../../core/data-model/options/confirm-popup-option';
 
 @Component({
     selector: 'app-confirm-popup',

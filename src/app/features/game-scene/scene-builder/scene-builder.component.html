@@ -3,20 +3,34 @@
         <span>no active scene</span>
     </div>
 
-    <ng-container *ngIf="activeScene$ | async">
-        <div fxLayoutAlign="start center" fxFlex="5vh">
-            <app-file-tab *ngFor="let scene of openedScenes$ | async"
-                [name]="scene.name"
-                [isActive]="(activeScene$ | async).id === scene.id"
-                (tabSelect)="onSceneSelected(scene)"
-                (tabClose)="onSceneClose(scene)">
-            </app-file-tab>
-        </div>
+    <div *ngIf="activeScene$ | async" fxLayoutAlign="start center" fxFlex="3.5vh">
+        <app-file-tab *ngFor="let scene of openedScenes$ | async"
+            [name]="scene.name"
+            [isActive]="(activeScene$ | async).storageKey === scene.storageKey"
+            (tabSelect)="onSceneSelected(scene)"
+            (tabClose)="onSceneClose(scene)">
+        </app-file-tab>
+    </div>
 
+    <div *ngIf="activeScene$ | async as activeScene" class="main-content" fxFlex>
         <app-scene-viewport [scene]="activeScene$ | async"
             [draggedSprite]="draggedSprite$ | async"
             (sceneChange)="onSceneChange($event)"
             fxFlex>
         </app-scene-viewport>
-    </ng-container>
+
+        <app-scene-tool-toggles [toolOptions]="toolOptions"
+            (toolToggle)="onToolToggle($event)"
+            fxFlex="35px">
+        </app-scene-tool-toggles>
+
+        <ng-container *ngFor="let tool of toolOptions">
+            <ng-container *ngIf="tool.isActive" [ngSwitch]="tool.name">
+                <app-scene-layer-tool *ngSwitchCase="'layers'"
+                    [layers]="(activeScene$ | async).layers"
+                    (layersChange)="onLayersChange(activeScene, $event)">
+                </app-scene-layer-tool>
+            </ng-container>
+        </ng-container>
+    </div>
 </div>

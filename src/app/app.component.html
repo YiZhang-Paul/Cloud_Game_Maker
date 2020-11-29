@@ -2,17 +2,17 @@
     <app-top-toolbar></app-top-toolbar>
 
     <div class="content" fxLayout="row" fxFlex>
-        <app-tool-set-panel #toolSet [tools]="tools" [ngSwitch]="toolSet.activeTool" fxFlex="20">
+        <app-tool-set-panel #toolSet [tools]="tools" [ngSwitch]="toolSet.activeTool" fxFlex="17.5">
             <app-scene-manager *ngSwitchCase="tools[0]"></app-scene-manager>
             <app-sprite-manager *ngSwitchCase="tools[1]"></app-sprite-manager>
             <app-scene-manager *ngSwitchDefault></app-scene-manager>
         </app-tool-set-panel>
 
-        <div fxLayout="column" fxFlex="60">
+        <div fxLayout="column" fxFlex="65">
             <app-scene-builder fxFlex="75"></app-scene-builder>
             <div fxFlex="25"></div>
         </div>
 
-        <div fxFlex="20"></div>
+        <div fxFlex="17.5"></div>
     </div>
 </div>

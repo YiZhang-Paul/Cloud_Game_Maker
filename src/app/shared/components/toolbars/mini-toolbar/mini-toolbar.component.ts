@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgxFileDropEntry } from 'ngx-file-drop';
 
-import { ToolbarActionOption } from '../../../../core/data-model/generic/options/toolbar-action-option';
+import { ToolbarActionOption } from '../../../../core/data-model/options/toolbar-action-option';
 import { MiniToolbarOption } from '../../../../core/enum/mini-toolbar-option.enum';
 
 @Component({

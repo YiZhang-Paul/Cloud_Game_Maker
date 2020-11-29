@@ -1,30 +1,31 @@
-import { Scene } from '../../../core/data-model/scene/scene';
+import { Scene } from '../../../../engine/core/data-model/scene/scene';
+import { SceneDescriptor } from '../../../core/data-model/descriptors/scene-descriptor';
 
 export const key = 'gameScene';
 
-export interface IScenesState {
-    scenes: Scene[];
-    hasFetchedScenes: boolean;
+export interface ISceneManagerState {
+    descriptors: SceneDescriptor[];
+    hasFetchedDescriptors: boolean;
     canAddScene: boolean;
 }
 
 export interface IActiveSceneState {
-    activeSceneId: string | null;
-    openedSceneIds: string[];
+    activeScene: Scene | null;
+    openedScenes: Scene[];
 }
 
 export interface IGameSceneModuleState {
-    scenesState: IScenesState;
+    sceneManagerState: ISceneManagerState;
     activeSceneState: IActiveSceneState;
 }
 
-export const initialScenesState: IScenesState = {
-    scenes: [],
-    hasFetchedScenes: false,
+export const initialScenesState: ISceneManagerState = {
+    descriptors: [],
+    hasFetchedDescriptors: false,
     canAddScene: true
 };
 
 export const initialActiveSceneState: IActiveSceneState = {
-    activeSceneId: null,
-    openedSceneIds: []
+    activeScene: null,
+    openedScenes: []
 };

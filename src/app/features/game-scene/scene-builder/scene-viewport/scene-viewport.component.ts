@@ -1,8 +1,9 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, OnChanges, SimpleChanges } from '@angular/core';
 
-import { Scene } from '../../../../core/data-model/scene/scene';
-import { SpriteFile } from '../../../../core/data-model/sprite/sprite-file';
 import { Point } from '../../../../../engine/core/data-model/generic/point';
+import { Scene } from '../../../../../engine/core/data-model/scene/scene';
+import { Sprite } from '../../../../../engine/core/data-model/sprite/sprite';
 import { EditorCamera2D } from '../../../../../engine/rendering/editor-camera-2d/editor-camera-2d';
 
 @Component({
@@ -11,17 +12,23 @@ import { EditorCamera2D } from '../../../../../engine/rendering/editor-camera-2d
     styleUrls: ['./scene-viewport.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SceneViewportComponent implements AfterViewInit {
+export class SceneViewportComponent implements AfterViewInit, OnChanges {
     @Input() public scene: Scene;
-    @Input() public draggedSprite: SpriteFile;
+    @Input() public draggedSprite: Sprite;
     @Output() public sceneChange = new EventEmitter<Scene>();
     @ViewChild('viewport') private _viewport: ElementRef;
-    private _lastDraggedSprite: SpriteFile;
+    public contextMenuStyle = { top: '0', left: '0' };
+    private _lastDraggedSprite: Sprite;
     private _isHovering = false;
     private _canDragPointer = false;
     private _canMoveCamera = false;
     private _pointerXY = new Point();
+    private _isContextMenuOn = false;
     private _camera: EditorCamera2D;
+
+    get isContextMenuOn(): boolean {
+        return this._isContextMenuOn;
+    }
 
     get viewportClass(): { [key: string]: boolean } {
         return {
@@ -31,26 +38,21 @@ export class SceneViewportComponent implements AfterViewInit {
     }
 
     get layerStyle(): { [key: string]: string } {
-        if (this._camera) {
-            return {
-                top: `${-this._camera.offsetY}px`,
-                left: `${-this._camera.offsetX}px`,
-                width: `${this._camera.renderWidth}px`,
-                height: `${this._camera.renderHeight}px`
-            };
-        }
+        return this._camera?.viewportStyle ?? null;
     }
 
     public ngAfterViewInit(): void {
         setTimeout(() => {
-            const { clientWidth: width, clientHeight: height } = this._viewport.nativeElement;
-            const { scale, layers, viewportXY } = this.scene;
-            const position = new Point(viewportXY.x, viewportXY.y);
-            const rows = layers[0].grids.length;
-            const columns = layers[0].grids[0].length;
-            this._camera = new EditorCamera2D(width, height, position, rows, columns, scale);
+            const { clientWidth, clientHeight } = this._viewport.nativeElement;
+            this._camera = new EditorCamera2D(clientWidth, clientHeight, this.scene);
             this.renderViewport();
         });
+    }
+
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.hasOwnProperty('scene') && this._camera) {
+            this.ngAfterViewInit();
+        }
     }
 
     @HostListener('document:keydown', ['$event'])
@@ -69,10 +71,8 @@ export class SceneViewportComponent implements AfterViewInit {
     }
 
     public onScaleChange({ deltaY }: WheelEvent): void {
-        this._camera.changeScale(deltaY > 0 ? 10 : -10);
-        this.scene = { ...this.scene, scale: this._camera.scale };
-        this.sceneChange.emit(this.scene);
-        this.renderViewport();
+        this._camera.scale(deltaY > 0 ? 10 : -10);
+        this.onViewportChange(this._camera.scene);
     }
 
     public onMouseEnter(): void {
@@ -81,9 +81,7 @@ export class SceneViewportComponent implements AfterViewInit {
 
     public onMouseLeave(): void {
         if (this._canMoveCamera) {
-            const { x, y } = this._camera.position;
-            this.scene = { ...this.scene, viewportXY: new Point(x, y) };
-            this.sceneChange.emit(this.scene);
+            this.onViewportChange(this._camera.scene);
         }
 
         this._isHovering = false;
@@ -103,7 +101,7 @@ export class SceneViewportComponent implements AfterViewInit {
         if (this._canMoveCamera) {
             this._camera.move(this._pointerXY.x - clientX, this._pointerXY.y - clientY);
             this._pointerXY = new Point(clientX, clientY);
-            this.renderViewport();
+            this.onViewportChange(this._camera.scene);
         }
         else if (this.isHovering(clientX, clientY) && this.draggedSprite) {
             const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
@@ -115,20 +113,37 @@ export class SceneViewportComponent implements AfterViewInit {
 
     @HostListener('document:mouseup', ['$event'])
     public onDocumentMouseUp({ clientX, clientY }: MouseEvent): void {
-        if (this._canMoveCamera) {
-            const { x, y } = this._camera.position;
-            this.scene = { ...this.scene, viewportXY: new Point(x, y) };
-            this.sceneChange.emit(this.scene);
-        }
-        else if (this.isHovering(clientX, clientY) && this._lastDraggedSprite) {
+        if (this.isHovering(clientX, clientY) && this._lastDraggedSprite) {
             const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
             const [x, y] = [Math.ceil(clientX - left), Math.ceil(clientY - top)];
-            this._camera.dropSprite(x, y, this.scene.layers[0], this._lastDraggedSprite);
-            this.renderViewport();
+            this._camera.dropSprite(x, y, 0, this._lastDraggedSprite);
+            this.onViewportChange(this._camera.scene);
         }
 
+        this._isContextMenuOn = false;
         this._canMoveCamera = false;
         this._lastDraggedSprite = null;
+    }
+
+    public onRightClick(event: MouseEvent): void {
+        event.preventDefault();
+        const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
+        const [x, y] = [event.clientX - left, event.clientY - top];
+
+        if (!this._camera.hasGridContent(x, y, 0)) {
+            return;
+        }
+
+        this.contextMenuStyle.top = `${y}px`;
+        this.contextMenuStyle.left = `${x}px`;
+        this._isContextMenuOn = true;
+    }
+
+    public removeGridContent(): void {
+        const { left, top } = this.contextMenuStyle;
+        const [x, y] = [left, top].map(_ => Number(_.replace('px', '')));
+        this._camera.dropSprite(x, y, 0, null);
+        this.onViewportChange(this._camera.scene);
     }
 
     private isHovering(x: number, y: number): boolean {
@@ -137,8 +152,18 @@ export class SceneViewportComponent implements AfterViewInit {
         return x >= left && x <= right && y >= top && y <= bottom;
     }
 
+    private onViewportChange(scene: Scene, render = true): void {
+        this.scene = scene;
+        this.sceneChange.emit(this.scene);
+
+        if (render) {
+            this.renderViewport();
+        }
+    }
+
     private renderViewport(): void {
-        this._camera.clearCanvas('highlight-grid-layer');
+        this._camera.clearView('highlight-grid-layer');
+        setTimeout(() => this._camera.renderLayer(0));
         this._camera.drawGridLines('grid-line-layer');
     }
 }

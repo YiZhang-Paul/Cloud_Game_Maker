@@ -1,10 +1,10 @@
 import { createSelector } from '@ngrx/store';
 
-import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
+import { Sprite } from '../../../../engine/core/data-model/sprite/sprite';
 
 import { IImageSpriteState, key } from './state';
 
-function matchSprites(sprites: SpriteFile[], filter: string): SpriteFile[] {
+function matchSprites(sprites: Sprite[], filter: string): Sprite[] {
     return sprites.filter(_ => _.name.toLowerCase().includes(filter ?? ''));
 }
 

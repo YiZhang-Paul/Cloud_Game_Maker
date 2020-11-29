@@ -1,9 +1,9 @@
-import { Point } from '../../../../engine/core/data-model/generic/point';
+import { Point } from '../../data-model/generic/point';
 
 import { SceneLayer } from './scene-layer';
 
 export class Scene {
-    public id = '';
+    public storageKey = '';
     public name = 'scene';
     public scale = 100;
     public viewportXY = new Point();

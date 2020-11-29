@@ -1,0 +1,22 @@
+.container {
+    width: 100%;
+    height: 100%;
+
+    input,
+    span {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    span {
+        cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    span:hover {
+        color: white;
+        background-color: rgb(27, 111, 236);
+    }
+}

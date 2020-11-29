@@ -2,10 +2,10 @@ import { ActionReducerMap } from '@ngrx/store';
 
 import { IGameSceneModuleState } from '../state';
 
-import { scenesReducer } from './scenes.reducers';
+import { sceneManagerReducer } from './scene-manager.reducers';
 import { activeSceneReducer } from './active-scene.reducers';
 
 export const reducers: ActionReducerMap<IGameSceneModuleState> = {
-    scenesState: scenesReducer,
+    sceneManagerState: sceneManagerReducer,
     activeSceneState: activeSceneReducer
 };

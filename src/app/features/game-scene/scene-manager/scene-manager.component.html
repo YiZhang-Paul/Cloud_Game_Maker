@@ -1,23 +1,23 @@
-<div *ngIf="hasFetchedScenes$ | async" class="container">
-    <div *ngIf="!(allScenes$ | async).length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="7px" fxFlex>
+<div *ngIf="hasFetchedDescriptors$ | async" class="container">
+    <div *ngIf="!(allDescriptors$ | async).length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="7px" fxFlex>
         <span>no scenes found.</span>
         <button (click)="onSceneCreate()" [disabled]="!(canAddScene$ | async)">Create Scene</button>
     </div>
 
-    <div *ngIf="(allScenes$ | async).length" fxLayout="column" fxFlex>
+    <div *ngIf="(allDescriptors$ | async).length" fxLayout="column" fxFlex>
         <app-mini-toolbar [actionOptions]="toolbarOptions$ | async"
             (fileCreate)="onSceneCreate()"
             (fileSearch)="onSceneSearch($event.toLowerCase())">
         </app-mini-toolbar>
 
-        <div *ngIf="!(filteredScenes$ | async).length" fxLayoutAlign="center center" fxFlex>
+        <div *ngIf="!(filteredDescriptors$ | async).length" fxLayoutAlign="center center" fxFlex>
             <span>no matching scenes found.</span>
         </div>
 
-        <div *ngIf="(filteredScenes$ | async).length" class="scenes" fxLayout="column" fxLayoutGap="4px">
-            <div *ngFor="let scene of filteredScenes$ | async" (click)="onSceneOpen(scene)" fxLayoutAlign="start center">
-                <span>{{ scene.name }}</span>
-                <button (click)="onDelete(scene)">Delete</button>
+        <div *ngIf="(filteredDescriptors$ | async).length" class="scenes" fxLayout="column" fxLayoutGap="4px">
+            <div *ngFor="let descriptor of filteredDescriptors$ | async" (click)="onSceneOpen(descriptor)" fxLayoutAlign="start center">
+                <span>{{ descriptor.name }}</span>
+                <button (click)="onDelete(descriptor)">Delete</button>
             </div>
         </div>
     </div>

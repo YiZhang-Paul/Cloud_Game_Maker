@@ -1,47 +1,41 @@
 import { createSelector } from '@ngrx/store';
 
-import { Scene } from '../../../core/data-model/scene/scene';
+import { SceneDescriptor } from '../../../core/data-model/descriptors/scene-descriptor';
 
 import { IGameSceneModuleState, key } from './state';
 
-function matchScenes(scenes: Scene[], filter: string): Scene[] {
-    return scenes.filter(_ => _.name.toLowerCase().includes(filter ?? ''));
+function matchDescriptors(descriptors: SceneDescriptor[], filter: string): SceneDescriptor[] {
+    return descriptors.filter(_ => _.name.toLowerCase().includes(filter ?? ''));
 }
 
 export const getFeatureState = (state: { [key]: IGameSceneModuleState }) => state[key];
 
-export const getAllScenes = createSelector(
+export const getAllDescriptors = createSelector(
     getFeatureState,
-    (state: IGameSceneModuleState) => state.scenesState.scenes
+    (state: IGameSceneModuleState) => state.sceneManagerState.descriptors
 );
 
-export const getFilteredScenes = createSelector(
+export const getFilteredDescriptors = createSelector(
     getFeatureState,
-    (state: IGameSceneModuleState, filter: string) => matchScenes(state.scenesState.scenes, filter)
+    (state: IGameSceneModuleState, filter: string) => matchDescriptors(state.sceneManagerState.descriptors, filter)
 );
 
-export const hasFetchedScenes = createSelector(
+export const hasFetchedDescriptors = createSelector(
     getFeatureState,
-    (state: IGameSceneModuleState) => state.scenesState.hasFetchedScenes
+    (state: IGameSceneModuleState) => state.sceneManagerState.hasFetchedDescriptors
 );
 
 export const canAddScene = createSelector(
     getFeatureState,
-    (state: IGameSceneModuleState) => state.scenesState.canAddScene
+    (state: IGameSceneModuleState) => state.sceneManagerState.canAddScene
 );
 
 export const getActiveScene = createSelector(
     getFeatureState,
-    getAllScenes,
-    (state: IGameSceneModuleState, scenes: Scene[]) => scenes.find(_ => _.id === state.activeSceneState.activeSceneId)
+    (state: IGameSceneModuleState) => state.activeSceneState.activeScene
 );
 
 export const getOpenedScenes = createSelector(
     getFeatureState,
-    getAllScenes,
-    (state: IGameSceneModuleState, scenes: Scene[]) => {
-        const ids = new Set(state.activeSceneState.openedSceneIds);
-
-        return scenes.filter(_ => ids.has(_.id));
-    }
+    (state: IGameSceneModuleState) => state.activeSceneState.openedScenes
 );

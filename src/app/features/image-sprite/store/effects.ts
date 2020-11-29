@@ -6,7 +6,7 @@ import { from, Observable, of } from 'rxjs';
 import { filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 import imageCompression from 'browser-image-compression';
 
-import { SpriteFile } from '../../../core/data-model/sprite/sprite-file';
+import { Sprite } from '../../../../engine/core/data-model/sprite/sprite';
 import { FileUtility } from '../../../core/utility/file-utility/file.utility';
 import { CloudStorageHttpService } from '../../../core/service/http/cloud-storage-http/cloud-storage-http.service';
 
@@ -19,7 +19,10 @@ export class SpritesEffects {
     public setActiveSpriteLazyLoad$ = createEffect(() => this._actions$.pipe(
         ofType(actions.setActiveSpriteLazyLoad),
         mergeMap(sprite => this._cloudStorageHttp.getSpriteContent(sprite).pipe(
-            map(content => actions.setActiveSprite({ ...sprite, content }))
+            switchMap(content => [
+                actions.updateSprite({ ...sprite, content }),
+                actions.setActiveSprite({ ...sprite, content })
+            ])
         ))
     ));
 
@@ -37,11 +40,9 @@ export class SpritesEffects {
         mergeMap(sprite => this.compressFile(sprite)),
         withLatestFrom(this._store.select(selectors.getAllSprites)),
         map(([sprite, sprites]) => this.setUniqueName(sprite, sprites)),
-        mergeMap(sprite => this._cloudStorageHttp.addSprite(sprite).pipe(
-            map(id => ({ ...sprite, id }))
-        )),
+        mergeMap(sprite => this._cloudStorageHttp.addSprite(sprite)),
         switchMap(sprite => {
-            const isAdded = Boolean(sprite.id);
+            const isAdded = Boolean(sprite);
             const message = isAdded ? 'Successfully added the sprite.' : 'Failed to add the sprite.';
             this._snackBar.open(message, isAdded ? 'Ok' : 'Got it');
 
@@ -65,10 +66,10 @@ export class SpritesEffects {
         filter(result => result.index !== -1),
         map(({ sprite, sprites, index }) => ({ sprite: this.ensureUniqueName(sprite, sprites, index), index })),
         mergeMap(result => this._cloudStorageHttp.updateSprite(result.sprite).pipe(
-            map(id => ({ ...result, sprite: { ...result.sprite, id } }))
+            map(sprite => ({ ...result, sprite }))
         )),
         switchMap(({ sprite, index }) => {
-            const isUpdated = Boolean(sprite.id);
+            const isUpdated = Boolean(sprite);
             const message = isUpdated ? 'Successfully updated the sprite.' : 'Failed to update the sprite.';
             this._snackBar.open(message, isUpdated ? 'Ok' : 'Got it');
 
@@ -77,7 +78,7 @@ export class SpritesEffects {
             }
 
             return [
-                actions.updateSprite({ payload: sprite, index }),
+                actions.updateSpriteByIndex({ payload: sprite, index }),
                 actions.resetActiveSprite()
             ];
         })
@@ -100,20 +101,20 @@ export class SpritesEffects {
                 private _cloudStorageHttp: CloudStorageHttpService,
                 private _snackBar: MatSnackBar) { }
 
-    private ensureUniqueName(sprite: SpriteFile, sprites: SpriteFile[], index: number): SpriteFile {
+    private ensureUniqueName(sprite: Sprite, sprites: Sprite[], index: number): Sprite {
         const hasNewName = sprite.name !== sprites[index].name;
 
         return hasNewName ? this.setUniqueName(sprite, sprites) : sprite;
     }
 
-    private setUniqueName(sprite: SpriteFile, sprites: SpriteFile[]): SpriteFile {
+    private setUniqueName(sprite: Sprite, sprites: Sprite[]): Sprite {
         const names = sprites.map(_ => _.name);
         const name = FileUtility.handleDuplicateName(names, sprite.name);
 
         return { ...sprite, name };
     }
 
-    private ensureCompressedFile(sprite: SpriteFile): Observable<SpriteFile> {
+    private ensureCompressedFile(sprite: Sprite): Observable<Sprite> {
         if (sprite.content) {
             return this.compressFile(sprite);
         }
@@ -123,8 +124,8 @@ export class SpritesEffects {
         );
     }
 
-    private compressFile(sprite: SpriteFile): Observable<SpriteFile> {
-        const promise = imageCompression(sprite.content, { maxSizeMB: 0.2 });
+    private compressFile(sprite: Sprite): Observable<Sprite> {
+        const promise = imageCompression(sprite.content, { maxSizeMB: 0.12 });
 
         return from(promise).pipe(
             mergeMap(content => of(new Blob([content], { type: content.type }))),

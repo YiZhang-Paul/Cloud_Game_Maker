@@ -5,11 +5,12 @@ import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
 import { store } from '../store';
-import { Scene } from '../../../core/data-model/scene/scene';
-import { SceneLayer } from '../../../core/data-model/scene/scene-layer';
-import { ToolbarActionOption } from '../../../core/data-model/generic/options/toolbar-action-option';
+import { Scene } from '../../../../engine/core/data-model/scene/scene';
+import { SceneLayer } from '../../../../engine/core/data-model/scene/scene-layer';
+import { SceneDescriptor } from '../../../core/data-model/descriptors/scene-descriptor';
 import { MiniToolbarOption } from '../../../core/enum/mini-toolbar-option.enum';
-import { ConfirmPopupOption } from '../../../core/data-model/generic/options/confirm-popup-option';
+import { ToolbarActionOption } from '../../../core/data-model/options/toolbar-action-option';
+import { ConfirmPopupOption } from '../../../core/data-model/options/confirm-popup-option';
 import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm-popup/confirm-popup.component';
 
 @Component({
@@ -18,19 +19,19 @@ import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm
     styleUrls: ['./scene-manager.component.scss']
 })
 export class SceneManagerComponent implements OnInit {
-    public allScenes$: Observable<Scene[]>;
-    public filteredScenes$: Observable<Scene[]>;
-    public hasFetchedScenes$: Observable<boolean>;
+    public allDescriptors$: Observable<SceneDescriptor[]>;
+    public filteredDescriptors$: Observable<SceneDescriptor[]>;
+    public hasFetchedDescriptors$: Observable<boolean>;
     public canAddScene$: Observable<boolean>;
     public toolbarOptions$: Observable<ToolbarActionOption[]>;
 
     constructor(private _store: Store, private _dialog: MatDialog) { }
 
     public ngOnInit(): void {
-        this._store.dispatch(store.actions.getScenesRemote());
-        this.allScenes$ = this._store.select(store.selectors.getAllScenes);
+        this._store.dispatch(store.actions.getDescriptorsRemote());
+        this.allDescriptors$ = this._store.select(store.selectors.getAllDescriptors);
         this.onSceneSearch('');
-        this.hasFetchedScenes$ = this._store.select(store.selectors.hasFetchedScenes);
+        this.hasFetchedDescriptors$ = this._store.select(store.selectors.hasFetchedDescriptors);
         this.canAddScene$ = this._store.select(store.selectors.canAddScene);
 
         this.toolbarOptions$ = this.canAddScene$.pipe(
@@ -42,7 +43,7 @@ export class SceneManagerComponent implements OnInit {
     }
 
     public onSceneSearch(keyword: string): void {
-        this.filteredScenes$ = this._store.select(store.selectors.getFilteredScenes, keyword);
+        this.filteredDescriptors$ = this._store.select(store.selectors.getFilteredDescriptors, keyword);
     }
 
     public onSceneCreate(): void {
@@ -51,11 +52,11 @@ export class SceneManagerComponent implements OnInit {
         this._store.dispatch(store.actions.addSceneRemote(scene));
     }
 
-    public onSceneOpen(scene: Scene): void {
-        this._store.dispatch(store.actions.openScene(scene));
+    public onSceneOpen(descriptor: SceneDescriptor): void {
+        this._store.dispatch(store.actions.openScene(descriptor));
     }
 
-    public onDelete(scene: Scene): void {
+    public onDelete(descriptor: SceneDescriptor): void {
         const title = 'Are you sure?';
         const message = 'The scene will be permanently removed.';
 
@@ -67,7 +68,7 @@ export class SceneManagerComponent implements OnInit {
 
         dialog.afterClosed().subscribe(_ => {
             if (_) {
-                this._store.dispatch(store.actions.deleteSceneRemote(scene));
+                this._store.dispatch(store.actions.deleteSceneRemote(descriptor));
             }
         });
     }

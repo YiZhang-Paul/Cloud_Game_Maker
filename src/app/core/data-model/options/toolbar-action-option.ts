@@ -1,4 +1,4 @@
-import { MiniToolbarOption } from '../../../enum/mini-toolbar-option.enum';
+import { MiniToolbarOption } from '../../enum/mini-toolbar-option.enum';
 
 export class ToolbarActionOption {
     public type: MiniToolbarOption;

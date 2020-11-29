@@ -16,4 +16,31 @@
     &.moveable:hover {
         cursor: grabbing;
     }
+
+    .context-menu {
+        position: absolute;
+        border-radius: 3px;
+        background-color: white;
+
+        & > div:first-of-type {
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+        }
+
+        & > div:last-of-type {
+            border-bottom-left-radius: 3px;
+            border-bottom-right-radius: 3px;
+        }
+
+        & > div {
+            padding: 3px 20px;
+            min-width: 10vh;
+            height: 2.5vh;
+        }
+
+        & > div:hover {
+            cursor: pointer;
+            background-color: rgb(225, 225, 225);
+        }
+    }
 }
