@@ -6,7 +6,7 @@ import { from, Observable, of } from 'rxjs';
 import { filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 import imageCompression from 'browser-image-compression';
 
-import { SpriteFile } from '../../../../engine/core/data-model/sprite/sprite-file';
+import { Sprite } from '../../../../engine/core/data-model/sprite/sprite';
 import { FileUtility } from '../../../core/utility/file-utility/file.utility';
 import { CloudStorageHttpService } from '../../../core/service/http/cloud-storage-http/cloud-storage-http.service';
 
@@ -101,20 +101,20 @@ export class SpritesEffects {
                 private _cloudStorageHttp: CloudStorageHttpService,
                 private _snackBar: MatSnackBar) { }
 
-    private ensureUniqueName(sprite: SpriteFile, sprites: SpriteFile[], index: number): SpriteFile {
+    private ensureUniqueName(sprite: Sprite, sprites: Sprite[], index: number): Sprite {
         const hasNewName = sprite.name !== sprites[index].name;
 
         return hasNewName ? this.setUniqueName(sprite, sprites) : sprite;
     }
 
-    private setUniqueName(sprite: SpriteFile, sprites: SpriteFile[]): SpriteFile {
+    private setUniqueName(sprite: Sprite, sprites: Sprite[]): Sprite {
         const names = sprites.map(_ => _.name);
         const name = FileUtility.handleDuplicateName(names, sprite.name);
 
         return { ...sprite, name };
     }
 
-    private ensureCompressedFile(sprite: SpriteFile): Observable<SpriteFile> {
+    private ensureCompressedFile(sprite: Sprite): Observable<Sprite> {
         if (sprite.content) {
             return this.compressFile(sprite);
         }
@@ -124,7 +124,7 @@ export class SpritesEffects {
         );
     }
 
-    private compressFile(sprite: SpriteFile): Observable<SpriteFile> {
+    private compressFile(sprite: Sprite): Observable<Sprite> {
         const promise = imageCompression(sprite.content, { maxSizeMB: 0.12 });
 
         return from(promise).pipe(

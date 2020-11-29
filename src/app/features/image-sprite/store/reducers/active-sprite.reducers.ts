@@ -2,9 +2,9 @@ import { Action, createReducer, on } from '@ngrx/store';
 
 import { IActiveSpriteState, initialActiveSpriteState } from '../state';
 import { actions } from '../actions';
-import { SpriteFile } from '../../../../../engine/core/data-model/sprite/sprite-file';
+import { Sprite } from '../../../../../engine/core/data-model/sprite/sprite';
 
-function setActiveSprite(state: IActiveSpriteState, sprite: SpriteFile): IActiveSpriteState {
+function setActiveSprite(state: IActiveSpriteState, sprite: Sprite): IActiveSpriteState {
     return { ...state, activeSprite: sprite };
 }
 

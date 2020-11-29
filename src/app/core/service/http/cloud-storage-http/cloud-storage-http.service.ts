@@ -4,7 +4,7 @@ import { catchError, mergeMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
 import { environment } from '../../../../../environments/environment';
-import { SpriteFile } from '../../../../../engine/core/data-model/sprite/sprite-file';
+import { Sprite } from '../../../../../engine/core/data-model/sprite/sprite';
 import { Scene } from '../../../../../engine/core/data-model/scene/scene';
 import { SceneDescriptor } from '../../../../../engine/core/data-model/scene/scene-descriptor';
 
@@ -21,7 +21,7 @@ export class CloudStorageHttpService {
     }
 
     public getScene(descriptor: SceneDescriptor): Observable<Scene> {
-        const endpoint = `${this._api}/scenes/${encodeURIComponent(descriptor.id)}`;
+        const endpoint = `${this._api}/scenes/${encodeURIComponent(descriptor.storageId)}`;
 
         return this._http.get<Scene>(endpoint).pipe(catchError(() => of(null)));
     }
@@ -41,12 +41,12 @@ export class CloudStorageHttpService {
     }
 
     public deleteScene(descriptor: SceneDescriptor): Observable<boolean> {
-        const endpoint = `${this._api}/scenes/${encodeURIComponent(descriptor.id)}`;
+        const endpoint = `${this._api}/scenes/${encodeURIComponent(descriptor.storageId)}`;
 
         return this._http.delete<boolean>(endpoint).pipe(catchError(() => of(false)));
     }
 
-    public getSpriteContent(sprite: SpriteFile): Observable<Blob> {
+    public getSpriteContent(sprite: Sprite): Observable<Blob> {
         const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.id)}`;
 
         return this._http.get(endpoint, { responseType: 'arraybuffer' }).pipe(
@@ -55,34 +55,34 @@ export class CloudStorageHttpService {
         );
     }
 
-    public getSprites(): Observable<SpriteFile[]> {
+    public getSprites(): Observable<Sprite[]> {
         const endpoint = `${this._api}/sprites`;
 
-        return this._http.get<SpriteFile[]>(endpoint).pipe(
-            mergeMap(sprites => of(sprites.map(_ => SpriteFile.fromSpriteFile(_, true)))),
+        return this._http.get<Sprite[]>(endpoint).pipe(
+            mergeMap(sprites => of(sprites.map(_ => Sprite.fromSprite(_, true)))),
             catchError(() => of([]))
         );
     }
 
-    public addSprite(sprite: SpriteFile): Observable<SpriteFile> {
+    public addSprite(sprite: Sprite): Observable<Sprite> {
         const endpoint = `${this._api}/sprites`;
         const data = new FormData();
         data.append('file', sprite.content);
         data.append('spriteJson', JSON.stringify(sprite));
 
-        return this._http.post<SpriteFile>(endpoint, data).pipe(catchError(() => of(null)));
+        return this._http.post<Sprite>(endpoint, data).pipe(catchError(() => of(null)));
     }
 
-    public updateSprite(sprite: SpriteFile): Observable<SpriteFile> {
+    public updateSprite(sprite: Sprite): Observable<Sprite> {
         const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.originated ?? sprite.id)}`;
         const data = new FormData();
         data.append('file', sprite.content);
         data.append('spriteJson', JSON.stringify(sprite));
 
-        return this._http.put<SpriteFile>(endpoint, data).pipe(catchError(() => of(null)));
+        return this._http.put<Sprite>(endpoint, data).pipe(catchError(() => of(null)));
     }
 
-    public deleteSprite(sprite: SpriteFile): Observable<boolean> {
+    public deleteSprite(sprite: Sprite): Observable<boolean> {
         const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.id)}`;
 
         return this._http.delete<boolean>(endpoint).pipe(catchError(() => of(false)));

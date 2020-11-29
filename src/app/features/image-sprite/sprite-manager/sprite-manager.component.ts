@@ -8,7 +8,7 @@ import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { store } from '../store';
 import { store as globalStore } from '../../../store';
 import { Point } from '../../../../engine/core/data-model/generic/point';
-import { SpriteFile } from '../../../../engine/core/data-model/sprite/sprite-file';
+import { Sprite } from '../../../../engine/core/data-model/sprite/sprite';
 import { ConfirmActionOption } from '../../../core/data-model/options/confirm-action-option';
 import { ConfirmPopupOption } from '../../../core/data-model/options/confirm-popup-option';
 import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm-popup/confirm-popup.component';
@@ -19,10 +19,10 @@ import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm
     styleUrls: ['./sprite-manager.component.scss']
 })
 export class SpriteManagerComponent implements OnInit {
-    public allSprites$: Observable<SpriteFile[]>;
-    public filteredSprites$: Observable<SpriteFile[]>;
-    public activeSprite$: Observable<SpriteFile>;
-    public draggedSprite$: Observable<SpriteFile>;
+    public allSprites$: Observable<Sprite[]>;
+    public filteredSprites$: Observable<Sprite[]>;
+    public activeSprite$: Observable<Sprite>;
+    public draggedSprite$: Observable<Sprite>;
     public draggedSpriteStartXY$: Observable<Point>;
     public hasFetchedSprites$: Observable<boolean>;
     public draggedSpriteStyle: { [key: string]: string };
@@ -59,14 +59,14 @@ export class SpriteManagerComponent implements OnInit {
 
     public onFileSelect(files: NgxFileDropEntry[]): void {
         const file = files[0]?.fileEntry as FileSystemFileEntry;
-        SpriteFile.fromFileEntry(file).subscribe(sprite => this.setActiveSprite(sprite));
+        Sprite.fromFileEntry(file).subscribe(sprite => this.setActiveSprite(sprite));
     }
 
     public onFileSearch(keyword: string): void {
         this.filteredSprites$ = this._store.select(store.selectors.getFilteredSprites, keyword);
     }
 
-    public onFileNameChange(name: string, file: SpriteFile): void {
+    public onFileNameChange(name: string, file: Sprite): void {
         if (name?.trim()) {
             this._store.dispatch(store.actions.updateSpriteRemote({ ...file, name }));
 
@@ -84,7 +84,7 @@ export class SpriteManagerComponent implements OnInit {
         });
     }
 
-    public onFileEdit(file: SpriteFile, saveAsNew = false): void {
+    public onFileEdit(file: Sprite, saveAsNew = false): void {
         if (saveAsNew) {
             this._store.dispatch(store.actions.addSpriteRemote(file));
         }
@@ -93,11 +93,11 @@ export class SpriteManagerComponent implements OnInit {
         }
     }
 
-    public onFileDelete(file: SpriteFile): void {
+    public onFileDelete(file: Sprite): void {
         this._store.dispatch(store.actions.deleteSpriteRemote(file));
     }
 
-    public onFileEditStart(file: SpriteFile): void {
+    public onFileEditStart(file: Sprite): void {
         if (file.content) {
             this.setActiveSprite(file);
         }
@@ -110,7 +110,7 @@ export class SpriteManagerComponent implements OnInit {
         this._store.dispatch(store.actions.resetActiveSprite());
     }
 
-    public onFileDragBegin(pointerXY: Point, file: SpriteFile): void {
+    public onFileDragBegin(pointerXY: Point, file: Sprite): void {
         this._store.dispatch(globalStore.actions.setDraggedSpriteStartXY({ payload: pointerXY }));
         this._store.dispatch(globalStore.actions.setDraggedSprite({ payload: file }));
     }
@@ -120,7 +120,7 @@ export class SpriteManagerComponent implements OnInit {
         this._store.dispatch(globalStore.actions.setDraggedSprite({ payload: null }));
     }
 
-    private setActiveSprite(file: SpriteFile): void {
+    private setActiveSprite(file: Sprite): void {
         this._store.dispatch(store.actions.setActiveSprite(file));
     }
 }

@@ -2,30 +2,30 @@ import { Action, createReducer, on } from '@ngrx/store';
 
 import { ISpritesState, initialSpritesState } from '../state';
 import { actions } from '../actions';
-import { SpriteFile } from '../../../../../engine/core/data-model/sprite/sprite-file';
+import { Sprite } from '../../../../../engine/core/data-model/sprite/sprite';
 import { GenericUtility } from '../../../../core/utility/generic-utility/generic.utility';
 
-function addSprite(state: ISpritesState, sprite: SpriteFile): ISpritesState {
+function addSprite(state: ISpritesState, sprite: Sprite): ISpritesState {
     return { ...state, sprites: [sprite, ...state.sprites] };
 }
 
-function updateSprite(state: ISpritesState, sprite: SpriteFile): ISpritesState {
+function updateSprite(state: ISpritesState, sprite: Sprite): ISpritesState {
     const index = state.sprites.findIndex(_ => _.id === sprite.id);
 
     return index === -1 ? state : updateSpriteByIndex(state, { payload: sprite, index });
 }
 
-function updateSpriteByIndex(state: ISpritesState, props: { payload: SpriteFile, index: number }): ISpritesState {
+function updateSpriteByIndex(state: ISpritesState, props: { payload: Sprite, index: number }): ISpritesState {
     const { payload, index } = props;
 
     return { ...state, sprites: GenericUtility.replaceAt(state.sprites, payload, index) };
 }
 
-function deleteSprite(state: ISpritesState, sprite: SpriteFile): ISpritesState {
+function deleteSprite(state: ISpritesState, sprite: Sprite): ISpritesState {
     return { ...state, sprites: state.sprites.filter(_ => _.id !== sprite.id) };
 }
 
-function setSprites(state: ISpritesState, props: { payload: SpriteFile[] }): ISpritesState {
+function setSprites(state: ISpritesState, props: { payload: Sprite[] }): ISpritesState {
     return { ...state, sprites: props.payload };
 }
 

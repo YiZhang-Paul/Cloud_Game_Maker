@@ -1,4 +1,4 @@
-import { SpriteFile } from '../sprite/sprite-file';
+import { Sprite } from '../sprite/sprite';
 
 import { SceneGrid } from './scene-grid';
 
@@ -7,6 +7,6 @@ export class SceneLayer {
     public rows = 2000;
     public columns = 2000;
     public isVisible = true;
-    public sprites: { [key: string]: SpriteFile } = {};
+    public sprites: { [key: string]: Sprite } = {};
     public grids: { [key: string]: SceneGrid } = {};
 }

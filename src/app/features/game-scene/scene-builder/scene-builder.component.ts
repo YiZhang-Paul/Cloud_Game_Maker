@@ -7,7 +7,7 @@ import { store } from '../store';
 import { store as globalStore } from '../../../store';
 import { Scene } from '../../../../engine/core/data-model/scene/scene';
 import { SceneLayer } from '../../../../engine/core/data-model/scene/scene-layer';
-import { SpriteFile } from '../../../../engine/core/data-model/sprite/sprite-file';
+import { Sprite } from '../../../../engine/core/data-model/sprite/sprite';
 import { IconButtonOption } from '../../../core/data-model/options/icon-button-option';
 import { GenericUtility } from '../../../core/utility/generic-utility/generic.utility';
 
@@ -21,7 +21,7 @@ export class SceneBuilderComponent implements OnInit {
     public toolOptions = [new IconButtonOption('fas fa-layer-group', 'layers', true)];
     public activeScene$: Observable<Scene>;
     public openedScenes$: Observable<Scene[]>;
-    public draggedSprite$: Observable<SpriteFile>;
+    public draggedSprite$: Observable<Sprite>;
     private _sceneChanges$ = new Subject<Scene>();
     private _pendingChange: Scene | null;
 
@@ -37,7 +37,7 @@ export class SceneBuilderComponent implements OnInit {
     public onSceneSelected(scene: Scene): void {
         this._store.dispatch(store.actions.setActiveScene({ payload: scene }));
 
-        if (this._pendingChange && this._pendingChange.id !== scene.id) {
+        if (this._pendingChange && this._pendingChange.storageId !== scene.storageId) {
             this.updateScene();
         }
     }
@@ -45,7 +45,7 @@ export class SceneBuilderComponent implements OnInit {
     public onSceneClose(scene: Scene): void {
         this._store.dispatch(store.actions.deleteOpenedScene(scene));
 
-        if (this._pendingChange?.id === scene.id) {
+        if (this._pendingChange?.storageId === scene.storageId) {
             this.updateScene();
         }
     }

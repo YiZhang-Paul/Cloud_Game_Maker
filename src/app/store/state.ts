@@ -1,8 +1,8 @@
 import { Point } from '../../engine/core/data-model/generic/point';
-import { SpriteFile } from '../../engine/core/data-model/sprite/sprite-file';
+import { Sprite } from '../../engine/core/data-model/sprite/sprite';
 
 export interface IAppImageSpritesState {
-    draggedSprite: SpriteFile | null;
+    draggedSprite: Sprite | null;
     draggedSpriteStartXY: Point | null;
 }
 

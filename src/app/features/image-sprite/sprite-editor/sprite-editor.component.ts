@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 import { MatDialog } from '@angular/material/dialog';
 import { Dimensions, ImageCropperComponent, ImageTransform } from 'ngx-image-cropper';
 
-import { SpriteFile } from '../../../../engine/core/data-model/sprite/sprite-file';
+import { Sprite } from '../../../../engine/core/data-model/sprite/sprite';
 import { ConfirmPopupOption } from '../../../core/data-model/options/confirm-popup-option';
 import { ConfirmActionOption } from '../../../core/data-model/options/confirm-action-option';
 import { ConfirmPopupComponent } from '../../../shared/components/popups/confirm-popup/confirm-popup.component';
@@ -15,26 +15,26 @@ import { FileUtility } from '../../../core/utility/file-utility/file.utility';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpriteEditorComponent implements OnInit {
-    @Input() public file: SpriteFile;
-    @Output() public importNew = new EventEmitter<SpriteFile>();
-    @Output() public overwrite = new EventEmitter<SpriteFile>();
-    @Output() public saveAsNew = new EventEmitter<SpriteFile>();
+    @Input() public file: Sprite;
+    @Output() public importNew = new EventEmitter<Sprite>();
+    @Output() public overwrite = new EventEmitter<Sprite>();
+    @Output() public saveAsNew = new EventEmitter<Sprite>();
     @Output() public cancel = new EventEmitter();
     @ViewChild('cropper') private _cropper: ImageCropperComponent;
     public transform: ImageTransform;
     public isPreviewing = false;
     private _isCropperReady = false;
     private _isCorrectRatio = false;
-    private _modifiedFile: SpriteFile;
+    private _modifiedFile: Sprite;
 
     constructor(private _dialog: MatDialog) { }
 
-    get targetFile(): SpriteFile {
+    get targetFile(): Sprite {
         return this._modifiedFile || this.file;
     }
 
     get isImported(): boolean {
-        return SpriteFile.isImported(this.file);
+        return Sprite.isImported(this.file);
     }
 
     get isModified(): boolean {
@@ -56,7 +56,7 @@ export class SpriteEditorComponent implements OnInit {
     }
 
     public onNameEdit(name: string): void {
-        this._modifiedFile = this._modifiedFile ?? SpriteFile.fromSpriteFile(this.file);
+        this._modifiedFile = this._modifiedFile ?? Sprite.fromSprite(this.file);
         this._modifiedFile.name = name;
     }
 
@@ -87,7 +87,7 @@ export class SpriteEditorComponent implements OnInit {
     public onImageCropped(): void {
         const { base64, width, height } = this._cropper.crop();
         this._isCorrectRatio = width === height;
-        this._modifiedFile = this._modifiedFile ?? SpriteFile.fromSpriteFile(this.file);
+        this._modifiedFile = this._modifiedFile ?? Sprite.fromSprite(this.file);
         this._modifiedFile.mime = 'image/jpeg';
         this._modifiedFile.extension = 'jpg';
         this._modifiedFile.content = FileUtility.base64ToBlob(base64, this._modifiedFile.mime);

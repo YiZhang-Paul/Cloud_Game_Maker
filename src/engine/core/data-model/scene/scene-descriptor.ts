@@ -1,9 +1,9 @@
 export class SceneDescriptor {
-    public id: string;
+    public storageId: string;
     public name: string;
 
-    constructor(id: string, name: string) {
-        this.id = id;
+    constructor(storageId: string, name: string) {
+        this.storageId = storageId;
         this.name = name;
     }
 }

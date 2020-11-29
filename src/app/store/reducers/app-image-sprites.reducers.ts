@@ -3,9 +3,9 @@ import { Action, createReducer, on } from '@ngrx/store';
 import { IAppImageSpritesState, initialAppImageSpritesState } from '../state';
 import { actions } from '../actions';
 import { Point } from '../../../engine/core/data-model/generic/point';
-import { SpriteFile } from '../../../engine/core/data-model/sprite/sprite-file';
+import { Sprite } from '../../../engine/core/data-model/sprite/sprite';
 
-function setDraggedSprite(state: IAppImageSpritesState, props: { payload: SpriteFile | null }): IAppImageSpritesState {
+function setDraggedSprite(state: IAppImageSpritesState, props: { payload: Sprite | null }): IAppImageSpritesState {
     return { ...state, draggedSprite: props.payload };
 }
 

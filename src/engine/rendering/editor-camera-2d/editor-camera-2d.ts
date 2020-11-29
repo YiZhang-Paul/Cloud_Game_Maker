@@ -1,11 +1,11 @@
 import { Camera2D } from '../camera-2d/camera-2d';
 import { SceneGrid } from '../../core/data-model/scene/scene-grid';
 import { SceneLayer } from '../../core/data-model/scene/scene-layer';
-import { SpriteFile } from '../../core/data-model/sprite/sprite-file';
+import { Sprite } from '../../core/data-model/sprite/sprite';
 
 export class EditorCamera2D extends Camera2D {
 
-    public dropSprite(x: number, y: number, index: number, sprite: SpriteFile | null): void {
+    public dropSprite(x: number, y: number, index: number, sprite: Sprite | null): void {
         let layer: SceneLayer;
         const { layers } = this._scene;
         const key = this.getTargetGrid(x, y).join();

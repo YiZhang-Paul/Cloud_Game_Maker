@@ -3,7 +3,7 @@ import { AfterViewInit, ChangeDetectionStrategy, OnChanges, SimpleChanges } from
 
 import { Point } from '../../../../../engine/core/data-model/generic/point';
 import { Scene } from '../../../../../engine/core/data-model/scene/scene';
-import { SpriteFile } from '../../../../../engine/core/data-model/sprite/sprite-file';
+import { Sprite } from '../../../../../engine/core/data-model/sprite/sprite';
 import { EditorCamera2D } from '../../../../../engine/rendering/editor-camera-2d/editor-camera-2d';
 
 @Component({
@@ -14,11 +14,11 @@ import { EditorCamera2D } from '../../../../../engine/rendering/editor-camera-2d
 })
 export class SceneViewportComponent implements AfterViewInit, OnChanges {
     @Input() public scene: Scene;
-    @Input() public draggedSprite: SpriteFile;
+    @Input() public draggedSprite: Sprite;
     @Output() public sceneChange = new EventEmitter<Scene>();
     @ViewChild('viewport') private _viewport: ElementRef;
     public contextMenuStyle = { top: '0', left: '0' };
-    private _lastDraggedSprite: SpriteFile;
+    private _lastDraggedSprite: Sprite;
     private _isHovering = false;
     private _canDragPointer = false;
     private _canMoveCamera = false;

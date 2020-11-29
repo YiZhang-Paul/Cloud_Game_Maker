@@ -11,7 +11,7 @@ function setActiveScene(state: IActiveSceneState, props: { payload: Scene | null
 }
 
 function updateActiveScene(state: IActiveSceneState, scene: Scene): IActiveSceneState {
-    if (state.activeScene?.id !== scene.id) {
+    if (state.activeScene?.storageId !== scene.storageId) {
         return state;
     }
 
@@ -19,7 +19,7 @@ function updateActiveScene(state: IActiveSceneState, scene: Scene): IActiveScene
 }
 
 function addOpenedScene(state: IActiveSceneState, scene: Scene): IActiveSceneState {
-    if (state.openedScenes.some(_ => _.id === scene.id)) {
+    if (state.openedScenes.some(_ => _.storageId === scene.storageId)) {
         return state;
     }
 
@@ -27,7 +27,7 @@ function addOpenedScene(state: IActiveSceneState, scene: Scene): IActiveSceneSta
 }
 
 function updateOpenedScene(state: IActiveSceneState, scene: Scene): IActiveSceneState {
-    const index = state.openedScenes.findIndex(_ => _.id === scene.id);
+    const index = state.openedScenes.findIndex(_ => _.storageId === scene.storageId);
 
     if (index === -1) {
         return state;
@@ -37,7 +37,7 @@ function updateOpenedScene(state: IActiveSceneState, scene: Scene): IActiveScene
 }
 
 function deleteOpenedScene(state: IActiveSceneState, scene: Scene | SceneDescriptor): IActiveSceneState {
-    const index = state.openedScenes.findIndex(_ => _.id === scene.id);
+    const index = state.openedScenes.findIndex(_ => _.storageId === scene.storageId);
 
     if (index === -1) {
         return state;
@@ -45,7 +45,7 @@ function deleteOpenedScene(state: IActiveSceneState, scene: Scene | SceneDescrip
 
     const nextIndex = index ? index - 1 : 1;
     const activeScene = state.openedScenes.length === 1 ? null : state.openedScenes[nextIndex];
-    const openedScenes = state.openedScenes.filter(_ => _.id !== scene.id);
+    const openedScenes = state.openedScenes.filter(_ => _.storageId !== scene.storageId);
 
     return { ...state, activeScene, openedScenes };
 }

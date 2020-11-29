@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { Point } from '../../../../../engine/core/data-model/generic/point';
-import { SpriteFile } from '../../../../../engine/core/data-model/sprite/sprite-file';
+import { Sprite } from '../../../../../engine/core/data-model/sprite/sprite';
 
 @Component({
     selector: 'app-sprite-thumbnail-item',
@@ -10,7 +10,7 @@ import { SpriteFile } from '../../../../../engine/core/data-model/sprite/sprite-
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpriteThumbnailItemComponent {
-    @Input() public file: SpriteFile;
+    @Input() public file: Sprite;
     @Input() public isDragMode = false;
     @Output() public editStart = new EventEmitter<Point>();
     @Output() public delete = new EventEmitter();

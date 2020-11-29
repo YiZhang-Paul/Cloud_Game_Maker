@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { Point } from '../../core/data-model/generic/point';
 import { Dimension2D } from '../../core/data-model/generic/dimension-2d';
 import { Scene } from '../../core/data-model/scene/scene';
-import { SpriteFile } from '../../core/data-model/sprite/sprite-file';
+import { Sprite } from '../../core/data-model/sprite/sprite';
 import { GenericUtility } from '../../core/utility/generic-utility/generic.utility';
 
 export class Camera2D {
@@ -103,7 +103,7 @@ export class Camera2D {
         return grids.hasOwnProperty(key) && Boolean(grids[key]);
     }
 
-    protected drawGrid(sprite: SpriteFile, column: number, row: number, context: CanvasRenderingContext2D, renderId: string): void {
+    protected drawGrid(sprite: Sprite, column: number, row: number, context: CanvasRenderingContext2D, renderId: string): void {
         const image = new Image();
         image.src = sprite.thumbnailUrl;
 

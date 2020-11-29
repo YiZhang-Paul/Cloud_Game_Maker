@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { SpriteFile } from '../../../../../engine/core/data-model/sprite/sprite-file';
+import { Sprite } from '../../../../../engine/core/data-model/sprite/sprite';
 
 @Component({
     selector: 'app-sprite-previewer',
@@ -9,6 +9,6 @@ import { SpriteFile } from '../../../../../engine/core/data-model/sprite/sprite-
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpritePreviewerComponent {
-    @Input() public file: SpriteFile;
+    @Input() public file: Sprite;
     @Output() public cancel = new EventEmitter();
 }

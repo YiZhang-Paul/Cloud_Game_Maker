@@ -1,14 +1,14 @@
-import { SpriteFile } from '../../../../engine/core/data-model/sprite/sprite-file';
+import { Sprite } from '../../../../engine/core/data-model/sprite/sprite';
 
 export const key = 'imageSprite';
 
 export interface ISpritesState {
-    sprites: SpriteFile[];
+    sprites: Sprite[];
     hasFetchedSprites: boolean;
 }
 
 export interface IActiveSpriteState {
-    activeSprite: SpriteFile | null;
+    activeSprite: Sprite | null;
 }
 
 export interface IImageSpriteState {

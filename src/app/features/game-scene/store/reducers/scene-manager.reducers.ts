@@ -10,7 +10,7 @@ function setDescriptors(state: ISceneManagerState, props: { payload: SceneDescri
 }
 
 function updateDescriptor(state: ISceneManagerState, descriptor: SceneDescriptor): ISceneManagerState {
-    const index = state.descriptors.findIndex(_ => _.id === descriptor.id);
+    const index = state.descriptors.findIndex(_ => _.storageId === descriptor.storageId);
 
     if (index === -1) {
         return state;
@@ -20,7 +20,7 @@ function updateDescriptor(state: ISceneManagerState, descriptor: SceneDescriptor
 }
 
 function deleteDescriptor(state: ISceneManagerState, descriptor: SceneDescriptor): ISceneManagerState {
-    return { ...state, descriptors: state.descriptors.filter(_ => _.id !== descriptor.id) };
+    return { ...state, descriptors: state.descriptors.filter(_ => _.storageId !== descriptor.storageId) };
 }
 
 function addDescriptor(state: ISceneManagerState, descriptor: SceneDescriptor): ISceneManagerState {
