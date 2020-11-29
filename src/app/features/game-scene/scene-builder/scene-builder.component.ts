@@ -51,7 +51,6 @@ export class SceneBuilderComponent implements OnInit {
     }
 
     public onSceneChange(scene: Scene): void {
-        this._store.dispatch(store.actions.updateDescriptor(scene));
         this._store.dispatch(store.actions.updateOpenedScene(scene));
         this._store.dispatch(store.actions.updateActiveScene(scene));
         this._pendingChange = scene;
