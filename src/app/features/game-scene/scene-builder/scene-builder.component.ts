@@ -23,6 +23,7 @@ export class SceneBuilderComponent implements OnInit {
     public openedScenes$: Observable<Scene[]>;
     public draggedSprite$: Observable<SpriteFile>;
     private _sceneChanges$ = new Subject<Scene>();
+    private _pendingChange: Scene | null;
 
     constructor(private _store: Store) { }
 
@@ -30,25 +31,31 @@ export class SceneBuilderComponent implements OnInit {
         this.activeScene$ = this._store.select(store.selectors.getActiveScene);
         this.openedScenes$ = this._store.select(store.selectors.getOpenedScenes);
         this.draggedSprite$ = this._store.select(globalStore.selectors.getDraggedSprite);
-
-        this._sceneChanges$.pipe(debounceTime(5000)).subscribe(scene => {
-            this._store.dispatch(store.actions.updateSceneRemote(scene));
-        });
+        this._sceneChanges$.pipe(debounceTime(5000)).subscribe(() => this.updateScene());
     }
 
     public onSceneSelected(scene: Scene): void {
         this._store.dispatch(store.actions.setActiveScene({ payload: scene }));
+
+        if (this._pendingChange && this._pendingChange.id !== scene.id) {
+            this.updateScene();
+        }
     }
 
     public onSceneClose(scene: Scene): void {
         this._store.dispatch(store.actions.deleteOpenedScene(scene));
+
+        if (this._pendingChange?.id === scene.id) {
+            this.updateScene();
+        }
     }
 
     public onSceneChange(scene: Scene): void {
         this._store.dispatch(store.actions.updateDescriptor(scene));
         this._store.dispatch(store.actions.updateOpenedScene(scene));
         this._store.dispatch(store.actions.updateActiveScene(scene));
-        this._sceneChanges$.next(scene);
+        this._pendingChange = scene;
+        this._sceneChanges$.next(this._pendingChange);
     }
 
     public onToolToggle(tool: IconButtonOption): void {
@@ -58,5 +65,12 @@ export class SceneBuilderComponent implements OnInit {
 
     public onLayersChange(scene: Scene, layers: SceneLayer[]): void {
         this.onSceneChange({ ...scene, layers });
+    }
+
+    private updateScene(): void {
+        if (this._pendingChange) {
+            this._store.dispatch(store.actions.updateSceneRemote(this._pendingChange));
+            this._pendingChange = null;
+        }
     }
 }
