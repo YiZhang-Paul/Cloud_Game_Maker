@@ -37,7 +37,7 @@ export class SceneBuilderComponent implements OnInit {
     public onSceneSelected(scene: Scene): void {
         this._store.dispatch(store.actions.setActiveScene({ payload: scene }));
 
-        if (this._pendingChange && this._pendingChange.storageId !== scene.storageId) {
+        if (this._pendingChange && this._pendingChange.storageKey !== scene.storageKey) {
             this.updateScene();
         }
     }
@@ -45,7 +45,7 @@ export class SceneBuilderComponent implements OnInit {
     public onSceneClose(scene: Scene): void {
         this._store.dispatch(store.actions.deleteOpenedScene(scene));
 
-        if (this._pendingChange?.storageId === scene.storageId) {
+        if (this._pendingChange?.storageKey === scene.storageKey) {
             this.updateScene();
         }
     }
