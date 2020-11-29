@@ -21,7 +21,7 @@ export class CloudStorageHttpService {
     }
 
     public getScene(descriptor: SceneDescriptor): Observable<Scene> {
-        const endpoint = `${this._api}/scenes/${encodeURIComponent(descriptor.storageId)}`;
+        const endpoint = `${this._api}/scenes/${descriptor.id}`;
 
         return this._http.get<Scene>(endpoint).pipe(catchError(() => of(null)));
     }
@@ -33,15 +33,14 @@ export class CloudStorageHttpService {
         return this._http.post(endpoint, scene, { responseType }).pipe(catchError(() => of(null)));
     }
 
-    public updateScene(scene: Scene): Observable<string> {
+    public updateScene(scene: Scene): Observable<boolean> {
         const endpoint = `${this._api}/scenes`;
-        const responseType = 'text';
 
-        return this._http.put(endpoint, scene, { responseType }).pipe(catchError(() => of(null)));
+        return this._http.put<boolean>(endpoint, scene).pipe(catchError(() => of(null)));
     }
 
     public deleteScene(descriptor: SceneDescriptor): Observable<boolean> {
-        const endpoint = `${this._api}/scenes/${encodeURIComponent(descriptor.storageId)}`;
+        const endpoint = `${this._api}/scenes/${descriptor.id}`;
 
         return this._http.delete<boolean>(endpoint).pipe(catchError(() => of(false)));
     }

@@ -50,8 +50,8 @@ export class ScenesEffects {
     public updateSceneRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.updateSceneRemote),
         mergeMap(scene => this._cloudStorageHttp.updateScene(scene)),
-        map(id => {
-            if (!id) {
+        map(updated => {
+            if (!updated) {
                 this._snackBar.open('Failed to update the scene.', 'Got it');
             }
         })
