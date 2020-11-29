@@ -16,7 +16,7 @@ export class Sprite {
         return file.id.includes('/');
     }
 
-    public static fromSpriteFile(file: Sprite, fromRemote = false): Sprite {
+    public static fromSprite(file: Sprite, fromRemote = false): Sprite {
         const sprite = new Sprite();
         sprite.originated = fromRemote ? sprite.originated : file.id;
         sprite.id = fromRemote ? file.id : sprite.id;
