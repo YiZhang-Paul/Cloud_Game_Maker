@@ -3,7 +3,7 @@ import { Action, createReducer, on } from '@ngrx/store';
 import { IActiveSceneState, initialActiveSceneState } from '../state';
 import { actions } from '../actions';
 import { Scene } from '../../../../../engine/core/data-model/scene/scene';
-import { SceneDescriptor } from '../../../../../engine/core/data-model/scene/scene-descriptor';
+import { SceneDescriptor } from '../../../../core/data-model/descriptors/scene-descriptor';
 import { GenericUtility } from '../../../../core/utility/generic-utility/generic.utility';
 
 function setActiveScene(state: IActiveSceneState, props: { payload: Scene | null }): IActiveSceneState {

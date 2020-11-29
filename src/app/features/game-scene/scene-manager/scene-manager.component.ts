@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { store } from '../store';
 import { Scene } from '../../../../engine/core/data-model/scene/scene';
 import { SceneLayer } from '../../../../engine/core/data-model/scene/scene-layer';
-import { SceneDescriptor } from '../../../../engine/core/data-model/scene/scene-descriptor';
+import { SceneDescriptor } from '../../../core/data-model/descriptors/scene-descriptor';
 import { MiniToolbarOption } from '../../../core/enum/mini-toolbar-option.enum';
 import { ToolbarActionOption } from '../../../core/data-model/options/toolbar-action-option';
 import { ConfirmPopupOption } from '../../../core/data-model/options/confirm-popup-option';

@@ -2,7 +2,7 @@ import { Action, createReducer, on } from '@ngrx/store';
 
 import { ISceneManagerState, initialScenesState } from '../state';
 import { actions } from '../actions';
-import { SceneDescriptor } from '../../../../../engine/core/data-model/scene/scene-descriptor';
+import { SceneDescriptor } from '../../../../core/data-model/descriptors/scene-descriptor';
 import { GenericUtility } from '../../../../core/utility/generic-utility/generic.utility';
 
 function setDescriptors(state: ISceneManagerState, props: { payload: SceneDescriptor[] }): ISceneManagerState {

@@ -6,7 +6,7 @@ import { Observable, of } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { Sprite } from '../../../../../engine/core/data-model/sprite/sprite';
 import { Scene } from '../../../../../engine/core/data-model/scene/scene';
-import { SceneDescriptor } from '../../../../../engine/core/data-model/scene/scene-descriptor';
+import { SceneDescriptor } from '../../../data-model/descriptors/scene-descriptor';
 
 @Injectable({
     providedIn: 'root'

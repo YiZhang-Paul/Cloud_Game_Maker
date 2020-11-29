@@ -1,5 +1,5 @@
 import { Scene } from '../../../../engine/core/data-model/scene/scene';
-import { SceneDescriptor } from '../../../../engine/core/data-model/scene/scene-descriptor';
+import { SceneDescriptor } from '../../../core/data-model/descriptors/scene-descriptor';
 
 export const key = 'gameScene';
 
