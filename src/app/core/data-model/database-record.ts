@@ -1,3 +1,7 @@
 export class DatabaseRecord {
-    public id = '';
+    public id: string;
+
+    constructor(id: string) {
+        this.id = id;
+    }
 }
