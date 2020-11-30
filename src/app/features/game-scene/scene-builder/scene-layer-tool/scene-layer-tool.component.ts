@@ -19,17 +19,11 @@ export class SceneLayerToolComponent implements OnInit {
     @Input() public layers: SceneLayer[] = [];
     @Output() public layersChange = new EventEmitter<SceneLayer[]>();
     @Output() public layerSelect = new EventEmitter<SceneLayer>();
-    private _activeLayer: SceneLayer;
 
     constructor(private _dialog: MatDialog) { }
 
     public ngOnInit(): void {
-        this.onLayerSelect(this.layers[0]);
-    }
-
-    public onLayerSelect(layer: SceneLayer): void {
-        this._activeLayer = layer;
-        this.layerSelect.emit(layer);
+        this.layerSelect.emit(this.layers[0]);
     }
 
     public onLayerAdd(): void {
@@ -39,7 +33,7 @@ export class SceneLayerToolComponent implements OnInit {
         layer.rows = this.layers[0].rows;
         layer.columns = this.layers[0].columns;
         this.onLayersChange([...this.layers, layer]);
-        this.onLayerSelect(layer);
+        this.layerSelect.emit(layer);
     }
 
     public onLayerDelete(layer: SceneLayer): void {
@@ -61,8 +55,8 @@ export class SceneLayerToolComponent implements OnInit {
 
             this.onLayersChange(this.layers.filter(_ => _.name !== layer.name));
 
-            if (this.isActiveLayer(layer)) {
-                this.onLayerSelect(this.layers[0]);
+            if (layer.isActive) {
+                this.layerSelect.emit(this.layers[0]);
             }
         });
     }
@@ -77,13 +71,12 @@ export class SceneLayerToolComponent implements OnInit {
     }
 
     public onNameChange(name: string, layer: SceneLayer): void {
-        const isActive = this.isActiveLayer(layer);
         const updated: SceneLayer = { ...layer, name };
         const index = this.layers.findIndex(_ => _.name === layer.name);
         this.onLayersChange(GenericUtility.replaceAt(this.layers, updated, index));
 
-        if (isActive) {
-            this.onLayerSelect(updated);
+        if (layer.isActive) {
+            this.layerSelect.emit(updated);
         }
     }
 
@@ -95,10 +88,6 @@ export class SceneLayerToolComponent implements OnInit {
 
     public canToggleVisibility(layer: SceneLayer): boolean {
         return !layer.isVisible || this.layers.filter(_ => _.isVisible).length > 1;
-    }
-
-    public isActiveLayer(layer: SceneLayer): boolean {
-        return this._activeLayer.name === layer.name;
     }
 
     private onLayersChange(layers: SceneLayer[]): void {
