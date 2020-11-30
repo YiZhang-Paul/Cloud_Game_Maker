@@ -26,11 +26,10 @@ export class CloudStorageHttpService {
         return this._http.get<Scene>(endpoint).pipe(catchError(() => of(null)));
     }
 
-    public addScene(scene: Scene): Observable<string> {
+    public addScene(scene: Scene): Observable<SceneDescriptor> {
         const endpoint = `${this._api}/scenes`;
-        const responseType = 'text';
 
-        return this._http.post(endpoint, scene, { responseType }).pipe(catchError(() => of(null)));
+        return this._http.post<SceneDescriptor>(endpoint, scene).pipe(catchError(() => of(null)));
     }
 
     public updateScene(scene: Scene): Observable<boolean> {

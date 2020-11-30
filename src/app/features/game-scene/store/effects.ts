@@ -5,7 +5,6 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { Scene } from '../../../../engine/core/data-model/scene/scene';
-import { SceneDescriptor } from '../../../core/data-model/descriptors/scene-descriptor';
 import { FileUtility } from '../../../core/utility/file-utility/file.utility';
 import { CloudStorageHttpService } from '../../../core/service/http/cloud-storage-http/cloud-storage-http.service';
 
@@ -28,11 +27,9 @@ export class ScenesEffects {
         ofType(actions.addSceneRemote),
         withLatestFrom(this._store.select(selectors.getAllDescriptors)),
         map(([scene, descriptors]) => this.setUniqueName(scene, descriptors.map(_ => _.name))),
-        mergeMap(scene => this._cloudStorageHttp.addScene(scene).pipe(
-            map(id => ({ name: scene.name, id }))
-        )),
-        switchMap(({ name, id }) => {
-            const isAdded = Boolean(id);
+        mergeMap(scene => this._cloudStorageHttp.addScene(scene)),
+        switchMap(descriptor => {
+            const isAdded = Boolean(descriptor);
             const message = isAdded ? 'Successfully added the scene.' : 'Failed to add the scene.';
             this._snackBar.open(message, isAdded ? 'Ok' : 'Got it');
 
@@ -41,7 +38,7 @@ export class ScenesEffects {
             }
 
             return [
-                actions.addDescriptor(new SceneDescriptor(id, name)),
+                actions.addDescriptor(descriptor),
                 actions.setCanAddScene({ payload: true })
             ];
         })
