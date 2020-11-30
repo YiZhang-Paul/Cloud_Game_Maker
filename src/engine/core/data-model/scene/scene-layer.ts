@@ -7,6 +7,7 @@ export class SceneLayer {
     public rows = 2000;
     public columns = 2000;
     public isVisible = true;
+    public isActive = false;
     public sprites: { [key: string]: Sprite } = {};
     public grids: { [key: string]: SceneGrid } = {};
 }
