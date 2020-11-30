@@ -5,44 +5,14 @@ import { Observable, of } from 'rxjs';
 
 import { environment } from '../../../../../environments/environment';
 import { Sprite } from '../../../../../engine/core/data-model/sprite/sprite';
-import { Scene } from '../../../../../engine/core/data-model/scene/scene';
-import { SceneDescriptor } from '../../../data-model/descriptors/scene-descriptor';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CloudStorageHttpService {
-    private readonly _api = `${environment.apiUrl}/api/cloud-storage`;
+    private readonly _api = `${environment.apiUrl}/api/v1/cloud-storage`;
 
     constructor(private _http: HttpClient) { }
-
-    public getDescriptors(): Observable<SceneDescriptor[]> {
-        return this._http.get<SceneDescriptor[]>(`${this._api}/scenes`).pipe(catchError(() => of([])));
-    }
-
-    public getScene(descriptor: SceneDescriptor): Observable<Scene> {
-        const endpoint = `${this._api}/scenes/${descriptor.id}`;
-
-        return this._http.get<Scene>(endpoint).pipe(catchError(() => of(null)));
-    }
-
-    public addScene(scene: Scene): Observable<SceneDescriptor> {
-        const endpoint = `${this._api}/scenes`;
-
-        return this._http.post<SceneDescriptor>(endpoint, scene).pipe(catchError(() => of(null)));
-    }
-
-    public updateScene(scene: Scene): Observable<boolean> {
-        const endpoint = `${this._api}/scenes`;
-
-        return this._http.put<boolean>(endpoint, scene).pipe(catchError(() => of(null)));
-    }
-
-    public deleteScene(descriptor: SceneDescriptor): Observable<boolean> {
-        const endpoint = `${this._api}/scenes/${descriptor.id}`;
-
-        return this._http.delete<boolean>(endpoint).pipe(catchError(() => of(false)));
-    }
 
     public getSpriteContent(sprite: Sprite): Observable<Blob> {
         const endpoint = `${this._api}/sprites/${encodeURIComponent(sprite.id)}`;

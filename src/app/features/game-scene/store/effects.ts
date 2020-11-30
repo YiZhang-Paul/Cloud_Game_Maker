@@ -6,7 +6,7 @@ import { map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { Scene } from '../../../../engine/core/data-model/scene/scene';
 import { FileUtility } from '../../../core/utility/file-utility/file.utility';
-import { CloudStorageHttpService } from '../../../core/service/http/cloud-storage-http/cloud-storage-http.service';
+import { GameSceneHttpService } from '../../../core/service/http/game-scene-http/game-scene-http.service';
 
 import * as selectors from './selectors';
 import { actions } from './actions';
@@ -16,7 +16,7 @@ export class ScenesEffects {
 
     public getDescriptorsRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.getDescriptorsRemote),
-        mergeMap(() => this._cloudStorageHttp.getDescriptors()),
+        mergeMap(() => this._gameSceneHttp.getDescriptors()),
         switchMap(descriptors => [
             actions.setDescriptors({ payload: descriptors }),
             actions.setHasFetchedDescriptors({ payload: true })
@@ -27,7 +27,7 @@ export class ScenesEffects {
         ofType(actions.addSceneRemote),
         withLatestFrom(this._store.select(selectors.getAllDescriptors)),
         map(([scene, descriptors]) => this.setUniqueName(scene, descriptors.map(_ => _.name))),
-        mergeMap(scene => this._cloudStorageHttp.addScene(scene)),
+        mergeMap(scene => this._gameSceneHttp.addScene(scene)),
         switchMap(descriptor => {
             const isAdded = Boolean(descriptor);
             const message = isAdded ? 'Successfully added the scene.' : 'Failed to add the scene.';
@@ -46,7 +46,7 @@ export class ScenesEffects {
 
     public updateSceneRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.updateSceneRemote),
-        mergeMap(scene => this._cloudStorageHttp.updateScene(scene)),
+        mergeMap(scene => this._gameSceneHttp.updateScene(scene)),
         map(updated => {
             if (!updated) {
                 this._snackBar.open('Failed to update the scene.', 'Got it');
@@ -56,7 +56,7 @@ export class ScenesEffects {
 
     public deleteSceneRemote$ = createEffect(() => this._actions$.pipe(
         ofType(actions.deleteSceneRemote),
-        mergeMap(descriptor => this._cloudStorageHttp.deleteScene(descriptor).pipe(
+        mergeMap(descriptor => this._gameSceneHttp.deleteScene(descriptor).pipe(
             switchMap(isDeleted => {
                 const message = isDeleted ? 'Successfully removed the scene.' : 'Failed to remove the scene.';
                 this._snackBar.open(message, isDeleted ? 'Ok' : 'Got it');
@@ -76,7 +76,7 @@ export class ScenesEffects {
 
     public openScene$ = createEffect(() => this._actions$.pipe(
         ofType(actions.openScene),
-        mergeMap(descriptor => this._cloudStorageHttp.getScene(descriptor)),
+        mergeMap(descriptor => this._gameSceneHttp.getScene(descriptor)),
         switchMap(scene => {
             if (!scene) {
                 this._snackBar.open('Failed to fetch the scene from remote server.', 'Got it');
@@ -93,7 +93,7 @@ export class ScenesEffects {
 
     constructor(private _actions$: Actions,
                 private _store: Store,
-                private _cloudStorageHttp: CloudStorageHttpService,
+                private _gameSceneHttp: GameSceneHttpService,
                 private _snackBar: MatSnackBar) { }
 
     private setUniqueName(scene: Scene, names: string[]): Scene {
