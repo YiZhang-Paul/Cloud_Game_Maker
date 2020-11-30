@@ -28,7 +28,8 @@
             <ng-container *ngIf="tool.isActive" [ngSwitch]="tool.name">
                 <app-scene-layer-tool *ngSwitchCase="'layers'"
                     [layers]="(activeScene$ | async).layers"
-                    (layersChange)="onLayersChange(activeScene, $event)">
+                    (layersChange)="onLayersChange(activeScene, $event)"
+                    (layerSelect)="onLayerSelect(activeScene, $event)">
                 </app-scene-layer-tool>
             </ng-container>
         </ng-container>

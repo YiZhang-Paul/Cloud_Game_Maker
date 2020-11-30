@@ -66,6 +66,13 @@ export class SceneBuilderComponent implements OnInit {
         this.onSceneChange({ ...scene, layers });
     }
 
+    public onLayerSelect(scene: Scene, layer: SceneLayer): void {
+        const active: SceneLayer = { ...layer, isActive: true };
+        const layers = scene.layers.map(_ => ({ ..._, isActive: false }));
+        const index = layers.findIndex(_ => _.name === layer.name);
+        this.onLayersChange(scene, GenericUtility.replaceAt(layers, active, index));
+    }
+
     private updateScene(): void {
         if (this._pendingChange) {
             this._store.dispatch(store.actions.updateSceneRemote(this._pendingChange));
