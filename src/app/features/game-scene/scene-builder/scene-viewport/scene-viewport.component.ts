@@ -166,7 +166,7 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
         this._camera.drawGridLines('grid-line-layer');
 
         setTimeout(() => {
-            for (let i = 0; i < this._camera.scene.layers.length; ++i) {
+            for (let i = this._camera.scene.layers.length - 1; i >= 0; --i) {
                 if (this._camera.scene.layers[i].isVisible) {
                     this._camera.renderLayer(i);
                 }
