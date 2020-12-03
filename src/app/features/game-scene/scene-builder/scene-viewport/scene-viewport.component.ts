@@ -116,7 +116,7 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
         if (this.isHovering(clientX, clientY) && this._lastDraggedSprite) {
             const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
             const [x, y] = [Math.ceil(clientX - left), Math.ceil(clientY - top)];
-            this._camera.dropSprite(x, y, 0, this._lastDraggedSprite);
+            this._camera.dropSprite(x, y, this._lastDraggedSprite);
             this.onViewportChange(this._camera.scene);
         }
 
@@ -130,7 +130,7 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
         const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
         const [x, y] = [event.clientX - left, event.clientY - top];
 
-        if (!this._camera.hasGridContent(x, y, 0)) {
+        if (!this._camera.hasGridContent(x, y)) {
             return;
         }
 
@@ -142,7 +142,7 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
     public removeGridContent(): void {
         const { left, top } = this.contextMenuStyle;
         const [x, y] = [left, top].map(_ => Number(_.replace('px', '')));
-        this._camera.dropSprite(x, y, 0, null);
+        this._camera.dropSprite(x, y, null);
         this.onViewportChange(this._camera.scene);
     }
 

@@ -96,13 +96,6 @@ export class Camera2D {
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    public hasGridContent(x: number, y: number, index: number): boolean {
-        const key = this.getTargetGrid(x, y).join();
-        const { grids } = this._scene.layers[index];
-
-        return grids.hasOwnProperty(key) && Boolean(grids[key]);
-    }
-
     protected drawGrid(sprite: Sprite, column: number, row: number, context: CanvasRenderingContext2D, renderId: string): void {
         const image = new Image();
         image.src = sprite.thumbnailUrl;
