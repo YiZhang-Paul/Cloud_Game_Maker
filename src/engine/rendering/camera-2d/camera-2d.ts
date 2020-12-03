@@ -1,5 +1,3 @@
-import { v4 as uuid } from 'uuid';
-
 import { Point } from '../../core/data-model/generic/point';
 import { Dimension2D } from '../../core/data-model/generic/dimension-2d';
 import { Scene } from '../../core/data-model/scene/scene';
@@ -11,7 +9,6 @@ export class Camera2D {
     protected _scene: Scene;
     protected _visibleRows = 0;
     protected _visibleColumns = 0;
-    protected _renderId: string;
 
     constructor(width: number, height: number, scene: Scene) {
         this._dimension = new Dimension2D(width, height);
@@ -66,8 +63,6 @@ export class Camera2D {
     }
 
     public renderLayer(index: number): void {
-        this._renderId = uuid();
-        const renderId = this._renderId;
         const layer = this._scene.layers[index];
         const canvas = this.getCanvas(layer.name);
         const context = canvas.getContext('2d');
@@ -79,12 +74,11 @@ export class Camera2D {
         for (let i = 0; i < this._visibleColumns; ++i) {
             for (let j = 0; j < this._visibleRows; ++j) {
                 const key = `${i + startColumn},${j + startRow}`;
-                const hasGrid = layer.grids.hasOwnProperty(key) && layer.grids[key];
 
-                if (hasGrid && renderId === this._renderId) {
+                if (layer.grids.hasOwnProperty(key) && layer.grids[key]) {
                     const { spriteId } = layer.grids[key];
                     const sprite = layer.sprites[spriteId];
-                    this.drawGrid(sprite, i, j, context, renderId);
+                    this.drawGrid(sprite, i, j, context);
                 }
             }
         }
@@ -96,16 +90,14 @@ export class Camera2D {
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    protected drawGrid(sprite: Sprite, column: number, row: number, context: CanvasRenderingContext2D, renderId: string): void {
+    protected drawGrid(sprite: Sprite, column: number, row: number, context: CanvasRenderingContext2D): void {
         const image = new Image();
         image.src = sprite.thumbnailUrl;
 
         image.onload = () => {
-            if (renderId === this._renderId) {
-                const { scale } = this._scene;
-                const [x, y] = [column * scale, row * scale];
-                context.drawImage(image, x, y, scale, scale);
-            }
+            const { scale } = this._scene;
+            const [x, y] = [column * scale, row * scale];
+            context.drawImage(image, x, y, scale, scale);
         };
     }
 
