@@ -142,7 +142,7 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
     public removeGridContent(): void {
         const { left, top } = this.contextMenuStyle;
         const [x, y] = [left, top].map(_ => Number(_.replace('px', '')));
-        this._camera.dropSprite(x, y, null);
+        this._camera.removeSprite(x, y);
         this.onViewportChange(this._camera.scene);
     }
 

@@ -1,7 +1,7 @@
 import { Camera2D } from '../camera-2d/camera-2d';
 import { SceneGrid } from '../../core/data-model/scene/scene-grid';
-import { SceneLayer } from '../../core/data-model/scene/scene-layer';
 import { Sprite } from '../../core/data-model/sprite/sprite';
+import { GenericUtility } from '../../core/utility/generic-utility/generic.utility';
 
 export class EditorCamera2D extends Camera2D {
 
@@ -12,24 +12,23 @@ export class EditorCamera2D extends Camera2D {
         return grids.hasOwnProperty(key) && Boolean(grids[key]);
     }
 
-    public dropSprite(x: number, y: number, sprite: Sprite | null): void {
-        let layer: SceneLayer;
-        const { layers } = this._scene;
-        const index = layers.findIndex(_ => _.isActive);
+    public dropSprite(x: number, y: number, sprite: Sprite): void {
+        const index = this._scene.layers.findIndex(_ => _.isActive);
+        const active = this._scene.layers[index];
         const key = this.getTargetGrid(x, y).join();
+        const grids = { ...active.grids, [key]: new SceneGrid(sprite.id) };
+        const layers = GenericUtility.replaceAt(this._scene.layers, { ...active, grids }, index);
+        const sprites = { ...this._scene.sprites, [sprite.id]: sprite };
+        this._scene = { ...this._scene, sprites, layers };
+    }
 
-        if (sprite) {
-            const grids = { ...layers[index].grids, [key]: new SceneGrid(sprite.id) };
-            const sprites = { ...layers[index].sprites, [sprite.id]: sprite };
-            layer = { ...layers[index], grids, sprites };
-        }
-        else {
-            const { [key]: deleted, ...grids } = layers[index].grids;
-            layer = { ...layers[index], grids };
-        }
-
-        const updated = [...layers.slice(0, index), layer, ...layers.slice(index + 1)];
-        this._scene = { ...this._scene, layers: updated };
+    public removeSprite(x: number, y: number): void {
+        const index = this._scene.layers.findIndex(_ => _.isActive);
+        const active = this._scene.layers[index];
+        const key = this.getTargetGrid(x, y).join();
+        const { [key]: deleted, ...grids } = active.grids;
+        const layers = GenericUtility.replaceAt(this._scene.layers, { ...active, grids }, index);
+        this._scene = { ...this._scene, layers };
     }
 
     public highlightGrid(x: number, y: number, id: string): void {
