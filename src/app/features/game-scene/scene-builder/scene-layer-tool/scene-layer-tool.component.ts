@@ -17,8 +17,11 @@ import { GenericUtility } from '../../../../core/utility/generic-utility/generic
 })
 export class SceneLayerToolComponent implements OnInit {
     @Input() public layers: SceneLayer[] = [];
-    @Output() public layersChange = new EventEmitter<SceneLayer[]>();
+    @Output() public layerAdd = new EventEmitter<SceneLayer>();
+    @Output() public layerDelete = new EventEmitter<SceneLayer>();
+    @Output() public layerChange = new EventEmitter<{ previous: SceneLayer, current: SceneLayer }>();
     @Output() public layerSelect = new EventEmitter<SceneLayer>();
+    @Output() public layersReorder = new EventEmitter<SceneLayer[]>();
 
     constructor(private _dialog: MatDialog) { }
 
@@ -32,8 +35,7 @@ export class SceneLayerToolComponent implements OnInit {
         layer.name = FileUtility.handleDuplicateName(names, layer.name, '_', '');
         layer.rows = this.layers[0].rows;
         layer.columns = this.layers[0].columns;
-        this.onLayersChange([...this.layers, layer]);
-        this.layerSelect.emit(layer);
+        this.layerAdd.emit(layer);
     }
 
     public onLayerDelete(layer: SceneLayer): void {
@@ -49,49 +51,30 @@ export class SceneLayerToolComponent implements OnInit {
         });
 
         dialog.afterClosed().subscribe(result => {
-            if (result !== actions[0].value) {
-                return;
-            }
-
-            this.onLayersChange(this.layers.filter(_ => _.name !== layer.name));
-
-            if (layer.isActive) {
-                this.layerSelect.emit(this.layers[0]);
+            if (result === actions[0].value) {
+                this.layerDelete.emit(layer);
             }
         });
     }
 
-    public onReorder(event: CdkDragDrop<SceneLayer[]>): void {
-        const { previousIndex, currentIndex } = event;
+    public onReorder({ previousIndex, currentIndex }: CdkDragDrop<SceneLayer[]>): void {
         const layer = this.layers[previousIndex];
+        const layers = this.layers.filter(_ => _.name !== layer.name);
         const index = currentIndex <= previousIndex ? currentIndex : currentIndex - 1;
-        this.layers = this.layers.filter(_ => _.name !== layer.name);
-        this.layers = GenericUtility.insertAt(this.layers, layer, index);
-        this.onLayersChange(this.layers);
+        this.layersReorder.emit(GenericUtility.insertAt(layers, layer, index));
     }
 
     public onNameChange(name: string, layer: SceneLayer): void {
-        const updated: SceneLayer = { ...layer, name };
-        const index = this.layers.findIndex(_ => _.name === layer.name);
-        this.onLayersChange(GenericUtility.replaceAt(this.layers, updated, index));
-
-        if (layer.isActive) {
-            this.layerSelect.emit(updated);
-        }
+        const current: SceneLayer = { ...layer, name };
+        this.layerChange.emit({ previous: layer, current });
     }
 
-    public onVisibilityChange(value: boolean, layer: SceneLayer): void {
-        const updated: SceneLayer = { ...layer, isVisible: value };
-        const index = this.layers.findIndex(_ => _.name === layer.name);
-        this.onLayersChange(GenericUtility.replaceAt(this.layers, updated, index));
+    public onVisibilityChange(isVisible: boolean, layer: SceneLayer): void {
+        const current: SceneLayer = { ...layer, isVisible };
+        this.layerChange.emit({ previous: layer, current });
     }
 
     public canToggleVisibility(layer: SceneLayer): boolean {
         return !layer.isVisible || this.layers.filter(_ => _.isVisible).length > 1;
-    }
-
-    private onLayersChange(layers: SceneLayer[]): void {
-        this.layers = layers;
-        this.layersChange.emit(this.layers);
     }
 }
