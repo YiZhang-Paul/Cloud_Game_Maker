@@ -77,7 +77,7 @@ export class Camera2D {
 
                 if (layer.grids.hasOwnProperty(key) && layer.grids[key]) {
                     const { spriteId } = layer.grids[key];
-                    const sprite = layer.sprites[spriteId];
+                    const sprite = this._scene.sprites[spriteId];
                     this.drawGrid(sprite, i, j, context);
                 }
             }

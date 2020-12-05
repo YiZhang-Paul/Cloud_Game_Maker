@@ -1,5 +1,3 @@
-import { Sprite } from '../sprite/sprite';
-
 import { SceneGrid } from './scene-grid';
 
 export class SceneLayer {
@@ -8,6 +6,5 @@ export class SceneLayer {
     public columns = 2000;
     public isVisible = true;
     public isActive = false;
-    public sprites: { [key: string]: Sprite } = {};
     public grids: { [key: string]: SceneGrid } = {};
 }
