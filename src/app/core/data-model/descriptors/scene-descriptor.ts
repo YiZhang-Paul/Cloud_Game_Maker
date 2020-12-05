@@ -1,4 +1,4 @@
-import { DatabaseRecord } from '../database-record';
+import { DatabaseRecord } from '../generic/database-record';
 
 export class SceneDescriptor extends DatabaseRecord {
     public storageKey: string;
