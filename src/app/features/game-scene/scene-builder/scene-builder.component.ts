@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 
 import { store } from '../store';
 import { store as globalStore } from '../../../store';
+import { ValueChange } from '../../../core/data-model/generic/value-change';
 import { Scene } from '../../../../engine/core/data-model/scene/scene';
 import { SceneLayer } from '../../../../engine/core/data-model/scene/scene-layer';
 import { Sprite } from '../../../../engine/core/data-model/sprite/sprite';
@@ -81,8 +82,7 @@ export class SceneBuilderComponent implements OnInit {
         this.onSceneChange({ ...scene, layers: GenericUtility.replaceAt(layers, active, 0) });
     }
 
-    public onLayerChange(scene: Scene, change: { previous: SceneLayer, current: SceneLayer }): void {
-        const { previous, current } = change;
+    public onLayerChange(scene: Scene, { previous, current }: ValueChange): void {
         const index = scene.layers.findIndex(_ => _.name === previous.name);
         const layers = GenericUtility.replaceAt(scene.layers, current, index);
         this.onSceneChange({ ...scene, layers });

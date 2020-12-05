@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
 
+import { ValueChange } from '../../../../core/data-model/generic/value-change';
 import { SceneLayer } from '../../../../../engine/core/data-model/scene/scene-layer';
 import { ConfirmActionOption } from '../../../../core/data-model/options/confirm-action-option';
 import { ConfirmPopupOption } from '../../../../core/data-model/options/confirm-popup-option';
@@ -19,7 +20,7 @@ export class SceneLayerToolComponent implements OnInit {
     @Input() public layers: SceneLayer[] = [];
     @Output() public layerAdd = new EventEmitter<SceneLayer>();
     @Output() public layerDelete = new EventEmitter<SceneLayer>();
-    @Output() public layerChange = new EventEmitter<{ previous: SceneLayer, current: SceneLayer }>();
+    @Output() public layerChange = new EventEmitter<ValueChange>();
     @Output() public layerSelect = new EventEmitter<SceneLayer>();
     @Output() public layersReorder = new EventEmitter<SceneLayer[]>();
 
