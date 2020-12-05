@@ -7,7 +7,7 @@
     (mousedown)="onMouseDown($event)"
     (contextmenu)="onRightClick($event)">
 
-    <ng-container *ngFor="let layer of scene.layers">
+    <ng-container *ngFor="let layer of scene.layers.slice().reverse()">
         <canvas *ngIf="layer.isVisible" [id]="layer.name" [ngStyle]="layerStyle"></canvas>
     </ng-container>
 
