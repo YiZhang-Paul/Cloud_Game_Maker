@@ -62,7 +62,29 @@ export class SceneBuilderComponent implements OnInit {
         this.toolOptions = GenericUtility.replaceAt(this.toolOptions, tool, index);
     }
 
-    public onLayersChange(scene: Scene, layers: SceneLayer[]): void {
+    public onLayerAdd(scene: Scene, layer: SceneLayer): void {
+        const added: SceneLayer = { ...layer, isActive: true };
+        const existing = scene.layers.map(_ => ({ ..._, isActive: false }));
+        this.onSceneChange({ ...scene, layers: [added, ...existing] });
+    }
+
+    public onLayerDelete(scene: Scene, layer: SceneLayer): void {
+        const layers = scene.layers.filter(_ => _.name !== layer.name);
+
+        if (!layer.isActive) {
+            this.onSceneChange({ ...scene, layers });
+
+            return;
+        }
+
+        const active: SceneLayer = { ...layers[0], isActive: true };
+        this.onSceneChange({ ...scene, layers: GenericUtility.replaceAt(layers, active, 0) });
+    }
+
+    public onLayerChange(scene: Scene, change: { previous: SceneLayer, current: SceneLayer }): void {
+        const { previous, current } = change;
+        const index = scene.layers.findIndex(_ => _.name === previous.name);
+        const layers = GenericUtility.replaceAt(scene.layers, current, index);
         this.onSceneChange({ ...scene, layers });
     }
 
@@ -70,7 +92,11 @@ export class SceneBuilderComponent implements OnInit {
         const active: SceneLayer = { ...layer, isActive: true };
         const layers = scene.layers.map(_ => ({ ..._, isActive: false }));
         const index = layers.findIndex(_ => _.name === layer.name);
-        this.onLayersChange(scene, GenericUtility.replaceAt(layers, active, index));
+        this.onSceneChange({ ...scene, layers: GenericUtility.replaceAt(layers, active, index) });
+    }
+
+    public onLayersReorder(scene: Scene, layers: SceneLayer[]): void {
+        this.onSceneChange({ ...scene, layers });
     }
 
     private updateScene(): void {
