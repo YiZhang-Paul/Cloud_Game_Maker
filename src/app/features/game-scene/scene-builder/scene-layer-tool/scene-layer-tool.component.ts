@@ -57,8 +57,7 @@ export class SceneLayerToolComponent {
     public onReorder({ previousIndex, currentIndex }: CdkDragDrop<SceneLayer[]>): void {
         const layer = this.layers[previousIndex];
         const layers = this.layers.filter(_ => _.name !== layer.name);
-        const index = currentIndex <= previousIndex ? currentIndex : currentIndex - 1;
-        this.layersReorder.emit(GenericUtility.insertAt(layers, layer, index));
+        this.layersReorder.emit(GenericUtility.insertAt(layers, layer, currentIndex));
     }
 
     public onNameChange(name: string, layer: SceneLayer): void {

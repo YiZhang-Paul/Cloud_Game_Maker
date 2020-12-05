@@ -1,7 +1,7 @@
 export class GenericUtility {
 
     public static insertAt<T>(elements: T[], element: T, index: number): T[] {
-        if (index < 0 || index > elements.length - 1) {
+        if (index < 0 || index > elements.length) {
             return elements;
         }
 
