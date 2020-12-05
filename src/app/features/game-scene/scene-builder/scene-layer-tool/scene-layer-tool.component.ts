@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -16,7 +16,7 @@ import { GenericUtility } from '../../../../core/utility/generic-utility/generic
     styleUrls: ['./scene-layer-tool.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SceneLayerToolComponent implements OnInit {
+export class SceneLayerToolComponent {
     @Input() public layers: SceneLayer[] = [];
     @Output() public layerAdd = new EventEmitter<SceneLayer>();
     @Output() public layerDelete = new EventEmitter<SceneLayer>();
@@ -25,10 +25,6 @@ export class SceneLayerToolComponent implements OnInit {
     @Output() public layersReorder = new EventEmitter<SceneLayer[]>();
 
     constructor(private _dialog: MatDialog) { }
-
-    public ngOnInit(): void {
-        this.layerSelect.emit(this.layers[0]);
-    }
 
     public onLayerAdd(): void {
         const layer = new SceneLayer();
