@@ -5,11 +5,11 @@ import { actions } from '../actions';
 import { SceneDescriptor } from '../../../../core/data-model/descriptors/scene-descriptor';
 import { GenericUtility } from '../../../../core/utility/generic-utility/generic.utility';
 
-function setDescriptors(state: ISceneManagerState, props: { payload: SceneDescriptor[] }): ISceneManagerState {
+const setDescriptors = (state: ISceneManagerState, props: { payload: SceneDescriptor[] }): ISceneManagerState => {
     return { ...state, descriptors: props.payload };
-}
+};
 
-function updateDescriptor(state: ISceneManagerState, descriptor: SceneDescriptor): ISceneManagerState {
+const updateDescriptor = (state: ISceneManagerState, descriptor: SceneDescriptor): ISceneManagerState => {
     const index = state.descriptors.findIndex(_ => _.storageKey === descriptor.storageKey);
 
     if (index === -1) {
@@ -17,23 +17,23 @@ function updateDescriptor(state: ISceneManagerState, descriptor: SceneDescriptor
     }
 
     return { ...state, descriptors: GenericUtility.replaceAt(state.descriptors, descriptor, index) };
-}
+};
 
-function deleteDescriptor(state: ISceneManagerState, descriptor: SceneDescriptor): ISceneManagerState {
+const deleteDescriptor = (state: ISceneManagerState, descriptor: SceneDescriptor): ISceneManagerState => {
     return { ...state, descriptors: state.descriptors.filter(_ => _.storageKey !== descriptor.storageKey) };
-}
+};
 
-function addDescriptor(state: ISceneManagerState, descriptor: SceneDescriptor): ISceneManagerState {
+const addDescriptor = (state: ISceneManagerState, descriptor: SceneDescriptor): ISceneManagerState => {
     return { ...state, descriptors: [...state.descriptors, descriptor] };
-}
+};
 
-function setHasFetchedDescriptors(state: ISceneManagerState, props: { payload: boolean }): ISceneManagerState {
+const setHasFetchedDescriptors = (state: ISceneManagerState, props: { payload: boolean }): ISceneManagerState => {
     return { ...state, hasFetchedDescriptors: props.payload };
-}
+};
 
-function setCanAddScene(state: ISceneManagerState, props: { payload: boolean }): ISceneManagerState {
+const setCanAddScene = (state: ISceneManagerState, props: { payload: boolean }): ISceneManagerState => {
     return { ...state, canAddScene: props.payload };
-}
+};
 
 const _sceneManagerReducer = createReducer(
     initialScenesState,
@@ -48,6 +48,6 @@ const _sceneManagerReducer = createReducer(
     on(actions.setCanAddScene, setCanAddScene)
 );
 
-export function sceneManagerReducer(state: ISceneManagerState, action: Action): ISceneManagerState {
+export const sceneManagerReducer = (state: ISceneManagerState, action: Action): ISceneManagerState => {
     return _sceneManagerReducer(state, action);
-}
+};

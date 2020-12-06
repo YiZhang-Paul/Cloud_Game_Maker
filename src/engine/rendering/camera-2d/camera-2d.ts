@@ -114,8 +114,9 @@ export class Camera2D {
 
         image.onload = () => {
             this._sprites.set(sprite.id, image);
-
+            // eslint-disable-next-line @typescript-eslint/dot-notation
             if (!--this._unloadedSprites && this['onSpritesLoaded']) {
+                // eslint-disable-next-line @typescript-eslint/dot-notation
                 this['onSpritesLoaded']();
             }
         };

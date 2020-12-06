@@ -6,7 +6,7 @@ const source = '[Sprite Manager]';
 
 export const addSprite = createAction(`${source} Add Sprite`, props<Sprite>());
 export const updateSprite = createAction(`${source} Update Sprite`, props<Sprite>());
-export const updateSpriteByIndex = createAction(`${source} Update Sprite By Index`, props<{ payload: Sprite, index: number }>());
+export const updateSpriteByIndex = createAction(`${source} Update Sprite By Index`, props<{ payload: Sprite; index: number }>());
 export const deleteSprite = createAction(`${source} Delete Sprite`, props<Sprite>());
 export const setSprites = createAction(`${source} Set Sprites`, props<{ payload: Sprite[] }>());
 export const getSpritesRemote = createAction(`${source} Get Sprites Remote`);

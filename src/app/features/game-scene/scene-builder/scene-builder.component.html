@@ -1,5 +1,5 @@
 <div class="container" fxLayout="column">
-    <div *ngIf="!(activeScene$ | async)" fxLayoutAlign="center center" fxFlex>
+    <div *ngIf="(activeScene$ | async) === null" fxLayoutAlign="center center" fxFlex>
         <span>no active scene</span>
     </div>
 
