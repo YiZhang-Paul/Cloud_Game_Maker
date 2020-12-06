@@ -45,14 +45,14 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
         setTimeout(() => {
             const { clientWidth, clientHeight } = this._viewport.nativeElement;
             this._camera = new EditorCamera2D(clientWidth, clientHeight, this.scene);
-            this.renderViewport();
+            this._camera.renderLayers();
         });
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.hasOwnProperty('scene') && this._camera) {
             this._camera.scene = this.scene;
-            this.renderViewport();
+            this._camera.renderLayers();
         }
     }
 
@@ -158,20 +158,7 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
         this.sceneChange.emit(this.scene);
 
         if (render) {
-            this.renderViewport();
+            this._camera.renderLayers();
         }
-    }
-
-    private renderViewport(): void {
-        this._camera.clearView('highlight-grid-layer');
-        this._camera.drawGridLines('grid-line-layer');
-
-        setTimeout(() => {
-            for (let i = this._camera.scene.layers.length - 1; i >= 0; --i) {
-                if (this._camera.scene.layers[i].isVisible) {
-                    this._camera.renderLayer(i);
-                }
-            }
-        }, 200);
     }
 }
