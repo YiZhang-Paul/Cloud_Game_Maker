@@ -98,10 +98,13 @@ export class Camera2D {
 
     protected loadSprites(): void {
         for (const key of Object.keys(this._scene.sprites)) {
-            const image = new Image();
             const sprite = this._scene.sprites[key];
-            image.src = sprite.thumbnailUrl;
-            image.onload = () => this._sprites.set(sprite.id, image);
+
+            if (!this._sprites.has(sprite.id)) {
+                const image = new Image();
+                image.src = sprite.thumbnailUrl;
+                image.onload = () => this._sprites.set(sprite.id, image);
+            }
         }
     }
 
