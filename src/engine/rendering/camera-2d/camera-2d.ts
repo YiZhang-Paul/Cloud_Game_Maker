@@ -13,13 +13,17 @@ export class Camera2D {
 
     constructor(width: number, height: number, scene: Scene) {
         this._dimension = new Dimension2D(width, height);
-        this._scene = scene;
-        this.loadSprites();
-        this.setRenderArea();
+        this.scene = scene;
     }
 
     get scene(): Scene {
         return this._scene;
+    }
+
+    set scene(scene: Scene) {
+        this._scene = scene;
+        this.loadSprites();
+        this.setRenderArea();
     }
 
     get viewportStyle(): { [key: string]: string } {
