@@ -5,13 +5,13 @@ import { actions } from '../actions';
 import { Point } from '../../../engine/core/data-model/generic/point';
 import { Sprite } from '../../../engine/core/data-model/sprite/sprite';
 
-function setDraggedSprite(state: IAppImageSpritesState, props: { payload: Sprite | null }): IAppImageSpritesState {
+const setDraggedSprite = (state: IAppImageSpritesState, props: { payload: Sprite | null }): IAppImageSpritesState => {
     return { ...state, draggedSprite: props.payload };
-}
+};
 
-function setDraggedSpriteStartXY(state: IAppImageSpritesState, props: { payload: Point | null }): IAppImageSpritesState {
+const setDraggedSpriteStartXY = (state: IAppImageSpritesState, props: { payload: Point | null }): IAppImageSpritesState => {
     return { ...state, draggedSpriteStartXY: props.payload };
-}
+};
 
 const _appImageSpritesReducer = createReducer(
     initialAppImageSpritesState,
@@ -19,6 +19,6 @@ const _appImageSpritesReducer = createReducer(
     on(actions.setDraggedSpriteStartXY, setDraggedSpriteStartXY)
 );
 
-export function appImageSpritesReducer(state: IAppImageSpritesState, action: Action): IAppImageSpritesState {
+export const appImageSpritesReducer = (state: IAppImageSpritesState, action: Action): IAppImageSpritesState => {
     return _appImageSpritesReducer(state, action);
-}
+};

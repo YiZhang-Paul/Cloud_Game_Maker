@@ -47,7 +47,7 @@ export class SceneManagerComponent implements OnInit {
     }
 
     public onSceneCreate(): void {
-        const layers = [new SceneLayer()];
+        const layers: SceneLayer[] = [{ ...new SceneLayer(), isActive: true }];
         const scene: Scene = { ...new Scene(), layers };
         this._store.dispatch(store.actions.addSceneRemote(scene));
     }

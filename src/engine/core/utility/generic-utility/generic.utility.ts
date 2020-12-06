@@ -15,4 +15,12 @@ export class GenericUtility {
 
         return Math.max(min, Math.min(max, value));
     }
+
+    public static replaceAt<T>(elements: T[], element: T, index: number): T[] {
+        if (index < 0 || index > elements.length - 1) {
+            return elements;
+        }
+
+        return [...elements.slice(0, index), element, ...elements.slice(index + 1)];
+    }
 }

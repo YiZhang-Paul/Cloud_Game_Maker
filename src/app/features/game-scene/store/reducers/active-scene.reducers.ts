@@ -6,27 +6,27 @@ import { Scene } from '../../../../../engine/core/data-model/scene/scene';
 import { SceneDescriptor } from '../../../../core/data-model/descriptors/scene-descriptor';
 import { GenericUtility } from '../../../../core/utility/generic-utility/generic.utility';
 
-function setActiveScene(state: IActiveSceneState, props: { payload: Scene | null }): IActiveSceneState {
+const setActiveScene = (state: IActiveSceneState, props: { payload: Scene | null }): IActiveSceneState => {
     return { ...state, activeScene: props.payload };
-}
+};
 
-function updateActiveScene(state: IActiveSceneState, scene: Scene): IActiveSceneState {
+const updateActiveScene = (state: IActiveSceneState, scene: Scene): IActiveSceneState => {
     if (state.activeScene?.storageKey !== scene.storageKey) {
         return state;
     }
 
     return setActiveScene(state, { payload: scene });
-}
+};
 
-function addOpenedScene(state: IActiveSceneState, scene: Scene): IActiveSceneState {
+const addOpenedScene = (state: IActiveSceneState, scene: Scene): IActiveSceneState => {
     if (state.openedScenes.some(_ => _.storageKey === scene.storageKey)) {
         return state;
     }
 
     return { ...state, openedScenes: [...state.openedScenes, scene] };
-}
+};
 
-function updateOpenedScene(state: IActiveSceneState, scene: Scene): IActiveSceneState {
+const updateOpenedScene = (state: IActiveSceneState, scene: Scene): IActiveSceneState => {
     const index = state.openedScenes.findIndex(_ => _.storageKey === scene.storageKey);
 
     if (index === -1) {
@@ -34,9 +34,9 @@ function updateOpenedScene(state: IActiveSceneState, scene: Scene): IActiveScene
     }
 
     return { ...state, openedScenes: GenericUtility.replaceAt(state.openedScenes, scene, index) };
-}
+};
 
-function deleteOpenedScene(state: IActiveSceneState, scene: Scene | SceneDescriptor): IActiveSceneState {
+const deleteOpenedScene = (state: IActiveSceneState, scene: Scene | SceneDescriptor): IActiveSceneState => {
     const index = state.openedScenes.findIndex(_ => _.storageKey === scene.storageKey);
 
     if (index === -1) {
@@ -48,7 +48,7 @@ function deleteOpenedScene(state: IActiveSceneState, scene: Scene | SceneDescrip
     const openedScenes = state.openedScenes.filter(_ => _.storageKey !== scene.storageKey);
 
     return { ...state, activeScene, openedScenes };
-}
+};
 
 const _activeSceneReducer = createReducer(
     initialActiveSceneState,
@@ -59,6 +59,6 @@ const _activeSceneReducer = createReducer(
     on(actions.deleteOpenedScene, deleteOpenedScene)
 );
 
-export function activeSceneReducer(state: IActiveSceneState, action: Action): IActiveSceneState {
+export const activeSceneReducer = (state: IActiveSceneState, action: Action): IActiveSceneState => {
     return _activeSceneReducer(state, action);
-}
+};

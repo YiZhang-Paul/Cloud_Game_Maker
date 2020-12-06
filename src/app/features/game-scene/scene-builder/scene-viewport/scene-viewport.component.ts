@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { AfterViewInit, ChangeDetectionStrategy, OnChanges, SimpleChanges } from '@angular/core';
 
+import { CanvasId } from '../../../../../engine/core/enum/canvas-id.enum';
 import { Point } from '../../../../../engine/core/data-model/generic/point';
 import { Scene } from '../../../../../engine/core/data-model/scene/scene';
 import { Sprite } from '../../../../../engine/core/data-model/sprite/sprite';
@@ -37,6 +38,14 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
         };
     }
 
+    get highlightLayerId(): string {
+        return CanvasId.HighlightLayer;
+    }
+
+    get gridLinesLayerId(): string {
+        return CanvasId.GridLinesLayer;
+    }
+
     get layerStyle(): { [key: string]: string } {
         return this._camera?.viewportStyle ?? null;
     }
@@ -45,13 +54,16 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
         setTimeout(() => {
             const { clientWidth, clientHeight } = this._viewport.nativeElement;
             this._camera = new EditorCamera2D(clientWidth, clientHeight, this.scene);
-            this.renderViewport();
+            this._camera.renderLayers();
         });
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.hasOwnProperty('scene') && this._camera) {
-            this.ngAfterViewInit();
+            setTimeout(() => {
+                this._camera.scene = this.scene;
+                this._camera.renderLayers();
+            });
         }
     }
 
@@ -106,7 +118,7 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
         else if (this.isHovering(clientX, clientY) && this.draggedSprite) {
             const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
             const [x, y] = [Math.ceil(clientX - left), Math.ceil(clientY - top)];
-            this._camera.highlightGrid(x, y, 'highlight-grid-layer');
+            this._camera.highlightGrid(x, y);
             this._lastDraggedSprite = this.draggedSprite;
         }
     }
@@ -116,7 +128,7 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
         if (this.isHovering(clientX, clientY) && this._lastDraggedSprite) {
             const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
             const [x, y] = [Math.ceil(clientX - left), Math.ceil(clientY - top)];
-            this._camera.dropSprite(x, y, 0, this._lastDraggedSprite);
+            this._camera.dropSprite(x, y, this._lastDraggedSprite);
             this.onViewportChange(this._camera.scene);
         }
 
@@ -130,7 +142,7 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
         const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
         const [x, y] = [event.clientX - left, event.clientY - top];
 
-        if (!this._camera.hasGridContent(x, y, 0)) {
+        if (!this._camera.hasGridContent(x, y)) {
             return;
         }
 
@@ -142,7 +154,7 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
     public removeGridContent(): void {
         const { left, top } = this.contextMenuStyle;
         const [x, y] = [left, top].map(_ => Number(_.replace('px', '')));
-        this._camera.dropSprite(x, y, 0, null);
+        this._camera.removeSprite(x, y);
         this.onViewportChange(this._camera.scene);
     }
 
@@ -157,13 +169,7 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
         this.sceneChange.emit(this.scene);
 
         if (render) {
-            this.renderViewport();
+            this._camera.renderLayers();
         }
-    }
-
-    private renderViewport(): void {
-        this._camera.clearView('highlight-grid-layer');
-        setTimeout(() => this._camera.renderLayer(0));
-        this._camera.drawGridLines('grid-line-layer');
     }
 }

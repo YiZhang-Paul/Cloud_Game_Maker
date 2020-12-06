@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 
 import { store } from '../store';
 import { store as globalStore } from '../../../store';
+import { ValueChange } from '../../../core/data-model/generic/value-change';
 import { Scene } from '../../../../engine/core/data-model/scene/scene';
 import { SceneLayer } from '../../../../engine/core/data-model/scene/scene-layer';
 import { Sprite } from '../../../../engine/core/data-model/sprite/sprite';
@@ -62,7 +63,39 @@ export class SceneBuilderComponent implements OnInit {
         this.toolOptions = GenericUtility.replaceAt(this.toolOptions, tool, index);
     }
 
-    public onLayersChange(scene: Scene, layers: SceneLayer[]): void {
+    public onLayerAdd(scene: Scene, layer: SceneLayer): void {
+        const added: SceneLayer = { ...layer, isActive: true };
+        const existing = scene.layers.map(_ => ({ ..._, isActive: false }));
+        this.onSceneChange({ ...scene, layers: [added, ...existing] });
+    }
+
+    public onLayerDelete(scene: Scene, layer: SceneLayer): void {
+        const layers = scene.layers.filter(_ => _.name !== layer.name);
+
+        if (!layer.isActive) {
+            this.onSceneChange({ ...scene, layers });
+
+            return;
+        }
+
+        const active: SceneLayer = { ...layers[0], isActive: true };
+        this.onSceneChange({ ...scene, layers: GenericUtility.replaceAt(layers, active, 0) });
+    }
+
+    public onLayerChange(scene: Scene, { previous, current }: ValueChange): void {
+        const index = scene.layers.findIndex(_ => _.name === previous.name);
+        const layers = GenericUtility.replaceAt(scene.layers, current, index);
+        this.onSceneChange({ ...scene, layers });
+    }
+
+    public onLayerSelect(scene: Scene, layer: SceneLayer): void {
+        const active: SceneLayer = { ...layer, isActive: true };
+        const layers = scene.layers.map(_ => ({ ..._, isActive: false }));
+        const index = layers.findIndex(_ => _.name === layer.name);
+        this.onSceneChange({ ...scene, layers: GenericUtility.replaceAt(layers, active, index) });
+    }
+
+    public onLayersReorder(scene: Scene, layers: SceneLayer[]): void {
         this.onSceneChange({ ...scene, layers });
     }
 

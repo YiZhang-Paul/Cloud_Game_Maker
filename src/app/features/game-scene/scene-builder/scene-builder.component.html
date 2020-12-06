@@ -1,5 +1,5 @@
 <div class="container" fxLayout="column">
-    <div *ngIf="!(activeScene$ | async)" fxLayoutAlign="center center" fxFlex>
+    <div *ngIf="(activeScene$ | async) === null" fxLayoutAlign="center center" fxFlex>
         <span>no active scene</span>
     </div>
 
@@ -28,7 +28,11 @@
             <ng-container *ngIf="tool.isActive" [ngSwitch]="tool.name">
                 <app-scene-layer-tool *ngSwitchCase="'layers'"
                     [layers]="(activeScene$ | async).layers"
-                    (layersChange)="onLayersChange(activeScene, $event)">
+                    (layerAdd)="onLayerAdd(activeScene, $event)"
+                    (layerDelete)="onLayerDelete(activeScene, $event)"
+                    (layerChange)="onLayerChange(activeScene, $event)"
+                    (layerSelect)="onLayerSelect(activeScene, $event)"
+                    (layersReorder)="onLayersReorder(activeScene, $event)">
                 </app-scene-layer-tool>
             </ng-container>
         </ng-container>

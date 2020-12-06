@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
 
+import { ValueChange } from '../../../../core/data-model/generic/value-change';
 import { SceneLayer } from '../../../../../engine/core/data-model/scene/scene-layer';
 import { ConfirmActionOption } from '../../../../core/data-model/options/confirm-action-option';
 import { ConfirmPopupOption } from '../../../../core/data-model/options/confirm-popup-option';
@@ -15,22 +16,15 @@ import { GenericUtility } from '../../../../core/utility/generic-utility/generic
     styleUrls: ['./scene-layer-tool.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SceneLayerToolComponent implements OnInit {
+export class SceneLayerToolComponent {
     @Input() public layers: SceneLayer[] = [];
-    @Output() public layersChange = new EventEmitter<SceneLayer[]>();
+    @Output() public layerAdd = new EventEmitter<SceneLayer>();
+    @Output() public layerDelete = new EventEmitter<SceneLayer>();
+    @Output() public layerChange = new EventEmitter<ValueChange>();
     @Output() public layerSelect = new EventEmitter<SceneLayer>();
-    private _activeLayer: SceneLayer;
+    @Output() public layersReorder = new EventEmitter<SceneLayer[]>();
 
     constructor(private _dialog: MatDialog) { }
-
-    public ngOnInit(): void {
-        this.onLayerSelect(this.layers[0]);
-    }
-
-    public onLayerSelect(layer: SceneLayer): void {
-        this._activeLayer = layer;
-        this.layerSelect.emit(layer);
-    }
 
     public onLayerAdd(): void {
         const layer = new SceneLayer();
@@ -38,8 +32,7 @@ export class SceneLayerToolComponent implements OnInit {
         layer.name = FileUtility.handleDuplicateName(names, layer.name, '_', '');
         layer.rows = this.layers[0].rows;
         layer.columns = this.layers[0].columns;
-        this.onLayersChange([...this.layers, layer]);
-        this.onLayerSelect(layer);
+        this.layerAdd.emit(layer);
     }
 
     public onLayerDelete(layer: SceneLayer): void {
@@ -55,54 +48,29 @@ export class SceneLayerToolComponent implements OnInit {
         });
 
         dialog.afterClosed().subscribe(result => {
-            if (result !== actions[0].value) {
-                return;
-            }
-
-            this.onLayersChange(this.layers.filter(_ => _.name !== layer.name));
-
-            if (this.isActiveLayer(layer)) {
-                this.onLayerSelect(this.layers[0]);
+            if (result === actions[0].value) {
+                this.layerDelete.emit(layer);
             }
         });
     }
 
-    public onReorder(event: CdkDragDrop<SceneLayer[]>): void {
-        const { previousIndex, currentIndex } = event;
+    public onReorder({ previousIndex, currentIndex }: CdkDragDrop<SceneLayer[]>): void {
         const layer = this.layers[previousIndex];
-        const index = currentIndex <= previousIndex ? currentIndex : currentIndex - 1;
-        this.layers = this.layers.filter(_ => _.name !== layer.name);
-        this.layers = GenericUtility.insertAt(this.layers, layer, index);
-        this.onLayersChange(this.layers);
+        const layers = this.layers.filter(_ => _.name !== layer.name);
+        this.layersReorder.emit(GenericUtility.insertAt(layers, layer, currentIndex));
     }
 
     public onNameChange(name: string, layer: SceneLayer): void {
-        const isActive = this.isActiveLayer(layer);
-        const updated: SceneLayer = { ...layer, name };
-        const index = this.layers.findIndex(_ => _.name === layer.name);
-        this.onLayersChange(GenericUtility.replaceAt(this.layers, updated, index));
-
-        if (isActive) {
-            this.onLayerSelect(updated);
-        }
+        const current: SceneLayer = { ...layer, name };
+        this.layerChange.emit({ previous: layer, current });
     }
 
-    public onVisibilityChange(value: boolean, layer: SceneLayer): void {
-        const updated: SceneLayer = { ...layer, isVisible: value };
-        const index = this.layers.findIndex(_ => _.name === layer.name);
-        this.onLayersChange(GenericUtility.replaceAt(this.layers, updated, index));
+    public onVisibilityChange(isVisible: boolean, layer: SceneLayer): void {
+        const current: SceneLayer = { ...layer, isVisible };
+        this.layerChange.emit({ previous: layer, current });
     }
 
     public canToggleVisibility(layer: SceneLayer): boolean {
         return !layer.isVisible || this.layers.filter(_ => _.isVisible).length > 1;
-    }
-
-    public isActiveLayer(layer: SceneLayer): boolean {
-        return this._activeLayer.name === layer.name;
-    }
-
-    private onLayersChange(layers: SceneLayer[]): void {
-        this.layers = layers;
-        this.layersChange.emit(this.layers);
     }
 }

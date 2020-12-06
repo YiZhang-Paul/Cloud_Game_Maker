@@ -4,13 +4,13 @@ import { IActiveSpriteState, initialActiveSpriteState } from '../state';
 import { actions } from '../actions';
 import { Sprite } from '../../../../../engine/core/data-model/sprite/sprite';
 
-function setActiveSprite(state: IActiveSpriteState, sprite: Sprite): IActiveSpriteState {
+const setActiveSprite = (state: IActiveSpriteState, sprite: Sprite): IActiveSpriteState => {
     return { ...state, activeSprite: sprite };
-}
+};
 
-function resetActiveSprite(state: IActiveSpriteState): IActiveSpriteState {
+const resetActiveSprite = (state: IActiveSpriteState): IActiveSpriteState => {
     return { ...state, activeSprite: null };
-}
+};
 
 const _activeSpriteReducer = createReducer(
     initialActiveSpriteState,
@@ -18,6 +18,6 @@ const _activeSpriteReducer = createReducer(
     on(actions.resetActiveSprite, resetActiveSprite)
 );
 
-export function activeSpriteReducer(state: IActiveSpriteState, action: Action): IActiveSpriteState {
+export const activeSpriteReducer = (state: IActiveSpriteState, action: Action): IActiveSpriteState => {
     return _activeSpriteReducer(state, action);
-}
+};

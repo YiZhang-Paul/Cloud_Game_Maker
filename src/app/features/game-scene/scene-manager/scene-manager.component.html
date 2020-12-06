@@ -1,7 +1,7 @@
 <div *ngIf="hasFetchedDescriptors$ | async" class="container">
     <div *ngIf="!(allDescriptors$ | async).length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="7px" fxFlex>
         <span>no scenes found.</span>
-        <button (click)="onSceneCreate()" [disabled]="!(canAddScene$ | async)">Create Scene</button>
+        <button (click)="onSceneCreate()" [disabled]="(canAddScene$ | async) === false">Create Scene</button>
     </div>
 
     <div *ngIf="(allDescriptors$ | async).length" fxLayout="column" fxFlex>

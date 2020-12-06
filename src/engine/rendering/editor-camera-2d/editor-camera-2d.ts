@@ -1,32 +1,47 @@
+import { CanvasId } from '../../core/enum/canvas-id.enum';
 import { Camera2D } from '../camera-2d/camera-2d';
 import { SceneGrid } from '../../core/data-model/scene/scene-grid';
-import { SceneLayer } from '../../core/data-model/scene/scene-layer';
 import { Sprite } from '../../core/data-model/sprite/sprite';
+import { GenericUtility } from '../../core/utility/generic-utility/generic.utility';
 
 export class EditorCamera2D extends Camera2D {
+    private _isRenderPending = false;
+    private _lastRender: number;
 
-    public dropSprite(x: number, y: number, index: number, sprite: Sprite | null): void {
-        let layer: SceneLayer;
-        const { layers } = this._scene;
+    public hasGridContent(x: number, y: number): boolean {
         const key = this.getTargetGrid(x, y).join();
+        const { grids } = this._scene.layers.find(_ => _.isActive);
 
-        if (sprite) {
-            const grids = { ...layers[index].grids, [key]: new SceneGrid(sprite.id) };
-            const sprites = { ...layers[index].sprites, [sprite.id]: sprite };
-            layer = { ...layers[index], grids, sprites };
-        }
-        else {
-            const { [key]: deleted, ...grids } = layers[index].grids;
-            layer = { ...layers[index], grids };
-        }
-
-        const updated = [...layers.slice(0, index), layer, ...layers.slice(index + 1)];
-        this._scene = { ...this._scene, layers: updated };
+        return grids.hasOwnProperty(key) && Boolean(grids[key]);
     }
 
-    public highlightGrid(x: number, y: number, id: string): void {
+    public dropSprite(x: number, y: number, sprite: Sprite): void {
+        const index = this._scene.layers.findIndex(_ => _.isActive);
+        const active = this._scene.layers[index];
+        const key = this.getTargetGrid(x, y).join();
+        const grids = { ...active.grids, [key]: new SceneGrid(sprite.id) };
+        const layers = GenericUtility.replaceAt(this._scene.layers, { ...active, grids }, index);
+        const sprites = { ...this._scene.sprites, [sprite.id]: sprite };
+        this._scene = { ...this._scene, sprites, layers };
+    }
+
+    public removeSprite(x: number, y: number): void {
+        const index = this._scene.layers.findIndex(_ => _.isActive);
+        const active = this._scene.layers[index];
+        const key = this.getTargetGrid(x, y).join();
+        const { [key]: deleted, ...grids } = active.grids;
+        const layers = GenericUtility.replaceAt(this._scene.layers, { ...active, grids }, index);
+        this._scene = { ...this._scene, layers };
+    }
+
+    public highlightGrid(x: number, y: number): void {
         const { scale } = this._scene;
-        const canvas = this.getCanvas(id);
+        const canvas = this.getCanvas(CanvasId.HighlightLayer);
+
+        if (!canvas) {
+            throw new Error(`No canvas with ID ${CanvasId.HighlightLayer} available.`);
+        }
+
         const context = canvas.getContext('2d');
         const [column, row] = this.getTargetGrid(x, y, true);
         context.clearRect(0, 0, canvas.width, canvas.height);
@@ -55,6 +70,33 @@ export class EditorCamera2D extends Camera2D {
             context.moveTo(0, y);
             context.lineTo(canvas.width, y);
             context.stroke();
+        }
+    }
+
+    public renderLayers(): void {
+        requestAnimationFrame(() => {
+            const isSameFrame = this._lastRender && Date.now() - this._lastRender <= 16.67;
+            this._isRenderPending = this._unloadedSprites > 0;
+
+            if (this._isRenderPending || isSameFrame) {
+                return;
+            }
+
+            for (let i = this._scene.layers.length - 1; i >= 0; --i) {
+                if (this._scene.layers[i].isVisible) {
+                    this.renderLayer(i);
+                }
+            }
+
+            this.clearView(CanvasId.HighlightLayer);
+            this.drawGridLines(CanvasId.GridLinesLayer);
+            this._lastRender = Date.now();
+        });
+    }
+
+    private onSpritesLoaded(): void {
+        if (this._isRenderPending) {
+            this.renderLayers();
         }
     }
 }

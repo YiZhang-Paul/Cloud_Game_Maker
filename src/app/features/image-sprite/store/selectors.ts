@@ -4,9 +4,9 @@ import { Sprite } from '../../../../engine/core/data-model/sprite/sprite';
 
 import { IImageSpriteState, key } from './state';
 
-function matchSprites(sprites: Sprite[], filter: string): Sprite[] {
+const matchSprites = (sprites: Sprite[], filter: string): Sprite[] => {
     return sprites.filter(_ => _.name.toLowerCase().includes(filter ?? ''));
-}
+};
 
 export const getFeatureState = (state: { [key]: IImageSpriteState }) => state[key];
 

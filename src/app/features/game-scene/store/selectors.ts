@@ -4,9 +4,9 @@ import { SceneDescriptor } from '../../../core/data-model/descriptors/scene-desc
 
 import { IGameSceneModuleState, key } from './state';
 
-function matchDescriptors(descriptors: SceneDescriptor[], filter: string): SceneDescriptor[] {
+const matchDescriptors = (descriptors: SceneDescriptor[], filter: string): SceneDescriptor[] => {
     return descriptors.filter(_ => _.name.toLowerCase().includes(filter ?? ''));
-}
+};
 
 export const getFeatureState = (state: { [key]: IGameSceneModuleState }) => state[key];
 

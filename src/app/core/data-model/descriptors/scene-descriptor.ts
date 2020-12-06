@@ -1,11 +1,11 @@
-import { DatabaseRecord } from '../database-record';
+import { DatabaseRecord } from '../generic/database-record';
 
 export class SceneDescriptor extends DatabaseRecord {
     public storageKey: string;
     public name: string;
 
-    constructor(storageKey: string, name: string) {
-        super();
+    constructor(id: string, storageKey: string, name: string) {
+        super(id);
         this.storageKey = storageKey;
         this.name = name;
     }
