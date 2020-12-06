@@ -171,6 +171,6 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
                     this._camera.renderLayer(i);
                 }
             }
-        });
+        }, 200);
     }
 }

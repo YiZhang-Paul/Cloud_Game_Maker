@@ -9,10 +9,12 @@ export class Camera2D {
     protected _scene: Scene;
     protected _visibleRows = 0;
     protected _visibleColumns = 0;
+    protected _sprites = new Map<string, HTMLImageElement>();
 
     constructor(width: number, height: number, scene: Scene) {
         this._dimension = new Dimension2D(width, height);
         this._scene = scene;
+        this.loadSprites();
         this.setRenderArea();
     }
 
@@ -90,34 +92,13 @@ export class Camera2D {
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    protected drawGrid(sprite: Sprite, column: number, row: number, context: CanvasRenderingContext2D): void {
-        const image = new Image();
-        image.src = sprite.thumbnailUrl;
-
-        image.onload = () => {
-            const { scale } = this._scene;
-            const [x, y] = [column * scale, row * scale];
-            context.drawImage(image, x, y, scale, scale);
-        };
-    }
-
-    protected getCanvas(id: string): HTMLCanvasElement {
-        const canvas = document.getElementById(id) as HTMLCanvasElement;
-        canvas.width = this.renderWidth;
-        canvas.height = this.renderHeight;
-
-        return canvas;
-    }
-
-    protected getTargetGrid(x: number, y: number, isRelative = false): [number, number] {
-        const { scale, viewportXY } = this._scene;
-        const column = Math.floor((viewportXY.x + x) / scale);
-        const row = Math.floor((viewportXY.y + y) / scale);
-
-        return [
-            isRelative ? column - Math.floor(viewportXY.x / scale) : column,
-            isRelative ? row - Math.floor(viewportXY.y / scale) : row
-        ];
+    protected loadSprites(): void {
+        for (const key of Object.keys(this._scene.sprites)) {
+            const image = new Image();
+            const sprite = this._scene.sprites[key];
+            image.src = sprite.thumbnailUrl;
+            image.onload = () => this._sprites.set(sprite.id, image);
+        }
     }
 
     protected setRenderArea(): void {
@@ -137,5 +118,35 @@ export class Camera2D {
         else {
             this._visibleColumns = Math.ceil(width / scale);
         }
+    }
+
+    protected drawGrid(sprite: Sprite, column: number, row: number, context: CanvasRenderingContext2D): void {
+        if (!this._sprites.get(sprite.id)) {
+            return;
+        }
+
+        const { scale } = this._scene;
+        const [x, y] = [column * scale, row * scale];
+        const image = this._sprites.get(sprite.id);
+        context.drawImage(image, x, y, scale, scale);
+    }
+
+    protected getCanvas(id: string): HTMLCanvasElement {
+        const canvas = document.getElementById(id) as HTMLCanvasElement;
+        canvas.width = this.renderWidth;
+        canvas.height = this.renderHeight;
+
+        return canvas;
+    }
+
+    protected getTargetGrid(x: number, y: number, isRelative = false): [number, number] {
+        const { scale, viewportXY } = this._scene;
+        const column = Math.floor((viewportXY.x + x) / scale);
+        const row = Math.floor((viewportXY.y + y) / scale);
+
+        return [
+            isRelative ? column - Math.floor(viewportXY.x / scale) : column,
+            isRelative ? row - Math.floor(viewportXY.y / scale) : row
+        ];
     }
 }
