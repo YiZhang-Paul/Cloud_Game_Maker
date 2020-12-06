@@ -60,8 +60,10 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
 
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.hasOwnProperty('scene') && this._camera) {
-            this._camera.scene = this.scene;
-            this._camera.renderLayers();
+            setTimeout(() => {
+                this._camera.scene = this.scene;
+                this._camera.renderLayers();
+            });
         }
     }
 
