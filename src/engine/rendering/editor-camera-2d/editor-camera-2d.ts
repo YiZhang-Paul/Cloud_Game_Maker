@@ -5,6 +5,7 @@ import { Sprite } from '../../core/data-model/sprite/sprite';
 import { GenericUtility } from '../../core/utility/generic-utility/generic.utility';
 
 export class EditorCamera2D extends Camera2D {
+    private _isRenderPending = false;
 
     public hasGridContent(x: number, y: number): boolean {
         const key = this.getTargetGrid(x, y).join();
@@ -72,15 +73,25 @@ export class EditorCamera2D extends Camera2D {
     }
 
     public renderLayers(): void {
-        setTimeout(() => {
-            for (let i = this._scene.layers.length - 1; i >= 0; --i) {
-                if (this._scene.layers[i].isVisible) {
-                    this.renderLayer(i);
-                }
-            }
+        this._isRenderPending = this._unloadedSprites > 0;
 
-            this.clearView(CanvasId.HighlightLayer);
-            this.drawGridLines(CanvasId.GridLinesLayer);
-        });
+        if (this._isRenderPending) {
+            return;
+        }
+
+        for (let i = this._scene.layers.length - 1; i >= 0; --i) {
+            if (this._scene.layers[i].isVisible) {
+                this.renderLayer(i);
+            }
+        }
+
+        this.clearView(CanvasId.HighlightLayer);
+        this.drawGridLines(CanvasId.GridLinesLayer);
+    }
+
+    private onSpritesLoaded(): void {
+        if (this._isRenderPending) {
+            this.renderLayers();
+        }
     }
 }
