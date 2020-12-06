@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
 import { store } from '../store';
@@ -24,12 +24,13 @@ export class SceneBuilderComponent implements OnInit {
     public openedScenes$: Observable<Scene[]>;
     public draggedSprite$: Observable<Sprite>;
     private _sceneChanges$ = new Subject<Scene>();
+    private _activeScene: Scene;
     private _pendingChange: Scene | null;
 
     constructor(private _store: Store) { }
 
     public ngOnInit(): void {
-        this.activeScene$ = this._store.select(store.selectors.getActiveScene);
+        this.activeScene$ = this._store.select(store.selectors.getActiveScene).pipe(tap(_ => this._activeScene = _));
         this.openedScenes$ = this._store.select(store.selectors.getOpenedScenes);
         this.draggedSprite$ = this._store.select(globalStore.selectors.getDraggedSprite);
         this._sceneChanges$.pipe(debounceTime(5000)).subscribe(() => this.updateScene());
@@ -63,40 +64,42 @@ export class SceneBuilderComponent implements OnInit {
         this.toolOptions = GenericUtility.replaceAt(this.toolOptions, tool, index);
     }
 
-    public onLayerAdd(scene: Scene, layer: SceneLayer): void {
+    public onLayerAdd(layer: SceneLayer): void {
         const added: SceneLayer = { ...layer, isActive: true };
-        const existing = scene.layers.map(_ => ({ ..._, isActive: false }));
-        this.onSceneChange({ ...scene, layers: [added, ...existing] });
+        const existing = this._activeScene.layers.map(_ => ({ ..._, isActive: false }));
+        this.onSceneChange({ ...this._activeScene, layers: [added, ...existing] });
     }
 
-    public onLayerDelete(scene: Scene, layer: SceneLayer): void {
-        const layers = scene.layers.filter(_ => _.name !== layer.name);
+    public onLayerDelete(layer: SceneLayer): void {
+        const layers = this._activeScene.layers.filter(_ => _.name !== layer.name);
 
         if (!layer.isActive) {
-            this.onSceneChange({ ...scene, layers });
+            this.onSceneChange({ ...this._activeScene, layers });
 
             return;
         }
 
         const active: SceneLayer = { ...layers[0], isActive: true };
-        this.onSceneChange({ ...scene, layers: GenericUtility.replaceAt(layers, active, 0) });
+        const updated = GenericUtility.replaceAt(layers, active, 0);
+        this.onSceneChange({ ...this._activeScene, layers: updated });
     }
 
-    public onLayerChange(scene: Scene, { previous, current }: ValueChange): void {
-        const index = scene.layers.findIndex(_ => _.name === previous.name);
-        const layers = GenericUtility.replaceAt(scene.layers, current, index);
-        this.onSceneChange({ ...scene, layers });
+    public onLayerChange({ previous, current }: ValueChange): void {
+        const index = this._activeScene.layers.findIndex(_ => _.name === previous.name);
+        const layers = GenericUtility.replaceAt(this._activeScene.layers, current, index);
+        this.onSceneChange({ ...this._activeScene, layers });
     }
 
-    public onLayerSelect(scene: Scene, layer: SceneLayer): void {
+    public onLayerSelect(layer: SceneLayer): void {
         const active: SceneLayer = { ...layer, isActive: true };
-        const layers = scene.layers.map(_ => ({ ..._, isActive: false }));
+        const layers = this._activeScene.layers.map(_ => ({ ..._, isActive: false }));
         const index = layers.findIndex(_ => _.name === layer.name);
-        this.onSceneChange({ ...scene, layers: GenericUtility.replaceAt(layers, active, index) });
+        const updated = GenericUtility.replaceAt(layers, active, index);
+        this.onSceneChange({ ...this._activeScene, layers: updated });
     }
 
-    public onLayersReorder(scene: Scene, layers: SceneLayer[]): void {
-        this.onSceneChange({ ...scene, layers });
+    public onLayersReorder(layers: SceneLayer[]): void {
+        this.onSceneChange({ ...this._activeScene, layers });
     }
 
     private updateScene(): void {
