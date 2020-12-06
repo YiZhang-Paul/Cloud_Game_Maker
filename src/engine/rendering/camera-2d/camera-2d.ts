@@ -10,6 +10,7 @@ export class Camera2D {
     protected _visibleRows = 0;
     protected _visibleColumns = 0;
     protected _sprites = new Map<string, HTMLImageElement>();
+    protected _unloadedSprites = 0;
 
     constructor(width: number, height: number, scene: Scene) {
         this._dimension = new Dimension2D(width, height);
@@ -101,11 +102,23 @@ export class Camera2D {
             const sprite = this._scene.sprites[key];
 
             if (!this._sprites.has(sprite.id)) {
-                const image = new Image();
-                image.src = sprite.thumbnailUrl;
-                image.onload = () => this._sprites.set(sprite.id, image);
+                this.loadSprite(sprite);
             }
         }
+    }
+
+    private loadSprite(sprite: Sprite): void {
+        const image = new Image();
+        image.src = sprite.thumbnailUrl;
+        ++this._unloadedSprites;
+
+        image.onload = () => {
+            this._sprites.set(sprite.id, image);
+
+            if (!--this._unloadedSprites && this['onSpritesLoaded']) {
+                this['onSpritesLoaded']();
+            }
+        };
     }
 
     protected setRenderArea(): void {
