@@ -6,6 +6,7 @@ import { GenericUtility } from '../../core/utility/generic-utility/generic.utili
 
 export class EditorCamera2D extends Camera2D {
     private _isRenderPending = false;
+    private _lastRender: number;
 
     public hasGridContent(x: number, y: number): boolean {
         const key = this.getTargetGrid(x, y).join();
@@ -73,20 +74,24 @@ export class EditorCamera2D extends Camera2D {
     }
 
     public renderLayers(): void {
-        this._isRenderPending = this._unloadedSprites > 0;
+        requestAnimationFrame(() => {
+            const isSameFrame = this._lastRender && Date.now() - this._lastRender <= 16.67;
+            this._isRenderPending = this._unloadedSprites > 0;
 
-        if (this._isRenderPending) {
-            return;
-        }
-
-        for (let i = this._scene.layers.length - 1; i >= 0; --i) {
-            if (this._scene.layers[i].isVisible) {
-                this.renderLayer(i);
+            if (this._isRenderPending || isSameFrame) {
+                return;
             }
-        }
 
-        this.clearView(CanvasId.HighlightLayer);
-        this.drawGridLines(CanvasId.GridLinesLayer);
+            for (let i = this._scene.layers.length - 1; i >= 0; --i) {
+                if (this._scene.layers[i].isVisible) {
+                    this.renderLayer(i);
+                }
+            }
+
+            this.clearView(CanvasId.HighlightLayer);
+            this.drawGridLines(CanvasId.GridLinesLayer);
+            this._lastRender = Date.now();
+        });
     }
 
     private onSpritesLoaded(): void {
