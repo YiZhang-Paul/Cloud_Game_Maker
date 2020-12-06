@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { AfterViewInit, ChangeDetectionStrategy, OnChanges, SimpleChanges } from '@angular/core';
 
+import { CanvasId } from '../../../../../engine/core/enum/canvas-id.enum';
 import { Point } from '../../../../../engine/core/data-model/generic/point';
 import { Scene } from '../../../../../engine/core/data-model/scene/scene';
 import { Sprite } from '../../../../../engine/core/data-model/sprite/sprite';
@@ -35,6 +36,14 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
             draggable: this._canDragPointer,
             moveable: this._canMoveCamera
         };
+    }
+
+    get highlightLayerId(): string {
+        return CanvasId.HighlightLayer;
+    }
+
+    get gridLinesLayerId(): string {
+        return CanvasId.GridLinesLayer;
     }
 
     get layerStyle(): { [key: string]: string } {
@@ -107,7 +116,7 @@ export class SceneViewportComponent implements AfterViewInit, OnChanges {
         else if (this.isHovering(clientX, clientY) && this.draggedSprite) {
             const { left, top } = this._viewport.nativeElement.getBoundingClientRect();
             const [x, y] = [Math.ceil(clientX - left), Math.ceil(clientY - top)];
-            this._camera.highlightGrid(x, y, 'highlight-grid-layer');
+            this._camera.highlightGrid(x, y);
             this._lastDraggedSprite = this.draggedSprite;
         }
     }

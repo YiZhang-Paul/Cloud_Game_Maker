@@ -1,11 +1,10 @@
+import { CanvasId } from '../../core/enum/canvas-id.enum';
 import { Camera2D } from '../camera-2d/camera-2d';
 import { SceneGrid } from '../../core/data-model/scene/scene-grid';
 import { Sprite } from '../../core/data-model/sprite/sprite';
 import { GenericUtility } from '../../core/utility/generic-utility/generic.utility';
 
 export class EditorCamera2D extends Camera2D {
-    public readonly highlightLayerId = 'highlight-layer';
-    public readonly gridLinesLayerId = 'grid-lines-layer';
 
     public hasGridContent(x: number, y: number): boolean {
         const key = this.getTargetGrid(x, y).join();
@@ -33,9 +32,14 @@ export class EditorCamera2D extends Camera2D {
         this._scene = { ...this._scene, layers };
     }
 
-    public highlightGrid(x: number, y: number, id: string): void {
+    public highlightGrid(x: number, y: number): void {
         const { scale } = this._scene;
-        const canvas = this.getCanvas(id);
+        const canvas = this.getCanvas(CanvasId.HighlightLayer);
+
+        if (!canvas) {
+            throw new Error(`No canvas with ID ${CanvasId.HighlightLayer} available.`);
+        }
+
         const context = canvas.getContext('2d');
         const [column, row] = this.getTargetGrid(x, y, true);
         context.clearRect(0, 0, canvas.width, canvas.height);
@@ -75,8 +79,8 @@ export class EditorCamera2D extends Camera2D {
                 }
             }
 
-            this.clearView(this.highlightLayerId);
-            this.drawGridLines(this.gridLinesLayerId);
-        }, 500);
+            this.clearView(CanvasId.HighlightLayer);
+            this.drawGridLines(CanvasId.GridLinesLayer);
+        });
     }
 }

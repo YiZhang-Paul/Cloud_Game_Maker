@@ -11,8 +11,8 @@
         <canvas *ngIf="layer.isVisible" [id]="layer.name" [ngStyle]="layerStyle"></canvas>
     </ng-container>
 
-    <canvas id="grid-line-layer" [ngStyle]="layerStyle"></canvas>
-    <canvas id="highlight-grid-layer" [ngStyle]="layerStyle"></canvas>
+    <canvas [id]="gridLinesLayerId" [ngStyle]="layerStyle"></canvas>
+    <canvas [id]="highlightLayerId" [ngStyle]="layerStyle"></canvas>
 
     <div *ngIf="isContextMenuOn" [ngStyle]="contextMenuStyle" class="context-menu" fxLayout="column">
         <div (mouseup)="removeGridContent()" fxLayoutAlign="start center">
