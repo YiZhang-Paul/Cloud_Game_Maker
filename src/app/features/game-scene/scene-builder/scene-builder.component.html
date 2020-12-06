@@ -12,7 +12,7 @@
         </app-file-tab>
     </div>
 
-    <div *ngIf="activeScene$ | async" class="main-content" fxFlex>
+    <div *ngIf="activeScene$ | async as activeScene" class="main-content" fxFlex>
         <app-scene-viewport [scene]="activeScene$ | async"
             [draggedSprite]="draggedSprite$ | async"
             (sceneChange)="onSceneChange($event)"
@@ -28,11 +28,11 @@
             <ng-container *ngIf="tool.isActive" [ngSwitch]="tool.name">
                 <app-scene-layer-tool *ngSwitchCase="'layers'"
                     [layers]="(activeScene$ | async).layers"
-                    (layerAdd)="onLayerAdd($event)"
-                    (layerDelete)="onLayerDelete($event)"
-                    (layerChange)="onLayerChange($event)"
-                    (layerSelect)="onLayerSelect($event)"
-                    (layersReorder)="onLayersReorder($event)">
+                    (layerAdd)="onLayerAdd(activeScene, $event)"
+                    (layerDelete)="onLayerDelete(activeScene, $event)"
+                    (layerChange)="onLayerChange(activeScene, $event)"
+                    (layerSelect)="onLayerSelect(activeScene, $event)"
+                    (layersReorder)="onLayersReorder(activeScene, $event)">
                 </app-scene-layer-tool>
             </ng-container>
         </ng-container>
